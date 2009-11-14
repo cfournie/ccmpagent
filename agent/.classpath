@@ -13,5 +13,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql-connector-java-3.1.8-bin.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/bayestrustlib/src/trust"/>
+	<classpathentry kind="lib" path="/dtlib/src/learning"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

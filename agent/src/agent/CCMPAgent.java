@@ -1,5 +1,20 @@
 package agent;
 import testbed.agent.Agent;
+import learning.LearningInterface;
+import trust.TrustInterface;
+
+import testbed.messages.CertaintyReplyMsg;
+import testbed.messages.CertaintyRequestMsg;
+import testbed.messages.OpinionOrderMsg;
+import testbed.messages.OpinionReplyMsg;
+import testbed.messages.OpinionRequestMsg;
+import testbed.messages.ReputationAcceptOrDeclineMsg;
+import testbed.messages.ReputationReplyMsg;
+import testbed.messages.ReputationRequestMsg;
+import testbed.messages.WeightMsg;
+
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * 
@@ -11,6 +26,10 @@ import testbed.agent.Agent;
  */
 public class CCMPAgent extends Agent {
 
+	private LearningInterface mDecisionTree;
+	private TrustInterface  mTrustNetwork;
+    private List<ReputationRequestMsg>  mReputationRequestsToAccept;	
+	
 	/**
 	 * 
 	 */
@@ -94,6 +113,24 @@ public class CCMPAgent extends Agent {
 	 */
 	@Override
 	public void prepareReputationAcceptsAndDeclines() {
+		List<ReputationRequestMsg> reputationRequests = getIncomingMessages();
+		mReputationRequestsToAccept = new ArrayList<ReputationRequestMsg>();		
+
+        for (ReputationRequestMsg receivedMsg: reputationRequests) {
+        	if( mDecisionTree.respondToReputationRequest( receivedMsg.getSender(), receivedMsg.getAppraiserID(), receivedMsg.getEra() ) )
+        	{
+        		mReputationRequestsToAccept.add(receivedMsg);
+        		ReputationAcceptOrDeclineMsg msg = receivedMsg.reputationAcceptOrDecline(true);
+            	sendOutgoingMessage(msg);
+        	}
+        	else
+        	{
+        		mReputationRequestsToAccept.add(receivedMsg);
+        		ReputationAcceptOrDeclineMsg msg = receivedMsg.reputationAcceptOrDecline(false);
+            	sendOutgoingMessage(msg);
+        	}        		
+        }		
+		
 		// TODO Auto-generated method stub
 
 	}
