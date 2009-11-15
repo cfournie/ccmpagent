@@ -1,5 +1,7 @@
 package learning;
-import testbed.sim.Era;;
+import testbed.sim.Era;
+import testbed.sim.AppraisalAssignment;
+
 /**
  * 
  */
@@ -10,10 +12,11 @@ import testbed.sim.Era;;
  */
 public interface LearningInterface {
 	
-	void  setAgentTrust( String agent, Era era );
-	void  setAgentPerceivedTrust( String agent, Era era );
+	void  setAgentTrust( String agent, Era era, double trust );
+	void  setAgentPerceivedTrust( String agent, Era era, double trust );
 	void  setOurEraCertainty( Era era, double certainty );
 	void  setAgentEraCertainty( String agent, Era era, double certainty);
+	void  setBankBalance( double balance );
 	
 	//get the reputation value, about an agent, we want to give to another agent.
 	double getReputationRequestValue( String requestingAgent, String aboutAgent, Era era );
@@ -38,9 +41,18 @@ public interface LearningInterface {
 	double getAppraisalCost(String requestingAgent, Era era);
 	
 	//Should we request a reputation update from an agent, about another agent?
-	boolean requestAgentReputationUpdate( String toAgent, String aboutAgent, Era era );
+	boolean requestAgentReputationUpdate( String toAgent, String aboutAgent, Era era, int currentTimestep );
 	//Should we request a certainty value from an agent?
 	boolean requestAgentCertainty( String toAgent, Era era );
 	//Should we request an opinion from an agent?
-	boolean requestAgentOpinion( String toAgent, Era era );
+	boolean requestAgentOpinion( String toAgent, AppraisalAssignment art );
+	
+	//Do we want to adjust an appraisal value (given by the sim) to a different value
+	//before we send it out?
+	int adjustAppraisalValue( String toAgent, Era era, int appraisal);
+	
+	void sentCertaintyRequest( String toAgent, Era era );
+	void sentOpinionRequest( String toAgent, AppraisalAssignment art );
+	void sentReputationRequest( String toAgent, String aboutAgent );
+
 }
