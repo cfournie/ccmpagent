@@ -11,14 +11,14 @@ import trust.model.primitives.Peer;
  *
  */
 public abstract class TrustSet {
-	protected int nLevel = 0;
+	protected int n = 0;
 	
 	/**
 	 * 
 	 * @param nLevel
 	 */
-	public TrustSet(int nLevel) {
-		this.nLevel = nLevel;
+	public TrustSet(int n) {
+		this.n = n;
 	}
 	
 	public String keyFrom(Context c, Peer p) {
