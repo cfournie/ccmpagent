@@ -3,6 +3,9 @@
  */
 package trust.model.sets;
 
+import trust.model.primitives.Context;
+import trust.model.primitives.Peer;
+
 /**
  * @author cfournie
  *
@@ -16,5 +19,9 @@ public abstract class TrustSet {
 	 */
 	public TrustSet(int nLevel) {
 		this.nLevel = nLevel;
+	}
+	
+	public String keyFrom(Context c, Peer p) {
+		return c.getName() + "." + p.getName();
 	}
 }

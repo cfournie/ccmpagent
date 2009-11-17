@@ -18,6 +18,10 @@ public abstract class Named {
 		this.name = name;
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
 	/**
 	 * Equality operator
 	 */
