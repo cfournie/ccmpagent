@@ -19,10 +19,10 @@ public class BayesTrust implements BayesTrustInterface {
 	protected DirectExperienceSet des;
 	protected RecommendedTrustSet rts;
 	protected SentRecommendationSet srs;
-	protected int n = 0;
+	protected int nLevels = 0;
 	
 	/**
-	 * 
+	 * Constructor
 	 * @param n
 	 */
 	public BayesTrust(int nLevels, List<Context> contexts) {
@@ -31,7 +31,30 @@ public class BayesTrust implements BayesTrustInterface {
 		this.rts = new RecommendedTrustSet(nLevels);
 		this.srs = new SentRecommendationSet(nLevels);
 		
-		this.n = nLevels;
+		this.nLevels = nLevels;
 		this.c = new LinkedList<Context>(contexts);
+	}
+	
+	/**
+	 * @see trust.BayesTrustInterface.addPeer
+	 */
+	public boolean addPeer(Peer p) {
+		return this.p.add(p);
+	}
+
+	/**
+	 * @see trust.getOverallTrust
+	 */
+	public double getOverallTrust(Peer p, Context c) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/**
+	 * @see trust.getRecommendedTrust
+	 */
+	public double getRecommendedTrust(Peer p, Context c) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
