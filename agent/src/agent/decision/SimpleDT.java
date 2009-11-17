@@ -1,18 +1,23 @@
 /**
  * 
  */
-package agent.learning;
+package agent.decision;
 
+import java.util.Map;
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Era;
-import trust.BayesTrustInterface;
+import agent.decision.DecisionTree;
 
 /**
  * @author cfournie
  *
  */
-public class LearningModule implements LearningInterface {
-
+public class SimpleDT extends DecisionTree {
+	
+	private Map<String,Double>          mReputations;
+	private Map<String,Map<Era,Double>> mCertainties;
+	private int							mNumCertaintyRequestsSent;
+	
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#adjustAppraisalValue(java.lang.String, testbed.sim.Era, int)
 	 */
@@ -49,9 +54,10 @@ public class LearningModule implements LearningInterface {
 	 * @see agent.learning.LearningInterface#getReputationRequestValue(java.lang.String, java.lang.String, testbed.sim.Era)
 	 */
 	public double getReputationRequestValue(String requestingAgent,
-			String aboutAgent, Era era) {
-		// TODO Auto-generated method stub
-		return 0;
+			String aboutAgent, Era era)
+	{
+		// The simple agent returns are real values
+		return mReputations.get(aboutAgent).doubleValue();
 	}
 
 	/* (non-Javadoc)
@@ -74,16 +80,21 @@ public class LearningModule implements LearningInterface {
 	 * @see agent.learning.LearningInterface#provideReputationRequest(java.lang.String, java.lang.String, testbed.sim.Era)
 	 */
 	public boolean provideReputationRequest(String requestingAgent,
-			String aboutAgent, Era era) {
-		// TODO Auto-generated method stub
-		return false;
+			String aboutAgent, Era era)
+	{
+		// The simple agent accepts all requests
+		return true;
 	}
 
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#requestAgentCertainty(java.lang.String, testbed.sim.Era)
 	 */
-	public boolean requestAgentCertainty(String toAgent, Era era) {
-		// TODO Auto-generated method stub
+	public boolean requestAgentCertainty(String toAgent, Era era)
+	{
+		if( mNumCertaintyRequestsSent >= mAgent.getMaxCertaintyRequests() )
+		{
+			return true;
+		}
 		return false;
 	}
 
@@ -124,15 +135,16 @@ public class LearningModule implements LearningInterface {
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#sentCertaintyRequest(java.lang.String, testbed.sim.Era)
 	 */
-	public void sentCertaintyRequest(String toAgent, Era era) {
-		// TODO Auto-generated method stub
-
+	public void sentCertaintyRequest(String toAgent, Era era)
+	{
+		mNumCertaintyRequestsSent++;
 	}
 
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#sentOpinionRequest(java.lang.String, testbed.sim.AppraisalAssignment)
 	 */
-	public void sentOpinionRequest(String toAgent, AppraisalAssignment art) {
+	public void sentOpinionRequest(String toAgent, AppraisalAssignment art)
+	{
 		// TODO Auto-generated method stub
 
 	}
@@ -140,49 +152,81 @@ public class LearningModule implements LearningInterface {
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#sentReputationRequest(java.lang.String, java.lang.String)
 	 */
-	public void sentReputationRequest(String toAgent, String aboutAgent) {
+	public void sentReputationRequest(String toAgent, String aboutAgent)
+	{
 		// TODO Auto-generated method stub
 
 	}
 
 	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#setAgentEraCertainty(java.lang.String, testbed.sim.Era, double)
+	 * @see agent.decision.DecisionTree#setAgentEraCertainty(java.lang.String, testbed.sim.Era, double)
 	 */
-	public void setAgentEraCertainty(String agent, Era era, double certainty) {
+	public void setAgentEraCertainty(String agent, Era era, double certainty)
+	{
 		// TODO Auto-generated method stub
 
 	}
 
 	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#setAgentPerceivedTrust(java.lang.String, testbed.sim.Era, double)
+	 * @see agent.decision.DecisionTree#setAgentPerceivedTrust(java.lang.String, testbed.sim.Era, double)
 	 */
-	public void setAgentPerceivedTrust(String agent, Era era, double trust) {
-		// TODO Auto-generated method stub
-
+	public void setAgentPerceivedTrust(String agent, Era era, double trust)
+	{
+		// Not used in Simple DecisionTree
 	}
 
 	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#setAgentTrust(java.lang.String, testbed.sim.Era, double)
+	 * @see agent.decision.DecisionTree#setAgentTrust(java.lang.String, testbed.sim.Era, double)
 	 */
-	public void setAgentTrust(String agent, Era era, double trust) {
-		// TODO Auto-generated method stub
-
+	public void setAgentTrust(String agent, Era era, double trust)
+	{
+		mReputations.put(agent, trust);
 	}
 
 	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#setBankBalance(double)
+	 * @see agent.decision.DecisionTree#setBankBalance(double)
 	 */
-	public void setBankBalance(double balance) {
-		// TODO Auto-generated method stub
-
+	public void setBankBalance(double balance)
+	{
+		// Not used in Simple DecisionTree
 	}
 
 	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#setOurEraCertainty(testbed.sim.Era, double)
+	 * @see agent.decision.DecisionTree#setOurEraCertainty(testbed.sim.Era, double)
 	 */
-	public void setOurEraCertainty(Era era, double certainty) {
+	public void setOurEraCertainty(Era era, double certainty)
+	{
 		// TODO Auto-generated method stub
-
 	}
+	
+	/* (non-Javadoc)
+	 * @see agent.decision.DecisionTree#initTrustNetwork()
+	 */
+	public void init()
+	{
+		mNumCertaintyRequestsSent = 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see agent.decision.DecisionTree#frameReset()
+	 */
+	public void frameReset()
+	{
+		mNumCertaintyRequestsSent = 0;
+	}	
 
+	/* (non-Javadoc)
+	 * @see agent.decision.DecisionTree#addAgent()
+	 */	
+	public void addAgent( String newAgent )
+	{
+	}
+	
+	/* (non-Javadoc)
+	 * @see agent.decision.DecisionTree#removeAgent()
+	 */	
+	public void removeAgent( String agent )
+	{
+	}	
+	}
 }

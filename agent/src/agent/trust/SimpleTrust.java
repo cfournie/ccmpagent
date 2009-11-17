@@ -6,26 +6,33 @@ package agent.trust;
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Era;
 import learning.DTLearningInterface;
+import java.util.Map;
+import testbed.sim.Appraisal;
+import testbed.sim.Opinion;
 
 /**
  * @author cfournie
  *
  */
-public class TrustModule implements TrustInterface {
+public class SimpleTrust implements TrustInterface {
 
+	private Map<String,Double>          reputations;
+	private Map<String,Map<Era,Double>> certainties;	
+	
 	/* (non-Javadoc)
 	 * @see agent.trust.TrustInterface#addAgent(java.lang.String)
 	 */
-	public void addAgent(String newAgent) {
-		// TODO Auto-generated method stub
-
+	public void addAgent(String newAgent)
+	{
+		reputations.put(newAgent,new Double(1.0));
 	}
 
 	/* (non-Javadoc)
 	 * @see agent.trust.TrustInterface#agentDidNotAcceptCertainty(java.lang.String, testbed.sim.Era, double)
 	 */
 	public void agentDidNotAcceptCertainty(String agent, Era era,
-			double certaintyValue) {
+			double certaintyValue)
+	{
 		// TODO Auto-generated method stub
 
 	}
@@ -126,7 +133,7 @@ public class TrustModule implements TrustInterface {
 	 */
 	public double getTrustValue(String agent, Era era) {
 		// TODO Auto-generated method stub
-		return 0;
+		return reputations.get(agent).doubleValue();
 	}
 
 	/* (non-Javadoc)
@@ -201,10 +208,15 @@ public class TrustModule implements TrustInterface {
 	/* (non-Javadoc)
 	 * @see agent.trust.TrustInterface#updateAgentTrustValue(java.lang.String, testbed.sim.AppraisalAssignment, int, int, double)
 	 */
-	public void updateAgentTrustValue(String agent, AppraisalAssignment art,
-			int paintingValue, int appraisalValue, double certainty) {
-		// TODO Auto-generated method stub
-
+	public void updateAgentTrustFromFinalAppraisal(String agent, Appraisal appraisal, Opinion opinion)
+	{
+		double difference = Math.abs(appraisal.getTrueValue() - opinion.getAppraisedValue());
+		difference = difference / ((double)appraisal.getTrueValue());
+		double reputation = reputations.get(agent).doubleValue();
+		if (difference > 0.5) reputation = reputation - 0.03;
+		else reputation = reputation + 0.03;
+		if (reputation > 1) reputation = 1;
+		if (reputation < 0) reputation = 0;
+		reputations.put(agent, reputation);
 	}
-
 }

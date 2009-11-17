@@ -14,8 +14,8 @@ import testbed.messages.WeightMsg;
 import java.util.List;
 import java.util.ArrayList;
 
-import agent.learning.LearningInterface;
-import agent.trust.TrustInterface;
+import agent.decision.DecisionTree;
+import agent.trust.TrustNetwork;
 import testbed.sim.Era;
 import testbed.sim.Weight;
 import testbed.sim.Opinion;
@@ -31,10 +31,10 @@ import testbed.sim.Appraisal;
  * @author cfournie
  *
  */
-public class CCMPAgent extends Agent {
+public abstract class CCMPAgent extends Agent {
 
-	private LearningInterface 					mDecisionTree;
-	private TrustInterface  					mTrustNetwork;
+	private DecisionTree 						mDecisionTree;
+	private TrustNetwork	  					mTrustNetwork;
     private List<ReputationRequestMsg>  		mReputationRequestsToAccept;	
     private List<CertaintyReplyMsg>  			mCertaintyReplysProvided;
     private List<OpinionRequestMsg>         	mOpinionRequests;
@@ -47,8 +47,10 @@ public class CCMPAgent extends Agent {
 	/**
 	 * 
 	 */
-	public CCMPAgent() {
-		// TODO Auto-generated constructor stub
+	public CCMPAgent()
+	{
+		mDecisionTree = createDecisionTree();
+		mTrustNetwork = createTrustNetwork();
 	}
 
 	/**
@@ -73,6 +75,9 @@ public class CCMPAgent extends Agent {
         		updateDecisionTreeTrustValues(name, era);
         	}
         }
+        
+        mDecisionTree.init();
+        mTrustNetwork.init();
 	}
 
 	/* (non-Javadoc)
@@ -523,16 +528,42 @@ public class CCMPAgent extends Agent {
     {
     	List<OpinionReplyMsg> opinionReplies = getIncomingMessages();
     	
+    	mDecisionTree.frameReset();
+    	mTrustNetwork.frameReset();
+    	
     	//There may have been era expertise change.
     	for( Era era: eras )
     	{
     		mDecisionTree.setOurEraCertainty(era, myExpertiseValues.get(era.getName()));
     	}
     	
-    	for( Appraisal art: finalAppraisals )
-    	{
-    		//handle the results of the appraisal process.
-    		// TODO - implement this, where should the remembering go in trust or here?
-    	}
+        if(finalAppraisals != null)
+        {
+        	for(Appraisal appraisal: finalAppraisals)
+        	{
+        	    //System.out.print("ID: " + appraisal.getPaintingID() + ", real: " + appraisal.getTrueValue());
+        		for(OpinionReplyMsg msg: opinionReplies)
+        		{
+        			if(msg.getAppraisalAssignment().getPaintingID().equals(appraisal.getPaintingID()))
+        			{
+        				mTrustNetwork.updateAgentTrustFromFinalAppraisal(msg.getOpinion().getOpinionProvider(),
+        						 										 appraisal, msg.getOpinion());
+        			}
+        		}
+        	}
+        }
     }
+    
+    public int getMaxCertaintyRequests()
+    {
+    	return super.maxNbCertaintyRequests;
+    }
+    
+    public int getMaxOpinionRequests()
+    {
+    	return super.maxNbOpinionRequests;
+    }
+    
+    abstract DecisionTree createDecisionTree();
+    abstract TrustNetwork createTrustNetwork();
 }
