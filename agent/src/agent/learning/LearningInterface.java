@@ -1,4 +1,4 @@
-package learning;
+package agent.learning;
 import testbed.sim.Era;
 import testbed.sim.AppraisalAssignment;
 

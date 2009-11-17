@@ -1,7 +1,5 @@
 package agent;
 import testbed.agent.Agent;
-import learning.LearningInterface;
-import trust.TrustInterface;
 
 import testbed.messages.CertaintyReplyMsg;
 import testbed.messages.CertaintyRequestMsg;
@@ -15,6 +13,9 @@ import testbed.messages.WeightMsg;
 
 import java.util.List;
 import java.util.ArrayList;
+
+import agent.learning.LearningInterface;
+import agent.trust.TrustInterface;
 import testbed.sim.Era;
 import testbed.sim.Weight;
 import testbed.sim.Opinion;

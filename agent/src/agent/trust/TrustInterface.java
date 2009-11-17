@@ -1,7 +1,7 @@
 /**
  * 
  */
-package trust;
+package agent.trust;
 import testbed.sim.Era;
 import testbed.sim.AppraisalAssignment;
 
