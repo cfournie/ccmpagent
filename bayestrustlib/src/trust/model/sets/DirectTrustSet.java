@@ -29,8 +29,8 @@ public class DirectTrustSet extends TrustSet {
 	 */
 	public double[] setTrustTuple(Peer p, Context c, double[] d) throws MalformedTupleException
 	{
-		if (d.length != this.n)
-			throw new MalformedTupleException(d.length, this.n);
+		if (d.length != this.nLevels)
+			throw new MalformedTupleException(d.length, this.nLevels);
 		
 		return set.put(super.keyFrom(c, p), d);
 	}

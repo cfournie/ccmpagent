@@ -9,9 +9,9 @@ public class MalformedTupleException extends IllegalArgumentException {
 	/**
 	 * Constructor
 	 * @param tupleLength
-	 * @param nLevel
+	 * @param nLevels
 	 */
-	public MalformedTupleException(int tupleLength, int nLevel) {
-		super("Recieved " + tupleLength + "expected " + nLevel);
+	public MalformedTupleException(int tupleLength, int nLevels) {
+		super("Received " + tupleLength + "expected " + nLevels);
 	}
 }
