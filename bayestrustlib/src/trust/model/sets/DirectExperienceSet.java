@@ -15,9 +15,8 @@ public class DirectExperienceSet extends TrustSet {
 	 * Constructor
 	 * @param nLevels
 	 */
-	public DirectExperienceSet(int nLevels)
+	public DirectExperienceSet()
 	{
-		super(nLevels);
 	}
 	
 	/**

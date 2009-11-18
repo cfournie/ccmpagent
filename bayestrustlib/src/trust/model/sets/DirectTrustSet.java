@@ -14,9 +14,8 @@ public class DirectTrustSet extends TrustSet {
 	 * Constructor
 	 * @param n
 	 */
-	public DirectTrustSet(int n)
+	public DirectTrustSet()
 	{
-		super(n);
 		set = new HashMap<String,double []>();
 	}
 	

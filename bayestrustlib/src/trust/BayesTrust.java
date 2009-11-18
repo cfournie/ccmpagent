@@ -30,10 +30,10 @@ public class BayesTrust implements BayesTrustInterface {
 	public BayesTrust(int nLevels, List<Context> contexts) {
 		Stats.setN(nLevels);
 		
-		this.dts = new DirectTrustSet(nLevels);
-		this.des = new DirectExperienceSet(nLevels);
-		this.rts = new RecommendedTrustSet(nLevels);
-		this.srs = new SentRecommendationSet(nLevels);
+		this.dts = new DirectTrustSet();
+		this.des = new DirectExperienceSet();
+		this.rts = new RecommendedTrustSet();
+		this.srs = new SentRecommendationSet();
 		
 		this.c = new LinkedList<Context>(contexts);
 	}

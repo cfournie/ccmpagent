@@ -3,6 +3,7 @@ package tests.trust.model.sets;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import trust.model.math.Stats;
 import trust.model.primitives.*;
 import trust.model.exceptions.*;
 import trust.model.sets.*;
@@ -12,7 +13,8 @@ public class RecommendedTrustSetTest {
 	
 	@Test
 	public void testStoreRetrieve() {
-		RecommendedTrustSet set = new RecommendedTrustSet(TRUST_LEVELS);
+		Stats.setN(TRUST_LEVELS);
+		RecommendedTrustSet set = new RecommendedTrustSet();
 		double[] trust = new double[]{0.1, 0.2, 0.3, 0.4};
 		set.store(new Context("renaissance"), new Peer("picasso"), trust);
 		
@@ -21,7 +23,8 @@ public class RecommendedTrustSetTest {
 	
 	@Test(expected=MalformedTupleException.class)
 	public void testStoreValidatesLength() throws Exception {
-		RecommendedTrustSet set = new RecommendedTrustSet(TRUST_LEVELS);
+		Stats.setN(TRUST_LEVELS);
+		RecommendedTrustSet set = new RecommendedTrustSet();
 		double[] trust = new double[TRUST_LEVELS + 1];
 		set.store(new Context("renaissance"), new Peer("picasso"), trust);
 	}

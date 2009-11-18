@@ -6,8 +6,8 @@ public class SentRecommendationSet extends TrustSet {
 	 * 
 	 * @param nLevels
 	 */
-	public SentRecommendationSet(int nLevels)
+	public SentRecommendationSet()
 	{
-		super(nLevels);
+		
 	}
 }

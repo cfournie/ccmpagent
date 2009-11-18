@@ -11,9 +11,8 @@ public class RecommendedTrustSet extends TrustSet {
 	 * Construct an RTS store.
 	 * @param nLevels number of trust levels
 	 */
-	public RecommendedTrustSet(int nLevels)
+	public RecommendedTrustSet()
 	{
-		super(nLevels);
 		store = new HashMap<String, double[]>();
 	}
 	
