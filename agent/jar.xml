@@ -6,6 +6,8 @@
     <property name="dtlib.build.dir" value="${dtlib.dir}/bin"/>
     <property name="agent.build.dir" value="bin"/>
     <property name="jar.dir" value=".."/>
+	
+    <property name="main-class" value="agent.SimpleCCMPAgent"/>
     
     <target name="jar">
         <mkdir dir="${jar.dir}"/>
@@ -20,6 +22,7 @@
               <exclude name="**/*.html"/>
             </fileset>
             <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
         </jar>
     </target>
