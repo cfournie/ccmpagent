@@ -27,12 +27,12 @@ public class DirectTrustSet extends TrustSet {
 	 * @return Previous value
 	 * @throws MalformedTupleException
 	 */
-	public double[] setTrustTuple(Peer p, Context c, double[] d) throws MalformedTupleException
+	public double[] store(Context ck, Peer py, double[] d) throws MalformedTupleException
 	{
 		if (d.length != this.nLevels)
 			throw new MalformedTupleException(d.length, this.nLevels);
 		
-		return set.put(super.keyFrom(c, p), d);
+		return set.put(super.keyFrom(ck, py), d);
 	}
 	
 	/**
@@ -41,8 +41,8 @@ public class DirectTrustSet extends TrustSet {
 	 * @param c Context
 	 * @return
 	 */
-	public double[] getTrustTuple(Peer p, Context c)
+	public double[] retrieve(Context ck, Peer py)
 	{
-		return set.get(super.keyFrom(c, p));
+		return set.get(super.keyFrom(ck, py));
 	}
 }
