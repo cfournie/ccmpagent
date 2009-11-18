@@ -1,15 +1,24 @@
 package trust.model.math;
 
 public class Stats {
+	protected static int n = 0;
+	
+	public static void setN(int n) {
+		Stats.n = n;
+	}
+	
+	public static int getN() {
+		return Stats.n;
+	}
 	
 	/**
 	 * Mean for a d that is a pmf
 	 * @param n
 	 * @return
 	 */
-	public static double mean(int n)
+	public static double meanPmf()
 	{
-		return 1/n;
+		return 1/Stats.n;
 	}
 	
 	/**
@@ -17,9 +26,9 @@ public class Stats {
 	 * @param n
 	 * @return
 	 */
-	public static double confidenceMax(int n)
+	public static double confidencePmfMax(int n)
 	{
-		return (1-Stats.mean(n));
+		return (1-Stats.meanPmf());
 	}
 	
 	/**
@@ -27,9 +36,9 @@ public class Stats {
 	 * @param d
 	 * @return
 	 */
-	public static double variance(double[] d, int n)
+	public static double variancePmf(double[] d)
 	{
-		double mean = Stats.mean(n);
+		double mean = Stats.meanPmf();
 		
 		double sum = 0;
 		for(int i = 0; i < d.length; i++)

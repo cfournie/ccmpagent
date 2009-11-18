@@ -3,6 +3,7 @@ package trust.model.sets;
 import java.util.*;
 
 import trust.model.exceptions.MalformedTupleException;
+import trust.model.math.Misc;
 import trust.model.primitives.*;
 
 public class DirectTrustSet extends TrustSet {
@@ -29,9 +30,7 @@ public class DirectTrustSet extends TrustSet {
 	 */
 	public double[] store(Context ck, Peer py, double[] d) throws MalformedTupleException
 	{
-		if (d.length != this.nLevels)
-			throw new MalformedTupleException(d.length, this.nLevels);
-		
+		Misc.checkTuple(d);
 		return set.put(super.keyFrom(ck, py), d);
 	}
 	

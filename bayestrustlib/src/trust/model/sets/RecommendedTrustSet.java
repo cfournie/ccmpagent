@@ -1,5 +1,6 @@
 package trust.model.sets;
 import trust.model.exceptions.MalformedTupleException;
+import trust.model.math.Misc;
 import trust.model.primitives.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +20,7 @@ public class RecommendedTrustSet extends TrustSet {
 	
 	public void store(Context ck, Peer py, double[] r) throws IllegalArgumentException
 	{
-		if (r.length != nLevels) {
-			throw new MalformedTupleException(r.length, nLevels);
-		}
-		
+		Misc.checkTuple(r);
 		store.put(keyFrom(ck, py), r);
 	}
 	

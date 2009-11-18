@@ -1,5 +1,7 @@
 package trust.model.exceptions;
 
+import trust.model.math.Stats;
+
 public class MalformedTupleException extends IllegalArgumentException {
 	/**
 	 * serialVersionUID
@@ -11,7 +13,7 @@ public class MalformedTupleException extends IllegalArgumentException {
 	 * @param tupleLength
 	 * @param nLevels
 	 */
-	public MalformedTupleException(int tupleLength, int nLevels) {
-		super("Received " + tupleLength + "expected " + nLevels);
+	public MalformedTupleException(int tupleLength) {
+		super("Received " + tupleLength + "expected " + Stats.getN());
 	}
 }
