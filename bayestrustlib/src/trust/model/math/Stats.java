@@ -26,7 +26,7 @@ public class Stats {
 	 * @param n
 	 * @return
 	 */
-	public static double confidencePmfMax(int n)
+	public static double confidencePmfMax()
 	{
 		return (1-Stats.meanPmf());
 	}

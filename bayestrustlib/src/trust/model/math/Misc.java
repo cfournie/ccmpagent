@@ -22,6 +22,7 @@ public class Misc {
 	public static int discretize(double l) {
 		return (int)l;
 	}
+	
 	/**
 	 * Creates an empty 2d array of size n*n
 	 * @return
@@ -38,12 +39,37 @@ public class Misc {
 	}
 	
 	/**
+	 * Creates an filled 2d array of size n*n
+	 * @return
+	 */
+	public static double[][] makeMatrix(double l) {
+		double d[][] = {};
+		
+		for(int i = 0; i < Stats.getN(); i++)
+		{
+			Arrays.fill(d[i], 0, Stats.getN(), l);
+		}
+		
+		return d;
+	}
+	
+	/**
 	 * Creates an empty array of size n
 	 * @return
 	 */
 	public static double[] makeTuple() {
 		double d[] = {};
 		Arrays.fill(d, 0, Stats.getN(), 0.0);
+		return d;
+	}
+	
+	/**
+	 * Creates a filled array of size n
+	 * @return
+	 */
+	public static double[] makeTuple(double l) {
+		double d[] = {};
+		Arrays.fill(d, 0, Stats.getN(), l);
 		return d;
 	}
 	
