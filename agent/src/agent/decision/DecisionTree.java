@@ -37,15 +37,15 @@ public abstract class DecisionTree {
 	//should we respond to an agents reputation request?
 	public abstract boolean respondToReputationRequest( String requestingAgent, String aboutAgent, Era era );
 	//should we actually provide an agents reputation request?
-	public abstract boolean provideReputationRequest( String requestingAgent, String aboutAgent, Era era );
+	public abstract boolean provideReputationReply( String requestingAgent, String aboutAgent, Era era );
 	
 	//get the certainty value, based on the eraCertainty we want to give to a 
 	//specific agent.
 	public abstract double getCertaintyRequestValue( String agent, Era era );
 	//should we respond to an agents certainty request?
 	public abstract boolean respondToCertaintyRequest( String agent, Era era );
-	//should we actually provide our certainty request to the agent?
-	public abstract boolean provideCertaintyRequest( String agent, Era era );
+	//should we actually provide our certainty reply to the agent?
+	public abstract boolean provideCertaintyReply( String agent, Era era );
 
 	//Should we generate an opinion for an agent if we have this era certainty about a painting?
 	public abstract boolean generateOpinion(String requestingAgent, Era era);
@@ -65,8 +65,12 @@ public abstract class DecisionTree {
 	//before we send it out?
 	public abstract int adjustAppraisalValue( String toAgent, Era era, int appraisal);
 	
+	//The following methods are used to tell the DT that we sent a request
+	//used to increment counter mostly (maybe more)
 	public abstract void sentCertaintyRequest( String toAgent, Era era );
 	public abstract void sentOpinionRequest( String toAgent, AppraisalAssignment art );
 	public abstract void sentReputationRequest( String toAgent, String aboutAgent );
 
+	//Should we provide an weight to the sim?
+	public abstract boolean provideWeight( String aboutAgent, Era era );
 }

@@ -4,9 +4,12 @@
 package agent.decision;
 
 import java.util.Map;
+import java.util.HashMap;
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Era;
 import agent.decision.DecisionTree;
+
+
 
 /**
  * @author cfournie
@@ -17,37 +20,46 @@ public class SimpleDT extends DecisionTree {
 	private Map<String,Double>          mReputations;
 	private Map<String,Map<Era,Double>> mCertainties;
 	private int							mNumCertaintyRequestsSent;
+	private int							mNumOpinionRequestsSent;
 	
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#adjustAppraisalValue(java.lang.String, testbed.sim.Era, int)
 	 */
 	public int adjustAppraisalValue(String toAgent, Era era, int appraisal) {
-		// TODO Auto-generated method stub
-		return 0;
+		// Simple DT doesn't adjust the appraisal value
+		return appraisal;
 	}
 
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#generateOpinion(java.lang.String, testbed.sim.Era)
 	 */
 	public boolean generateOpinion(String requestingAgent, Era era) {
-		// TODO Auto-generated method stub
-		return false;
+		// Simple DT always generates an opinion when asked
+		return true;
 	}
 
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#getAppraisalCost(java.lang.String, testbed.sim.Era)
 	 */
-	public double getAppraisalCost(String requestingAgent, Era era) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public double getAppraisalCost(String requestingAgent, Era era)
+	{
+        // if the requester is trusted we pay 80% for the opinion
+        // otherwise we pay 0.01
+        if (mReputations.get(requestingAgent) > 0.5)
+        	return mAgent.getOpinionCost() * 0.8; // spend 80% of the opinion cost  
+        else 
+            return 0.01;
+    }
 
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#getCertaintyRequestValue(java.lang.String, testbed.sim.Era)
 	 */
-	public double getCertaintyRequestValue(String agent, Era era) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getCertaintyRequestValue(String agent, Era era)
+	{
+		// SimpleDT responds with the agents true expertise value
+        String eraName = era.getName();
+        double myExpertise = mAgent.getExpertise(eraName);
+		return 1-myExpertise;
 	}
 
 	/* (non-Javadoc)
@@ -63,26 +75,28 @@ public class SimpleDT extends DecisionTree {
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#provideCertaintyRequest(java.lang.String, testbed.sim.Era)
 	 */
-	public boolean provideCertaintyRequest(String agent, Era era) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean provideCertaintyReply(String agent, Era era)
+	{
+		//we will always provide our reply that we committed to
+		return true;
 	}
 
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#provideOpinion(java.lang.String, testbed.sim.Era)
 	 */
-	public boolean provideOpinion(String requestionAgent, Era era) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean provideOpinion(String requestionAgent, Era era)
+	{
+		//Simple DT always provides an opinion
+		return true;
 	}
 
 	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#provideReputationRequest(java.lang.String, java.lang.String, testbed.sim.Era)
+	 * @see agent.learning.LearningInterface#provideReputationReply(java.lang.String, java.lang.String, testbed.sim.Era)
 	 */
-	public boolean provideReputationRequest(String requestingAgent,
+	public boolean provideReputationReply(String requestingAgent,
 			String aboutAgent, Era era)
 	{
-		// The simple agent accepts all requests
+		// The simple agent always provides the reply it committed to
 		return true;
 	}
 
@@ -91,9 +105,15 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public boolean requestAgentCertainty(String toAgent, Era era)
 	{
+		//If we haven't sent to many requests, and we don't already know the agents
+		//certainty, return true.
 		if( mNumCertaintyRequestsSent >= mAgent.getMaxCertaintyRequests() )
 		{
-			return true;
+		    Map<Era,Double> agCert = mCertainties.get(toAgent); 
+		    if (agCert == null || !agCert.containsKey(era))
+		    {			
+		    	return true;
+		    }
 		}
 		return false;
 	}
@@ -101,8 +121,15 @@ public class SimpleDT extends DecisionTree {
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#requestAgentOpinion(java.lang.String, testbed.sim.AppraisalAssignment)
 	 */
-	public boolean requestAgentOpinion(String toAgent, AppraisalAssignment art) {
-		// TODO Auto-generated method stub
+	public boolean requestAgentOpinion(String toAgent, AppraisalAssignment art)
+	{
+		if( mNumOpinionRequestsSent >= mAgent.getMaxOpinionRequests() )
+		{
+            if (mReputations.get(toAgent) > 0.5)
+            {
+                return true;
+            }
+		}
 		return false;
 	}
 
@@ -110,26 +137,29 @@ public class SimpleDT extends DecisionTree {
 	 * @see agent.learning.LearningInterface#requestAgentReputationUpdate(java.lang.String, java.lang.String, testbed.sim.Era, int)
 	 */
 	public boolean requestAgentReputationUpdate(String toAgent,
-			String aboutAgent, Era era, int currentTimestep) {
-		// TODO Auto-generated method stub
+			String aboutAgent, Era era, int currentTimestep)
+	{
+		// Simple DT never requests an reputation update.
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#respondToCertaintyRequest(java.lang.String, testbed.sim.Era)
 	 */
-	public boolean respondToCertaintyRequest(String agent, Era era) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean respondToCertaintyRequest(String agent, Era era)
+	{
+		// We respond to all certainty requests
+		return true;
 	}
 
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#respondToReputationRequest(java.lang.String, java.lang.String, testbed.sim.Era)
 	 */
 	public boolean respondToReputationRequest(String requestingAgent,
-			String aboutAgent, Era era) {
-		// TODO Auto-generated method stub
-		return false;
+			String aboutAgent, Era era)
+	{
+		//The agent always replies to all the requests.
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -145,8 +175,7 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void sentOpinionRequest(String toAgent, AppraisalAssignment art)
 	{
-		// TODO Auto-generated method stub
-
+		mNumOpinionRequestsSent++;
 	}
 
 	/* (non-Javadoc)
@@ -154,8 +183,7 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void sentReputationRequest(String toAgent, String aboutAgent)
 	{
-		// TODO Auto-generated method stub
-
+		// Simple DT doesn't send reputation requests and doesn't care if we do
 	}
 
 	/* (non-Javadoc)
@@ -163,8 +191,12 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void setAgentEraCertainty(String agent, Era era, double certainty)
 	{
-		// TODO Auto-generated method stub
-
+        Map<Era,Double> agCert = mCertainties.get(agent);
+        if (agCert == null) {
+            agCert = new HashMap<Era,Double>();
+            mCertainties.put(agent, agCert);
+        }
+        agCert.put(era, certainty);
 	}
 
 	/* (non-Javadoc)
@@ -196,7 +228,7 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void setOurEraCertainty(Era era, double certainty)
 	{
-		// TODO Auto-generated method stub
+		// Not used in SimpleDT, it just explicity asks for the agents expertice 
 	}
 	
 	/* (non-Javadoc)
@@ -205,6 +237,7 @@ public class SimpleDT extends DecisionTree {
 	public void init()
 	{
 		mNumCertaintyRequestsSent = 0;
+		mNumOpinionRequestsSent = 0;
 	}
 	
 	/* (non-Javadoc)
@@ -213,6 +246,7 @@ public class SimpleDT extends DecisionTree {
 	public void frameReset()
 	{
 		mNumCertaintyRequestsSent = 0;
+		mNumOpinionRequestsSent = 0;
 	}	
 
 	/* (non-Javadoc)
@@ -220,6 +254,7 @@ public class SimpleDT extends DecisionTree {
 	 */	
 	public void addAgent( String newAgent )
 	{
+		mReputations.put(newAgent, new Double(1.0));
 	}
 	
 	/* (non-Javadoc)
@@ -227,6 +262,14 @@ public class SimpleDT extends DecisionTree {
 	 */	
 	public void removeAgent( String agent )
 	{
+		mReputations.remove(agent);
 	}	
+	
+	public boolean provideWeight( String aboutAgent, Era era )
+	{
+        if (mReputations.get(aboutAgent) > 0.8)
+        	return true;
+        else
+        	return false;
 	}
 }

@@ -101,7 +101,7 @@ public abstract class CCMPAgent extends Agent {
             Era era = receivedMsg.getEra();
             String fromAgent = receivedMsg.getSender();
             
-            if( mDecisionTree.provideCertaintyRequest(fromAgent, era) )
+            if( mDecisionTree.provideCertaintyReply(fromAgent, era) )
             {
             	double myExpertise = mDecisionTree.getCertaintyRequestValue(fromAgent, era);
             	CertaintyReplyMsg msg = receivedMsg.certaintyReply(myExpertise);
@@ -270,11 +270,16 @@ public abstract class CCMPAgent extends Agent {
 	@Override
 	public void prepareOpinionProviderWeights()
 	{
-        for (String agentToWeight: agentNames) {
-            for (Era thisEra: eras) {
-            	double weight = mTrustNetwork.getReputationWeight(agentToWeight, thisEra);
-                WeightMsg msg = new WeightMsg(new Weight(getName(), agentToWeight, weight, thisEra.getName()));
-                sendOutgoingMessage(msg);
+        for (String agentToWeight: agentNames)
+        {
+            for (Era thisEra: eras)
+            {
+            	if( mDecisionTree.provideWeight(agentToWeight, thisEra) )
+            	{
+	            	double weight = mTrustNetwork.getReputationWeight(agentToWeight, thisEra);
+	                WeightMsg msg = new WeightMsg(new Weight(getName(), agentToWeight, weight, thisEra.getName()));
+	                sendOutgoingMessage(msg);
+            	}
             }
         }  
 	}
@@ -445,7 +450,7 @@ public abstract class CCMPAgent extends Agent {
         	String aboutAgent = receivedMsg.getAppraiserID();
         	Era  era = receivedMsg.getEra();
 
-        	if( mDecisionTree.provideReputationRequest( toAgent, aboutAgent, era ) )
+        	if( mDecisionTree.provideReputationReply( toAgent, aboutAgent, era ) )
         	{
         		double repValue = mDecisionTree.getReputationRequestValue(toAgent,
         																  aboutAgent,
@@ -562,6 +567,16 @@ public abstract class CCMPAgent extends Agent {
     public int getMaxOpinionRequests()
     {
     	return super.maxNbOpinionRequests;
+    }
+    
+    public double getExpertise( String eraName )
+    {
+    	return myExpertiseValues.get(eraName);
+    }
+    
+    public double getOpinionCost()
+    {
+    	return opinionCost;
     }
     
     abstract DecisionTree createDecisionTree();
