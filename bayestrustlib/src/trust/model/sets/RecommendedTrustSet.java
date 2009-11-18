@@ -1,5 +1,4 @@
 package trust.model.sets;
-import trust.model.exceptions.MalformedTupleException;
 import trust.model.math.Misc;
 import trust.model.primitives.*;
 import java.util.HashMap;

@@ -4,9 +4,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import trust.model.math.Stats;
-import trust.model.primitives.*;
-import trust.model.exceptions.*;
-import trust.model.sets.*;
 
 public class StatsTest {
 	public static final int TRUST_LEVELS = 4;
