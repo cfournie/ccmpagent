@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import testbed.sim.Appraisal;
 import testbed.sim.Opinion;
+import java.util.Hashtable;
 
 /**
  * @author cfournie
@@ -231,6 +232,8 @@ public class SimpleTrust extends TrustNetwork {
 	
 	public void init()
 	{
+		mReputations = new Hashtable<String,Double>();
+		mCertainties = new Hashtable<String,Map<Era,Double>>();
 	}	
 	
 	public void frameReset()
