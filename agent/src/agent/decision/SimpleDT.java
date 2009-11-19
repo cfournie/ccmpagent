@@ -3,6 +3,7 @@
  */
 package agent.decision;
 
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.HashMap;
 import testbed.sim.AppraisalAssignment;
@@ -236,6 +237,9 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void init()
 	{
+		mReputations = new Hashtable<String,Double>();
+		mCertainties = new Hashtable<String,Map<Era,Double>>();
+		
 		mNumCertaintyRequestsSent = 0;
 		mNumOpinionRequestsSent = 0;
 	}
