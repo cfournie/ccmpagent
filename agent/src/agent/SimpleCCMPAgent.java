@@ -18,7 +18,7 @@ import java.util.Collections;
  * @author cfournie
  *
  */
-public abstract class SimpleCCMPAgent extends CCMPAgent {
+public class SimpleCCMPAgent extends CCMPAgent {
     		
 	/**
 	 * 

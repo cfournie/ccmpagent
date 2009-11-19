@@ -67,17 +67,22 @@ public abstract class CCMPAgent extends Agent {
 	@Override
 	public void initializeAgent()
 	{
+        mDecisionTree.init();
+        mTrustNetwork.init();
+        
+        mDecisionTree.setAgent(this);
+        mTrustNetwork.setAgent(this);
+        
         for (String name: agentNames)
         {
         	mTrustNetwork.addAgent(name);
+        	mDecisionTree.addAgent(name);
         	for( Era era: eras )
         	{
         		updateDecisionTreeTrustValues(name, era);
         	}
         }
-        
-        mDecisionTree.init();
-        mTrustNetwork.init();
+
 	}
 
 	/* (non-Javadoc)
