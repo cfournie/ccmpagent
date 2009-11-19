@@ -1,0 +1,4 @@
+<agentConfig typename="HonestAgent">
+  <classFile>src/testbed/participants/HonestAgent.class</classFile>
+  <parameters>false</parameters>
+</agentConfig>

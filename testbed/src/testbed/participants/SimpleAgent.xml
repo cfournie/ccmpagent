@@ -1,0 +1,4 @@
+<agentConfig typename="simple">
+   <classFile>src/testbed/participants/SimpleAgent.class</classFile>
+   <parameters>false</parameters>
+</agentConfig>

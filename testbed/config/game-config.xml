@@ -1,0 +1,120 @@
+<gameDefinition>
+     <gameID>ArtSimpleExample</gameID>
+    <gameParameters>
+        <param>
+            <name>averageClientsPerAgent</name>
+            <type>Integer</type>
+            <value>20</value>
+        </param>        <param>
+            <name>safeMode</name>
+            <type>Boolean</type>
+            <value>false</value>
+        </param>        <param>
+            <name>expertiseChangeRate</name>
+            <type>Double</type>
+            <value>0.01</value>
+        </param>        <param>
+            <name>f_clientFee</name>
+            <type>Double</type>
+            <value>100</value>
+        </param>        <param>
+            <name>cp_opinionCost</name>
+            <type>Double</type>
+            <value>10</value>
+        </param>        <param>
+            <name>numberOfTimeStepsPerSession</name>
+            <type>Integer</type>
+            <value>5</value>
+        </param>        <param>
+            <name>cr_reputationCost</name>
+            <type>Double</type>
+            <value>1</value>
+        </param>        <param>
+            <name>randomMode</name>
+            <type>Integer</type>
+            <value>2</value>
+        </param>        <param>
+            <name>q_OldClientShareInfluence</name>
+            <type>Double</type>
+            <value>0.1</value>
+        </param>        <param>
+            <name>threadWait</name>
+            <type>Integer</type>
+            <value>3</value>
+        </param>        <param>
+            <name>resultsPath</name>
+            <type>String</type>
+            <value>./result</value>
+        </param>        <param>
+            <name>a_sensingCostAccuracyRatio</name>
+            <type>Double</type>
+            <value>0.5</value>
+        </param>        <param>
+            <name>numberOfPaintingEras</name>
+            <type>Integer</type>
+            <value>10</value>
+        </param>        <param>
+            <name>cp_certaintyCost</name>
+            <type>Integer</type>
+            <value>2</value>
+        </param><param>
+            <name>denyUseOfSelfOpinions</name>
+            <type>Boolean</type>
+            <value>true</value>
+        </param><param>
+            <name>nb_certaintyMsg</name>
+            <type>Integer</type>
+            <value>20</value>
+        </param><param>
+            <name>nb_opinionMsg</name>
+            <type>Integer</type>
+            <value>2</value>
+        </param>
+        <param>
+            <name>numSStarValues</name>
+            <type>Integer</type>
+            <value>20</value>
+        </param>
+        <param>
+            <name>maxSStarValue</name>
+            <type>Double</type>
+            <value>1.0</value>
+        </param>
+        <param>
+            <name>amountOfExpertiseChange</name>
+            <type>Double</type>
+            <value>0.05</value>
+        </param>
+        <param>
+            <name>numberOfErasToChangeExpertise</name>
+            <type>Integer</type>
+            <value>2</value>
+        </param>
+    </gameParameters>
+
+
+     <participants>
+        <agentGroup>
+            <agentID>SimpleAgent_$c$</agentID>
+            <owner>user</owner>
+            <agentConfigFile>src/testbed/participants/SimpleAgent.xml</agentConfigFile>
+            <dummy>false</dummy>
+            <quantity>2</quantity>
+        </agentGroup>
+        <agentGroup>
+            <agentID>CheatingAgent_$c$</agentID>
+            <owner>user</owner>
+            <agentConfigFile>src/testbed/participants/CheatingAgent.xml</agentConfigFile>
+            <dummy>false</dummy>
+            <quantity>2</quantity>
+        </agentGroup>
+        <agentGroup>
+            <agentID>HonestAgent_$c$</agentID>
+            <owner>user</owner>
+            <agentConfigFile>src/testbed/participants/HonestAgent.xml</agentConfigFile>
+            <dummy>false</dummy>
+            <quantity>2</quantity>
+        </agentGroup>
+    </participants>
+
+</gameDefinition>
