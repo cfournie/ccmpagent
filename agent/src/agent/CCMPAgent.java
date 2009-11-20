@@ -98,9 +98,7 @@ public abstract class CCMPAgent extends Agent {
 		List<CertaintyRequestMsg> certRequests = getIncomingMessages();
 		//Store the list of certainty replies we provided to others.
 		mCertaintyReplysProvided = new ArrayList<CertaintyReplyMsg>();
-		
-		mDecisionTree.setBankBalance(bankBalance);
-		
+				
         for (CertaintyRequestMsg receivedMsg: certRequests)
         {
             Era era = receivedMsg.getEra();
@@ -215,8 +213,6 @@ public abstract class CCMPAgent extends Agent {
 		List<OpinionRequestMsg> opinionRequests = getIncomingMessages();
 		mOpinionRequests = new ArrayList<OpinionRequestMsg>(); 
 		
-		mDecisionTree.setBankBalance(bankBalance);
-
 		//First find out who didn't like our certainty values and didn't ask us for
 		//an opinion
         for (CertaintyReplyMsg previousCertaintyMsg: mCertaintyReplysProvided)
@@ -388,7 +384,6 @@ public abstract class CCMPAgent extends Agent {
 		List<ReputationRequestMsg> reputationRequests = getIncomingMessages();
 		mReputationRequestsToAccept = new ArrayList<ReputationRequestMsg>();
 		
-		mDecisionTree.setBankBalance(bankBalance);		
 		
         for (ReputationRequestMsg receivedMsg: reputationRequests)
         {
@@ -445,8 +440,6 @@ public abstract class CCMPAgent extends Agent {
 				}
 			}
 		}
-		
-		mDecisionTree.setBankBalance(bankBalance);
 
 		//Now go through the reputation requests we accepted and generate the results.
         for (ReputationRequestMsg receivedMsg: mReputationRequestsToAccept)
@@ -541,11 +534,7 @@ public abstract class CCMPAgent extends Agent {
     	mDecisionTree.frameReset();
     	mTrustNetwork.frameReset();
     	
-    	//There may have been era expertise change.
-    	for( Era era: eras )
-    	{
-    		mDecisionTree.setOurEraCertainty(era, myExpertiseValues.get(era.getName()));
-    	}
+    	//There may have been era expertise change. Should we tell our decision tree about it?
     	
         if(finalAppraisals != null)
         {
@@ -582,6 +571,16 @@ public abstract class CCMPAgent extends Agent {
     public double getOpinionCost()
     {
     	return opinionCost;
+    }
+    
+    public double getBankBalance()
+    {
+    	return bankBalance;
+    }
+    
+    public double getEraCertainty( Era era )
+    {
+        return myExpertiseValues.get(era.getName());
     }
     
     abstract DecisionTree createDecisionTree();

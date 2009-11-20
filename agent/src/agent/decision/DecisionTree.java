@@ -28,9 +28,7 @@ public abstract class DecisionTree {
 	
 	public abstract void  setAgentTrust( String agent, Era era, double trust );
 	public abstract void  setAgentPerceivedTrust( String agent, Era era, double trust );
-	public abstract void  setOurEraCertainty( Era era, double certainty );
 	public abstract void  setAgentEraCertainty( String agent, Era era, double certainty);
-	public abstract void  setBankBalance( double balance );
 	
 	//get the reputation value, about an agent, we want to give to another agent.
 	public abstract double getReputationRequestValue( String requestingAgent, String aboutAgent, Era era );
@@ -73,4 +71,13 @@ public abstract class DecisionTree {
 
 	//Should we provide an weight to the sim?
 	public abstract boolean provideWeight( String aboutAgent, Era era );
+	
+	private double getBankBalance()
+	{
+		return mAgent.getBankBalance();
+	}
+	private double getOurEraCertainty(Era era)
+	{
+		return mAgent.getEraCertainty(era);
+	}
 }
