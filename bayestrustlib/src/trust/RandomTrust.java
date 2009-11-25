@@ -15,7 +15,7 @@ public class RandomTrust implements TrustInterface{
 	protected Misc misc;
 	protected HashSet<Peer> p = new HashSet<Peer>();
 	
-	RandomTrust(int nLevels, List<Context> contexts) {
+	public RandomTrust(int nLevels, List<Context> contexts) {
 		this.stats = new Stats(nLevels);
 		this.misc = new Misc(stats);
 	}
