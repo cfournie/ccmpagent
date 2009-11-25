@@ -11,7 +11,21 @@
 \input{pagesetup}
 \begin{document}
 
-\section{Sample section}
-Sample content
+\section{Introduction}
+The Chris Cat Mike and Pierre (CCMP) agent is comprised to two components: the
+Trust Network and the Decision Tree. The trust network manages and updates the
+trust values for each agent in the ART testbed while the decision tree provides
+directions on how the agent should behave.  The interactions between the trust
+network, decision tree and ART testbed are managed through a generic framework.
+
+\section{CCMP Agent Framework}
+The CCMP framework handles the interactions between the ART testbed and the
+trust network and decision tree.  The main framework class, CCMPAgent, is a
+subclass of the ART testbed Agent class thus providing the interface to the ART
+testbed.
+
+\input{baysiantrust}
+
+\input{wekadecisiontree}
 
 \end{document}
