@@ -1,14 +1,15 @@
 package trust.model.math;
 
 public class Stats {
-	protected static int n = 0;
+	protected int n = 0;
 	
-	public static void setN(int n) {
-		Stats.n = n;
+	
+	public Stats(int n) {
+		this.n = n;
 	}
 	
-	public static int getN() {
-		return Stats.n;
+	public int getN() {
+		return n;
 	}
 	
 	/**
@@ -16,9 +17,9 @@ public class Stats {
 	 * @param n
 	 * @return
 	 */
-	public static double meanPmf()
+	public double meanPmf()
 	{
-		return 1/Stats.n;
+		return 1/this.n;
 	}
 	
 	/**
@@ -26,9 +27,9 @@ public class Stats {
 	 * @param n
 	 * @return
 	 */
-	public static double confidencePmfMax()
+	public double confidencePmfMax()
 	{
-		return (1-Stats.meanPmf());
+		return (1-this.meanPmf());
 	}
 	
 	/**
@@ -36,9 +37,9 @@ public class Stats {
 	 * @param d
 	 * @return
 	 */
-	public static double variancePmf(double[] d)
+	public double variancePmf(double[] d)
 	{
-		double mean = Stats.meanPmf();
+		double mean = this.meanPmf();
 		
 		double sum = 0;
 		for(int i = 0; i < d.length; i++)
@@ -52,7 +53,7 @@ public class Stats {
 	 * @param d
 	 * @return
 	 */
-	public static double mean(double[] d)
+	public double mean(double[] d)
 	{
 		double sum = 0;
 		for(int i = 0; i < d.length; i++)
@@ -65,9 +66,9 @@ public class Stats {
 	 * @param d
 	 * @return
 	 */
-	public static double variance(double[] d)
+	public double variance(double[] d)
 	{
-		double mean = Stats.mean(d);
+		double mean = this.mean(d);
 		
 		double sum = 0;
 		for(int i = 0; i < d.length; i++)

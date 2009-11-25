@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import trust.model.sets.*;
 import trust.model.exceptions.DuplicatePeerException;
+import trust.model.exceptions.LevelRangeException;
 import trust.model.math.Misc;
 import trust.model.math.Stats;
 import trust.model.primitives.*;
@@ -15,13 +16,16 @@ import trust.model.primitives.*;
  * @author cfournie
  *
  */
-public class BayesTrust {
+public class BayesTrust implements TrustInterface {
 	protected List<Context> c = new LinkedList<Context>();
 	protected List<Peer> p = new LinkedList<Peer>();
 	protected DirectTrustSet dts;
 	protected DirectExperienceSet des;
 	protected RecommendedTrustSet rts;
 	protected SentRecommendationSet srs;
+	protected Stats stats;
+	protected Misc misc;
+	
 	
 	/** A default value to initialize the DTS to */
 	private static final double DEFAULT_TRUST = 0.25;
@@ -33,12 +37,13 @@ public class BayesTrust {
 	 * @param n
 	 */
 	public BayesTrust(int nLevels, List<Context> contexts) {
-		Stats.setN(nLevels);
+		this.stats = new Stats(nLevels);
+		this.misc = new Misc(stats);
 		
-		this.dts = new DirectTrustSet();
-		this.des = new DirectExperienceSet();
-		this.rts = new RecommendedTrustSet();
-		this.srs = new SentRecommendationSet();
+		this.dts = new DirectTrustSet(stats);
+		this.des = new DirectExperienceSet(stats);
+		this.rts = new RecommendedTrustSet(stats);
+		this.srs = new SentRecommendationSet(stats);
 		
 		this.c = new LinkedList<Context>(contexts);
 	}
@@ -57,10 +62,10 @@ public class BayesTrust {
 		for (Context ck : c)
 		{
 			// Init DTS with no confidence trust values (variance = 0)
-			des.store(ck, py, Misc.makeMatrix(DEFAULT_TRUST));
+			des.store(ck, py, this.misc.makeMatrix(DEFAULT_TRUST));
 			
 			// Init DES with blank experience counts
-			des.store(ck, py, Misc.makeMatrix());
+			des.store(ck, py, this.misc.makeMatrix());
 			
 			// Init RTS
 			// TODO: Add RTS init here
@@ -80,7 +85,7 @@ public class BayesTrust {
 	 * @param py
 	 * @param lb
 	 */
-	public void storeEncounter(Context ck, Peer py, int lb) {
+	public void storeEncounter(Context ck, Peer py, int lb) throws LevelRangeException {
 		des.storeEncounter(ck, py, lb, getOverallTrust(ck, py));
 	}
 	
@@ -90,7 +95,7 @@ public class BayesTrust {
 	 * @param py
 	 * @param lb
 	 */
-	public void storeRecommendation(Context ck, Peer py, int lb) {
+	public void storeRecommendation(Context ck, Peer py, int lb) throws LevelRangeException {
 		// TODO: Implement
 	}
 
@@ -105,7 +110,7 @@ public class BayesTrust {
 	public int getOverallTrust(Context ck, Peer py, int lj) {
 		double dj = dts.retrieve(ck, py)[lj];	// Direct trust
 		double rj = rts.retrieve(ck, py)[lj];	// Recommended trust
-		return Misc.discretize((SIGMA * dj) + ((1-SIGMA) * rj));
+		return this.misc.discretize((SIGMA * dj) + ((1-SIGMA) * rj));
 	}
 	
 	/**
@@ -120,13 +125,13 @@ public class BayesTrust {
 		double dy = 0;
 		double ry = 0;
 		
-		for (int i = 0; i < Stats.getN(); i++)
+		for (int i = 0; i < stats.getN(); i++)
 		{
 			dy += (i+1) * d[i];
 			ry += (i+1) * r[i];
 		}
 		
-		return Misc.discretize((SIGMA * dy) + ((1-SIGMA) * ry));
+		return this.misc.discretize((SIGMA * dy) + ((1-SIGMA) * ry));
 	}
 	
 	/**
@@ -138,13 +143,13 @@ public class BayesTrust {
 	public double getOverallTrustConfidence(Context ck, Peer py) {
 		double[] d = dts.retrieve(ck, py);
 		double[] r = rts.retrieve(ck, py);
-		double[] t = Misc.makeTuple();
+		double[] t = this.misc.makeTuple();
 		
-		for (int i = 0; i < Stats.getN(); i++)
+		for (int i = 0; i < stats.getN(); i++)
 		{
 			t[i] = (SIGMA * d[i]) + ((1-SIGMA) * r[i]);
 		}
 		
-		return Stats.confidencePmfMax() / Stats.variancePmf(t);
+		return stats.confidencePmfMax() / stats.variancePmf(t);
 	}
 }

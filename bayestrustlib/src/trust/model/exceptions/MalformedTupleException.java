@@ -13,7 +13,7 @@ public class MalformedTupleException extends IllegalArgumentException {
 	 * @param tupleLength
 	 * @param nLevels
 	 */
-	public MalformedTupleException(int tupleLength) {
-		super("Received " + tupleLength + "expected " + Stats.getN());
+	public MalformedTupleException(int tupleLength, Stats stats) {
+		super("Received " + tupleLength + "expected " + stats.getN());
 	}
 }

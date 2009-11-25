@@ -13,8 +13,8 @@ public class RecommendedTrustSetTest {
 	
 	@Test
 	public void testStoreRetrieve() {
-		Stats.setN(TRUST_LEVELS);
-		RecommendedTrustSet set = new RecommendedTrustSet();
+		Stats stats = new Stats(TRUST_LEVELS);
+		RecommendedTrustSet set = new RecommendedTrustSet(stats);
 		double[] trust = new double[]{0.1, 0.2, 0.3, 0.4};
 		set.store(new Context("renaissance"), new Peer("picasso"), trust);
 		
@@ -23,8 +23,8 @@ public class RecommendedTrustSetTest {
 	
 	@Test(expected=MalformedTupleException.class)
 	public void testStoreValidatesLength() throws Exception {
-		Stats.setN(TRUST_LEVELS);
-		RecommendedTrustSet set = new RecommendedTrustSet();
+		Stats stats = new Stats(TRUST_LEVELS);
+		RecommendedTrustSet set = new RecommendedTrustSet(stats);
 		double[] trust = new double[TRUST_LEVELS + 1];
 		set.store(new Context("renaissance"), new Peer("picasso"), trust);
 	}

@@ -3,20 +3,21 @@ package trust.model.sets;
 import java.util.HashMap;
 
 import trust.model.exceptions.MalformedTupleException;
-import trust.model.math.Misc;
+import trust.model.math.Stats;
 import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
 public class DirectExperienceSet extends TrustSet {
 	/** DES */
-	HashMap<String,double [][]> set;
+	protected HashMap<String,double [][]> set;
 	
 	/**
 	 * Constructor
 	 * @param nLevels
 	 */
-	public DirectExperienceSet()
+	public DirectExperienceSet(Stats stats)
 	{
+		super(stats);
 	}
 	
 	/**
@@ -27,8 +28,8 @@ public class DirectExperienceSet extends TrustSet {
 	 * @param la Previous trust level
 	 */
 	public void storeEncounter(Context ck, Peer py, int lb, int la) {
-		Misc.checkLevel(la);
-		Misc.checkLevel(lb);
+		this.misc.checkLevel(la);
+		this.misc.checkLevel(lb);
 		
 		double[][] ec = this.retrieve(ck, py);
 		ec[lb][la]++;
@@ -46,7 +47,7 @@ public class DirectExperienceSet extends TrustSet {
 	 */
 	public double[][] store(Context ck, Peer py, double[][] ec)
 	{
-		Misc.checkMatrix(ec);
+		this.misc.checkMatrix(ec);
 		return set.put(super.keyFrom(ck, py), ec);
 	}
 	

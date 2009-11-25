@@ -3,20 +3,22 @@ package trust.model.sets;
 import java.util.*;
 
 import trust.model.exceptions.MalformedTupleException;
-import trust.model.math.Misc;
+import trust.model.math.Stats;
 import trust.model.primitives.*;
 
 public class DirectTrustSet extends TrustSet {
 	/** DTS */
-	HashMap<String,double []> set;
+	protected HashMap<String,double []> set;
 	
 	/**
 	 * Constructor
 	 * @param n
 	 */
-	public DirectTrustSet()
+	public DirectTrustSet(Stats stats)
 	{
-		set = new HashMap<String,double []>();
+		super(stats);
+		this.set = new HashMap<String,double []>();
+		
 	}
 	
 	/**
@@ -29,7 +31,7 @@ public class DirectTrustSet extends TrustSet {
 	 */
 	public double[] store(Context ck, Peer py, double[] d) throws MalformedTupleException
 	{
-		Misc.checkTuple(d);
+		this.misc.checkTuple(d);
 		return set.put(super.keyFrom(ck, py), d);
 	}
 	
