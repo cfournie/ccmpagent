@@ -7,6 +7,9 @@ import agent.trust.SimpleTrust;
 import agent.trust.TrustNetwork;
 
 import java.util.Collections;
+import java.util.List;
+
+import testbed.sim.Era;
 
 
 
@@ -35,8 +38,8 @@ public class SimpleCCMPAgent extends CCMPAgent {
     	return new SimpleDT();
     }
     
-    TrustNetwork createTrustNetwork()
+    TrustNetwork createTrustNetwork(List<Era> eras)
     {
-    	return new SimpleTrust();
+    	return new SimpleTrust(eras);
     }
 }

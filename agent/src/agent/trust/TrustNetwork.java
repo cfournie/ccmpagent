@@ -2,11 +2,13 @@
  * 
  */
 package agent.trust;
+
 import agent.CCMPAgent;
 import testbed.sim.Appraisal;
 import testbed.sim.Era;
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Opinion;
+import trust.TrustInterface;
 
 
 /**
@@ -16,11 +18,15 @@ import testbed.sim.Opinion;
 public abstract class TrustNetwork {
 	
 	protected CCMPAgent mAgent;
+	protected TrustInterface trust;
 	
 	public abstract void addAgent( String newAgent );
 	public abstract void removeAgent( String agent );
 	
-	public abstract void init();
+	public TrustNetwork() {
+		// Initialization
+	}
+	
 	public abstract void frameReset();
 	
 	public void setAgent( CCMPAgent agent )

@@ -11,6 +11,7 @@ import testbed.messages.ReputationReplyMsg;
 import testbed.messages.ReputationRequestMsg;
 import testbed.messages.WeightMsg;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -42,6 +43,7 @@ public abstract class CCMPAgent extends Agent {
     private List<ReputationAcceptOrDeclineMsg>	mReputationRequestsAcceptedOrDeclined;
     private List<CertaintyRequestMsg>			mCertaintiesRequested;
     private List<OpinionRequestMsg>				mOpinionsRequested;
+    private List<Era> 							mEras;
     	
 	
 	/**
@@ -49,8 +51,11 @@ public abstract class CCMPAgent extends Agent {
 	 */
 	public CCMPAgent()
 	{
+		mEras = new LinkedList<Era>();
+		// TODO: Add list of eras
+		
 		mDecisionTree = createDecisionTree();
-		mTrustNetwork = createTrustNetwork();
+		mTrustNetwork = createTrustNetwork(mEras);
 	}
 
 	/**
@@ -68,7 +73,6 @@ public abstract class CCMPAgent extends Agent {
 	public void initializeAgent()
 	{
         mDecisionTree.init();
-        mTrustNetwork.init();
         
         mDecisionTree.setAgent(this);
         mTrustNetwork.setAgent(this);
@@ -584,5 +588,5 @@ public abstract class CCMPAgent extends Agent {
     }
     
     abstract DecisionTree createDecisionTree();
-    abstract TrustNetwork createTrustNetwork();
+    abstract TrustNetwork createTrustNetwork(List<Era> eras);
 }
