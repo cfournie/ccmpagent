@@ -3,6 +3,8 @@
  */
 package learning;
 
+import java.io.StringReader;
+
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.classifiers.trees.J48;
@@ -18,8 +20,8 @@ public class DTLearning implements DTLearningInterface {
 	
 	public DTLearning(String Data) throws Exception
 	{
-		DataSource source = new DataSource(Data);
-		Instances data = source.getDataSet();
+        StringReader srData = new StringReader(Data);		
+		Instances data = new Instances(srData);
 		// setting class attribute if the data format does not provide this information
 		// E.g., the XRFF format saves the class attribute information as well
 		if (data.classIndex() == -1)
@@ -34,11 +36,10 @@ public class DTLearning implements DTLearningInterface {
 	
 	public String DTClassify(String nonCatTest) throws Exception
 	{
-		DataSource source = new DataSource(nonCatTest);
-		Instance test = new Instance(nonCatCount);
-		test.setDataset(source.getDataSet());
-		
-		tree.classifyInstance(test);
+		StringReader srNonCatTest = new StringReader(nonCatTest);		
+		Instances test = new Instances(srNonCatTest);
+				
+		double result = tree.classifyInstance(test.firstInstance());
 		
 		return "aweomse";
 	}
