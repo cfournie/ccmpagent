@@ -1,0 +1,23 @@
+\section{CCMP Agent Framework}
+The CCMP framework handles the interactions between the ART testbed and the
+trust network and decision tree.  Composed of three sections: main agent
+class, decision tree and trust network classes.
+
+\subsection{Main Agent}
+The main framework class, CCMPAgent, is a subclass of the ART testbed Agent
+class thus providing the interface to the ART testbed.  Handles message
+passing, provides info to trust network and gets trust values to decision tree
+to get decisions on what to do.
+
+\subsection{Trust Network}
+Abstract class for representation of the trust the agent has for other players.
+Methods to receive updates regarding events in the ART testbed that would have
+an effect on trust
+
+\subsection{Decision Tree}
+Abstract class that provides direction to the agent on how to behave.  For each
+possible action (list actions) the DT has a function to provide direction to
+the main agent class.
+
+\subsection{CCMP Agent Flow}
+Document interaction process here\ldotsor in Main Agent subsection maybe?
