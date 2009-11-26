@@ -1,3 +1,6 @@
+/**
+ * @author Catalin Patulea <cat@vv.carleton.ca>
+ */
 package trust.model.sets;
 import trust.model.math.Stats;
 import trust.model.primitives.*;

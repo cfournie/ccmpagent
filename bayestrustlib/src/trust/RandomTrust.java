@@ -39,7 +39,7 @@ public class RandomTrust implements TrustInterface{
 		misc.checkLevel(lb);
 	}
 
-	public void storeRecommendation(Context ck, Peer py, int lb) throws LevelRangeException {
+	public void storeRecommendation(Context ck, Peer pr, Peer py, int lb) throws LevelRangeException {
 		misc.checkLevel(lb);
 	}
 }

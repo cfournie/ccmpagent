@@ -1,5 +1,7 @@
+/**
+ * @author Catalin Patulea <cat@vv.carleton.ca>
+ */
 package trust.model.sets;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,18 +26,22 @@ public class SentRecommendationSet extends TrustSet {
 		store = new HashMap<String, double[][]>();
 	}
 	
-	public void store(Context ck, Peer py, double[][] r) throws IllegalArgumentException
+	public void store(Context ck, Peer pr, double[][] rc) throws IllegalArgumentException
 	{
-		if (r.length != stats.getN()) {
-			throw new MalformedTupleException(r.length, stats);
+		if (rc.length != stats.getN()) {
+			throw new MalformedTupleException(rc.length, stats);
 		}
 		
-		store.put(keyFrom(ck, py), r);
+		if (rc[0].length != stats.getN()) {
+			throw new MalformedTupleException(rc[0].length, stats);
+		}
+		
+		store.put(keyFrom(ck, pr), rc);
 	}
 	
-	public double[][] retrieve(Context ck, Peer py)
+	public double[][] retrieve(Context ck, Peer pr)
 	{
-		double[][] trust = store.get(keyFrom(ck, py));
+		double[][] trust = store.get(keyFrom(ck, pr));
 		if (trust == null) {
 			return misc.makeMatrix(RC_INIT);
 		} else {

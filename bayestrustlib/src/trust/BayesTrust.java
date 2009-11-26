@@ -91,12 +91,47 @@ public class BayesTrust implements TrustInterface {
 	
 	/**
 	 * Record a recommendation
-	 * @param ck
-	 * @param py
-	 * @param lb
+	 * @param ck context
+	 * @param pr recommender
+	 * @param py subject of recommendation
+	 * @param lb recommendation level
+	 * @author Catalin Patulea <cat@vv.carleton.ca>
 	 */
-	public void storeRecommendation(Context ck, Peer py, int lb) throws LevelRangeException {
-		// TODO: Implement
+	public void storeRecommendation(Context ck, Peer pr, Peer py, int beta) throws LevelRangeException {
+		if (beta < 0 || beta > stats.getN()) {
+			throw new LevelRangeException(beta, stats);
+		}
+		
+		// Prior belief of recommended trust in py.
+		double [] r = rts.retrieve(ck, py);
+		
+		// Prior belief of what pr will send about py.
+		double [][] rc = srs.retrieve(ck, pr);
+		
+		double [] newR = misc.makeTuple();
+		for (int alpha = 0; alpha < stats.getN(); alpha++) {
+			double denom = 0.0;
+			for (int gamma = 0; gamma < stats.getN(); gamma++) {
+				denom += r[gamma] * pSRgivenRT(rc, beta, gamma);
+			}
+			newR[alpha] = r[alpha] * pSRgivenRT(rc, beta, alpha) / denom;
+		}
+		
+		rts.store(ck, py, newR);
+		
+		for (int alpha = 0; alpha < stats.getN(); alpha++) {
+			rc[alpha][beta] = rc[alpha][beta] + newR[alpha];
+		}
+		
+		srs.store(ck, pr, rc);
+	}
+	
+	private double pSRgivenRT(double [][] rc, int beta, int alpha) {
+		double denom = 0.0;
+		for (int gamma = 0; gamma < stats.getN(); gamma++) {
+			denom += rc[alpha][gamma]; 
+		}
+		return rc[alpha][beta] / denom;
 	}
 
 	/**
