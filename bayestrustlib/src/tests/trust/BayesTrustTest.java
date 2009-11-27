@@ -22,10 +22,15 @@ public class BayesTrustTest {
 		new Peer("charlie")
 	};
 	
+	private BayesTrust bt;
+	
+	@Before
+	public void setUpBayesTrust() {
+		bt = new BayesTrust(4, Arrays.asList(CONTEXTS));
+	}
+	
 	@Test
 	public void testRecommendedTrustInit() {
-		BayesTrust bt = new BayesTrust(4, Arrays.asList(CONTEXTS));
-		
 		for (Peer p: PEERS) {
 			assertEquals(new double[] {0.25, 0.25, 0.25, 0.25},
 				bt.getRecommendedTrust(CONTEXTS[0], p),
