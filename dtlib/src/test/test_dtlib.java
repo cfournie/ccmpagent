@@ -1,6 +1,6 @@
 package test;
 
-import learning.DTLearning;
+import learning.*;
 
 public class test_dtlib {
 
@@ -8,38 +8,34 @@ public class test_dtlib {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String arff = 
-			"@relation bank\n\n" +
-			"@attribute age numeric\n" +
-			"@attribute sex {MALE,FEMALE}\n" +
-			"@attribute region {INNER_CITY,RURAL,TOWN,SUBURBAN}\n\n" +
-			"@data\n" +
-			"48,FEMALE,INNER_CITY\n" +
-			"40,MALE,TOWN\n" +
-			"51,FEMALE,INNER_CITY\n" +
-			"23,FEMALE,TOWN\n" +
-			"57,FEMALE,RURAL\n" +
-			"57,FEMALE,TOWN\n" +
-			"22,MALE,RURAL\n" +
-			"58,MALE,TOWN\n" +
-			"37,FEMALE,SUBURBAN\n" +
-			"54,MALE,TOWN\n" +
-			"66,FEMALE,TOWN\n" +
-			"52,FEMALE,INNER_CITY\n" +
-			"44,FEMALE,TOWN\n" +
-			"66,FEMALE,TOWN\n" +
-			"36,MALE,RURAL\n" +
-			"38,FEMALE,INNER_CITY";
-		String test = 
-			"@relation bank-test\n\n" +
-			"@attribute age numeric\n" +
-			"@attribute sex {MALE,FEMALE}\n" +
-			"@attribute region {INNER_CITY,RURAL,TOWN,SUBURBAN}\n\n" +
-			"@data\n" +
-			"48,FEMALE,?";
+		DTAttribute[] myAttributes = {new DTAttribute("age","numeric"),
+								      new DTAttribute("sex","{MALE,FEMALE}"),
+								      new DTAttribute("region", "{RURAL,INNER_CITY,TOWN,SUBURBAN}")};
+		String[] myData = { "48,FEMALE,INNER_CITY",
+							"40,MALE,TOWN",
+							"51,FEMALE,INNER_CITY",
+							"23,FEMALE,TOWN",
+							"57,FEMALE,RURAL",
+							"57,FEMALE,TOWN",
+							"22,MALE,RURAL",
+							"58,MALE,TOWN",
+							"37,FEMALE,SUBURBAN",
+							"54,MALE,TOWN",
+							"66,FEMALE,TOWN",
+							"52,FEMALE,INNER_CITY",
+							"44,FEMALE,TOWN",
+							"66,FEMALE,TOWN",
+							"36,MALE,RURAL",
+							"38,FEMALE,INNER_CITY" };
+							
+		
+		DTWekaARFF myARFF = new DTWekaARFF(myAttributes,myData);
+		
+		String myTest = "48,FEMALE,?";
+			
 		try {
-			DTLearning myDT = new DTLearning(arff);
-			myDT.DTClassify(test);
+			DTLearning myDT = new DTLearning(myARFF);
+			System.out.println(myDT.DTClassify(myTest));
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}
