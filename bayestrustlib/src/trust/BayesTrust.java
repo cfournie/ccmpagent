@@ -133,7 +133,19 @@ public class BayesTrust implements TrustInterface {
 		}
 		return rc[alpha][beta] / denom;
 	}
-
+	
+	/**
+	 * Retrieves the recommended trust in peer py, as computed from
+	 * recommendations received from other peers. For unit testing only.
+	 * 
+	 * @param ck context
+	 * @param py subject of recommendation
+	 * @return pmf of recommended trust
+	 */
+	public double[] getRecommendedTrust(Context ck, Peer py) {
+		return rts.retrieve(ck, py);
+	}
+	
 	/**
 	 * Returns overall trust in a peer for a context
 	 * @param ck Context
