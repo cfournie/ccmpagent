@@ -1,5 +1,8 @@
 package trust.model.math;
 
+import trust.model.exceptions.*;
+import java.text.*;
+
 public class Stats {
 	protected int n = 0;
 	
@@ -75,5 +78,34 @@ public class Stats {
 			sum += Math.pow(d[i] - mean, 2);
 		
 		return sum / (d.length - 1);
+	}
+	
+	/**
+	 * Shows a pmf, its mean and variance on stdout.
+	 * @param d the pmf
+	 */
+	public void printPmf(double[] d) 
+	{
+		if (d.length != getN()) {
+			throw new MalformedTupleException(d.length, this);
+		}
+
+		double mean = 0.0, var = 0.0;
+		for (int j = 0; j < getN(); j++) {
+			mean += j * d[j];
+			var += j * j * d[j];
+		}
+		
+		var -= mean * mean;
+		
+		final DecimalFormat fmt = new DecimalFormat("#.###");
+		System.out.print("[");
+		for (int j = 0; j < getN(); j++) {
+			System.out.print(fmt.format(d[j]));
+			if (j != getN() - 1) {
+				System.out.print(" ");
+			}
+		}
+		System.out.println("] mean=" + fmt.format(mean) + " var=" + fmt.format(var));
 	}
 }
