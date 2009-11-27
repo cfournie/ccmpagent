@@ -20,12 +20,18 @@ public class Misc {
 	}
 	
 	/**
-	 * Truncates a double, establishing whether a cts level has hit a particular lvl threshold
-	 * @param l cts level
-	 * @return
+	 * Maps a continuous level on [0, 1] to a discrete level on [0, N - 1].
+	 * @param l continuous level on [0, 1]
+	 * @return discrete level in [0, N - 1]
 	 */
-	public int discretize(double l) {
-		return (int)l;
+	public int discretize(double level) {
+		checkLevel(level);
+		
+		// Approximately map [0, 1] to [0, 1).
+		double exclusive = level * 0.999;
+		
+		// Map equally-sized intervals [i/N, (i+1)/N) to i.
+		return (int)Math.floor(exclusive * stats.getN());
 	}
 	
 	/**
@@ -92,7 +98,7 @@ public class Misc {
 	 * @param l
 	 */
 	public void checkLevel(double l) throws LevelRangeException {
-		if (l < 0 || l > this.stats.getN())
+		if (l < 0 || l > 1.0)
 			throw new LevelRangeException(l, stats);
 	}
 	

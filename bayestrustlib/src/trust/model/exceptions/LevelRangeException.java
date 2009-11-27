@@ -17,10 +17,11 @@ public class LevelRangeException extends IllegalArgumentException {
 	private static final long serialVersionUID = 1L;
 	
 	public LevelRangeException(int l, Stats stats) {
-		super("Invalid level '" + l + " was outside of the 0 to " + stats.getN() + " range");
+		super("Invalid discrete level " + l + " is outside of [0, " +
+			(stats.getN() - 1) + "]");
 	}
 	
 	public LevelRangeException(double l, Stats stats) {
-		super("Invalid level '" + l + " was outside of the 0 to " + stats.getN() + " range");
+		super("Invalid continuous level " + l + " is outside of [0, 1]");
 	}
 }

@@ -234,7 +234,7 @@ public class RandomTrustNetwork extends TrustNetwork {
 		Context c = new Context(era.getName());
 		Peer p = new Peer(agent);
         
-        trust.storeRecommendation(c, p, (int)certainty);
+        trust.storeRecommendation(c, p, certainty);
 	}
 
 	/* (non-Javadoc)

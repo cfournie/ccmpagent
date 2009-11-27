@@ -27,19 +27,19 @@ public class RandomTrust implements TrustInterface{
 		return this.p.add(py);
 	}
 
-	public int getOverallTrust(Context ck, Peer py) {
-		return (int)(Math.random() * stats.getN());
+	public double getOverallTrust(Context ck, Peer py) {
+		return Math.random();
 	}
 
 	public double getOverallTrustConfidence(Context ck, Peer py) {
-		return (int)(Math.random() * stats.getN());
+		return Math.random();
 	}
 
-	public void storeEncounter(Context ck, Peer py, int lb) throws LevelRangeException {
-		misc.checkLevel(lb);
+	public void storeEncounter(Context ck, Peer py, double level) throws LevelRangeException {
+		misc.checkLevel(level);
 	}
 
-	public void storeRecommendation(Context ck, Peer pr, Peer py, int lb) throws LevelRangeException {
-		misc.checkLevel(lb);
+	public void storeRecommendation(Context ck, Peer pr, Peer py, double level) throws LevelRangeException {
+		misc.checkLevel(level);
 	}
 }

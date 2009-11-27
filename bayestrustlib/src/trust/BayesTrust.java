@@ -85,8 +85,8 @@ public class BayesTrust implements TrustInterface {
 	 * @param py
 	 * @param lb
 	 */
-	public void storeEncounter(Context ck, Peer py, int lb) throws LevelRangeException {
-		des.storeEncounter(ck, py, lb, getOverallTrust(ck, py));
+	public void storeEncounter(Context ck, Peer py, double level) throws LevelRangeException {
+		des.storeEncounter(ck, py, misc.discretize(level), misc.discretize(getOverallTrust(ck, py)));
 	}
 	
 	/**
@@ -94,13 +94,11 @@ public class BayesTrust implements TrustInterface {
 	 * @param ck context
 	 * @param pr recommender
 	 * @param py subject of recommendation
-	 * @param lb recommendation level
+	 * @param ctsBeta continuous recommendation level on [0, 1.0]
 	 * @author Catalin Patulea <cat@vv.carleton.ca>
 	 */
-	public void storeRecommendation(Context ck, Peer pr, Peer py, int beta) throws LevelRangeException {
-		if (beta < 0 || beta > stats.getN()) {
-			throw new LevelRangeException(beta, stats);
-		}
+	public void storeRecommendation(Context ck, Peer pr, Peer py, double ctsBeta) throws LevelRangeException {
+		int beta = misc.discretize(ctsBeta);
 		
 		// Prior belief of recommended trust in py.
 		double [] r = rts.retrieve(ck, py);
@@ -166,7 +164,7 @@ public class BayesTrust implements TrustInterface {
 	 * @param py Peer
 	 * @return level from 0 to n
 	 */
-	public int getOverallTrust(Context ck, Peer py) {
+	public double getOverallTrust(Context ck, Peer py) {
 		double[] d = dts.retrieve(ck, py);
 		double[] r = rts.retrieve(ck, py);
 		double dy = 0;
@@ -178,7 +176,7 @@ public class BayesTrust implements TrustInterface {
 			ry += (i+1) * r[i];
 		}
 		
-		return this.misc.discretize((SIGMA * dy) + ((1-SIGMA) * ry));
+		return ((SIGMA * dy) + ((1-SIGMA) * ry)) / stats.getN();
 	}
 	
 	/**
