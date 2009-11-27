@@ -22,20 +22,22 @@ public class StatsTest {
 	@Test
 	public void testMean() {
 		double[] trust = new double[]{0.1, 0.2, 0.3, 0.4};
-		assertTrue(stats.mean(trust) == 0.25);
+		double mean = stats.mean(trust);
+		assertTrue(mean == TRUST_LEVELS * 0.5);
 	}
 	
 	@Test
 	public void testNoVariance() {
-		double[] trust = new double[]{0.25, 0.25, 0.25, 0.25};
-		assertTrue(stats.variance(trust) == 0.0);
+		double[] trust = new double[]{0, 1/6, 2/6, 3/6};
+		double variance = stats.variance(trust);
+		assertEquals(0, variance, 0.0);
 	}
 	
 	@Test
 	public void testAverageVariance() {
-		double[] trust = new double[]{0.1, 0.1, 0.8, 0.0};
-		System.out.println(stats.variance(trust));
-		assertTrue(stats.variance(trust) == 0.1366666666666667);
+		double[] trust = new double[]{0.0, 0.5, 0.0, 0.5};
+		double variance = stats.variance(trust);
+		assertEquals(1, variance, 0.0);
 	}
 	
 	@Test
