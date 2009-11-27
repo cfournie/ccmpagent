@@ -59,9 +59,9 @@ public class Stats {
 	public double mean(double[] d)
 	{
 		double sum = 0;
-		for(int i = 0; i < d.length; i++)
-			sum += d[i];
-		return sum / d.length;
+		for(int j = 0; j < d.length; j++)
+			sum += j * d[j];
+		return sum;
 	}
 	
 	/**
@@ -74,10 +74,10 @@ public class Stats {
 		double mean = this.mean(d);
 		
 		double sum = 0;
-		for(int i = 0; i < d.length; i++)
-			sum += Math.pow(d[i] - mean, 2);
+		for(int j = 0; j < d.length; j++)
+			sum += Math.pow(j, 2) * d[j];
 		
-		return sum / (d.length - 1);
+		return sum - Math.pow(mean, 2);
 	}
 	
 	/**
