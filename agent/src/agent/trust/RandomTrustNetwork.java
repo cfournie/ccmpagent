@@ -9,31 +9,53 @@ import agent.CCMPAgent;
 import agent.trust.TrustNetwork;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import testbed.sim.Appraisal;
 import testbed.sim.Opinion;
+import trust.RandomTrust;
+import trust.TrustInterface;
+import trust.model.primitives.Context;
+import trust.model.primitives.Peer;
+
 import java.util.Hashtable;
 
 /**
  * @author cfournie
  *
  */
-public class SimpleTrust extends TrustNetwork {
+public class RandomTrustNetwork extends TrustNetwork {
 
-	private Map<String,Double>          mReputations;
-	private Map<String,Map<Era,Double>> mCertainties;
+	public static final int TRUST_LEVELS = 4;
 	
-	public SimpleTrust(CCMPAgent agent)
+	public RandomTrustNetwork(CCMPAgent agent)
 	{
 		super(agent);
+		List<Context> contexts = new LinkedList<Context>();
+		
+		for(Era era : mAgent.getEras()) {
+			Context c = new Context(era.getName());
+			contexts.add(c);
+		}
+		
+		this.trust = new RandomTrust(TRUST_LEVELS, contexts);
 	}
+	
+	/* (non-Javadoc)
+	 * @see agent.trust.TrustInterface#addAgent(java.lang.String)
+	 */
+	public void init()
+	{
+	}	
 	
 	/* (non-Javadoc)
 	 * @see agent.trust.TrustInterface#addAgent(java.lang.String)
 	 */
 	public void addAgent(String newAgent)
 	{
-		mReputations.put(newAgent,new Double(1.0));
+		Peer p = new Peer(newAgent);
+		trust.addPeer(p);
 	}
 
 	/* (non-Javadoc)
@@ -42,7 +64,7 @@ public class SimpleTrust extends TrustNetwork {
 	public void agentDidNotAcceptCertainty(String agent, Era era,
 			double certaintyValue)
 	{
-		// Don't care about this in SimpleTrust
+		// Don't care about this in RandomTrust
 	}
 
 	/* (non-Javadoc)
@@ -125,7 +147,9 @@ public class SimpleTrust extends TrustNetwork {
 	 */
 	public double getInferredTrustValue(String agent, Era era)
 	{
-		return mReputations.get(agent);
+		Context c = new Context(era.getName());
+		Peer p = new Peer(agent);
+		return trust.getOverallTrust(c, p);
 	}
 
 	/* (non-Javadoc)
@@ -142,7 +166,9 @@ public class SimpleTrust extends TrustNetwork {
 	 */
 	public double getTrustValue(String agent, Era era)
 	{
-		return mReputations.get(agent).doubleValue();
+		Context c = new Context(era.getName());
+		Peer p = new Peer(agent);
+		return trust.getOverallTrust(c, p);
 	}
 
 	/* (non-Javadoc)
@@ -197,7 +223,7 @@ public class SimpleTrust extends TrustNetwork {
 	 */
 	public void removeAgent(String agent)
 	{
-		mReputations.remove(agent);
+		// Trustlib does not care about agent removal
 	}
 
 	/* (non-Javadoc)
@@ -205,12 +231,10 @@ public class SimpleTrust extends TrustNetwork {
 	 */
 	public void setAgentEraCertainty(String agent, Era era, double certainty)
 	{
-        Map<Era,Double> agCert = mCertainties.get(agent);
-        if (agCert == null) {
-            agCert = new HashMap<Era,Double>();
-            mCertainties.put(agent, agCert);
-        }
-        agCert.put(era, certainty);
+		Context c = new Context(era.getName());
+		Peer p = new Peer(agent);
+        
+        trust.storeRecommendation(c, p, (int)certainty);
 	}
 
 	/* (non-Javadoc)
@@ -226,23 +250,27 @@ public class SimpleTrust extends TrustNetwork {
 	 */
 	public void updateAgentTrustFromFinalAppraisal(String agent, Appraisal appraisal, Opinion opinion)
 	{
+
+		Context c = new Context(appraisal.getEra().getName());
+		Peer p = new Peer(agent);
+		
 		double difference = Math.abs(appraisal.getTrueValue() - opinion.getAppraisedValue());
 		difference = difference / ((double)appraisal.getTrueValue());
-		double reputation = mReputations.get(agent).doubleValue();
+		
+		double reputation = trust.getOverallTrust(c, p);
+		
 		if (difference > 0.5) reputation = reputation - 0.03;
 		else reputation = reputation + 0.03;
 		if (reputation > 1) reputation = 1;
 		if (reputation < 0) reputation = 0;
-		mReputations.put(agent, reputation);
+		
+        
+        trust.storeEncounter(c, p, (int)reputation);
+		
+		
 	}
-	
-	public void init()
-	{
-		mReputations = new Hashtable<String,Double>();
-		mCertainties = new Hashtable<String,Map<Era,Double>>();
-	}	
 	
 	public void frameReset()
 	{
-	}		
+	}	
 }
