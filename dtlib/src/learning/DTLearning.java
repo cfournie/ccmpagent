@@ -14,7 +14,7 @@ import weka.classifiers.trees.J48;
  *
  */
 
-public class DTLearning implements DTLearningInterface {
+public class DTLearning {
 	J48 tree;
 	int nonCatCount;
 	DTWekaARFF arff;
