@@ -1,4 +1,6 @@
 package agent.decision;
+import java.util.Map;
+
 import agent.CCMPAgent;
 import testbed.sim.Era;
 import testbed.sim.AppraisalAssignment;
@@ -14,6 +16,10 @@ import testbed.sim.AppraisalAssignment;
 public abstract class DecisionTree {
 	
 	protected CCMPAgent mAgent;
+	protected Map<String,Double>            mReputations;
+	protected Map<String,Map<Era,Double>> 	mCertainties;
+	protected int							mNumCertaintyRequestsSent;
+	protected int							mNumOpinionRequestsSent;
 	
 	public DecisionTree(CCMPAgent agent)
 	{

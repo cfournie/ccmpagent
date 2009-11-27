@@ -1,40 +1,76 @@
-/**
- * 
- */
 package agent.decision;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.HashMap;
+
+import learning.*;
+
+import agent.CCMPAgent;
+
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Era;
-import agent.CCMPAgent;
-import agent.decision.DecisionTree;
 
-
-
-/**
- * @author cfournie
- *
- */
-public class SimpleDT extends DecisionTree {
+public class WekaDT extends DecisionTree {
 	
-	private Map<String,Double>          mReputations;
-	private Map<String,Map<Era,Double>> mCertainties;
-	private int							mNumCertaintyRequestsSent;
-	private int							mNumOpinionRequestsSent;
+	DTLearning[] dtreeArray;
+	private static int numDTS = 1;
 	
-	public SimpleDT(CCMPAgent agent)
+	public enum DTLearningNames{
+		DT_ADJUSTAPPRAISAL,
+		DT_GENERATEOPINION,
+		DT_GETAPPRAISAL,
+		DT_GETCERTAINTY,
+		DT_GETREPUTATION,
+		DT_PROVIDECERTAINTY,
+		DT_PROVIDEOPINION,
+		DT_PROVIDEREPUTATION,
+		DT_REQUESTCERTAINTY,
+		DT_REQUESTOPINION,
+		DT_REQUESTREPUTATION,
+		DT_RESPONDCERTAINTY,
+		DT_RESPONDREQUEST,
+		DT_PROVIDEWEIGHT,
+		DT_NUMDT
+	}
+	
+	public WekaDT(CCMPAgent agent, DTWekaARFF[] dtData)
 	{
 		super(agent);
-	}	
+		dtreeArray = new DTLearning[DTLearningNames.DT_NUMDT.ordinal()];
+		for( int i = 0; i < dtData.length && i < numDTS; i++ )
+		{
+			dtreeArray[i] = new DTLearning(dtData[i]);
+		}
+	}
 	
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#adjustAppraisalValue(java.lang.String, testbed.sim.Era, int)
 	 */
 	public int adjustAppraisalValue(String toAgent, Era era, int appraisal) {
-		// Simple DT doesn't adjust the appraisal value
-		return appraisal;
+		double certainty, trust;
+		certainty = 0;
+		trust = 0;
+		String dtTest = Double.toString(certainty)+","+Double.toString(trust)+",?"; 
+			
+		String result = dtreeArray[DTLearningNames.DT_ADJUSTAPPRAISAL.ordinal()].DTClassify(dtTest);
+		
+		if(result=="UNCHANGED")
+		{
+			return appraisal;
+		}
+		else if(result=="INFLATEx2")
+		{
+			return 2*appraisal;
+		}
+		else if(result=="INFLATEx10")
+		{
+			return 10*appraisal;
+		}
+		else
+		{
+			return appraisal;
+		}
 	}
 
 	/* (non-Javadoc)
