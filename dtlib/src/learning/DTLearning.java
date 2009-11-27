@@ -3,13 +3,11 @@
  */
 package learning;
 
-import java.io.IOException;
 import java.io.StringReader;
 
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.classifiers.trees.J48;
-import weka.core.converters.ConverterUtils.DataSource;
 
 /**
  * @author pdinniss
