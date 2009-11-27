@@ -90,6 +90,8 @@ public class Stats {
 			throw new MalformedTupleException(d.length, this);
 		}
 
+		// mean = E(X)
+		// var = E(X^2) - mean^2
 		double mean = 0.0, var = 0.0;
 		for (int j = 0; j < getN(); j++) {
 			mean += j * d[j];
