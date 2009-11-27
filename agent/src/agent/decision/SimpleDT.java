@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Era;
+import agent.CCMPAgent;
 import agent.decision.DecisionTree;
 
 
@@ -22,6 +23,11 @@ public class SimpleDT extends DecisionTree {
 	private Map<String,Map<Era,Double>> mCertainties;
 	private int							mNumCertaintyRequestsSent;
 	private int							mNumOpinionRequestsSent;
+	
+	public SimpleDT(CCMPAgent agent)
+	{
+		super(agent);
+	}	
 	
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#adjustAppraisalValue(java.lang.String, testbed.sim.Era, int)
@@ -141,7 +147,7 @@ public class SimpleDT extends DecisionTree {
 			String aboutAgent, Era era, int currentTimestep)
 	{
 		// Simple DT never requests an reputation update.
-		return false;
+		return true;
 	}
 
 	/* (non-Javadoc)

@@ -1,27 +1,16 @@
 package agent;
+
+import java.util.Collections;
+
 import agent.CCMPAgent;
 
 import agent.decision.SimpleDT;
 import agent.decision.DecisionTree;
-import agent.trust.SimpleTrust;
+import agent.trust.RandomTrustNetwork;
 import agent.trust.TrustNetwork;
 
-import java.util.Collections;
-
-
-/**
- * 
- */
-
-/**
- * @author cfournie
- *
- */
-public class SimpleCCMPAgent extends CCMPAgent {
-    		
-	/**
-	 * 
-	 */ 
+public class RandomCCMPAgent extends CCMPAgent
+{
 	@Override
 	public void prepareCertaintyRequests()
 	{
@@ -36,11 +25,11 @@ public class SimpleCCMPAgent extends CCMPAgent {
     
     TrustNetwork createTrustNetwork()
     {
-    	return new SimpleTrust(this);
+    	return new RandomTrustNetwork(this);
     }
     
     public String getLogFileName()
     {
-    	return "SimpleCCMPAgentLog.txt";
-    }     
+    	return "RandomCCMPAgentLog.txt";
+    } 
 }

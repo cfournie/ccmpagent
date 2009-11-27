@@ -22,6 +22,8 @@ import testbed.sim.Weight;
 import testbed.sim.Opinion;
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Appraisal;
+import java.util.logging.*;
+import java.io.*;
 
 
 /**
@@ -44,7 +46,7 @@ public abstract class CCMPAgent extends Agent {
     private List<CertaintyRequestMsg>			mCertaintiesRequested;
     private List<OpinionRequestMsg>				mOpinionsRequested;
     private List<Era> 							mEras;
-    	
+    protected Logger							mLogger;	
 	
 	/**
 	 * 
@@ -55,7 +57,7 @@ public abstract class CCMPAgent extends Agent {
 		// TODO: Add list of eras
 		
 		mDecisionTree = createDecisionTree();
-		mTrustNetwork = createTrustNetwork(mEras);
+		mTrustNetwork = createTrustNetwork();
 	}
 
 	/**
@@ -72,10 +74,34 @@ public abstract class CCMPAgent extends Agent {
 	@Override
 	public void initializeAgent()
 	{
+	    try
+	    {
+	        boolean append = false;
+	        FileHandler fh = new FileHandler(getLogFileName(), append);
+	        fh.setFormatter(new Formatter() {
+	            public String format(LogRecord rec) {
+	               StringBuffer buf = new StringBuffer(1000);
+	               buf.append("Timestep: "+currentTimestep);
+	               buf.append(' ');
+	               buf.append(rec.getLevel());
+	               buf.append(' ');
+	               buf.append(formatMessage(rec));
+	               buf.append('\n');
+	               return buf.toString();
+	               }
+	             });
+	        mLogger = Logger.getLogger("CCMPAgentLog");
+	       	mLogger.addHandler(fh);
+	       	mLogger.setUseParentHandlers(false);
+	    }
+	    catch (IOException e)
+	    {
+	    	 e.printStackTrace();
+        }
+		
+	    mLogger.warning("Initializing CCMPAgent");
         mDecisionTree.init();
-        
-        mDecisionTree.setAgent(this);
-        mTrustNetwork.setAgent(this);
+        mTrustNetwork.init();
         
         for (String name: agentNames)
         {
@@ -190,7 +216,7 @@ public abstract class CCMPAgent extends Agent {
     	{
     		for( String name: agentNames )
     		{
-    			if( mDecisionTree.requestAgentCertainty(name, appraisal.getEra()) )
+    			if( name != getName() && mDecisionTree.requestAgentCertainty(name, appraisal.getEra()) )
     			{
     		        CertaintyRequestMsg msg = new CertaintyRequestMsg( name, null, appraisal.getEra() );
     		        sendOutgoingMessage(msg); 
@@ -439,6 +465,7 @@ public abstract class CCMPAgent extends Agent {
 				{
 					if( requestMsg.getTransactionID() == acceptMsg.getTransactionID() )
 					{
+        				mLogger.info("Agent " + acceptMsg.getSender() + " did not accept our reputation request about " + requestMsg.getEra());
 						mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
 					}
 				}
@@ -464,7 +491,9 @@ public abstract class CCMPAgent extends Agent {
             	mTrustNetwork.providedReputationReply(toAgent, aboutAgent, era, repValue);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
-            	updateDecisionTreeTrustValues(toAgent, era);                
+            	updateDecisionTreeTrustValues(toAgent, era);   
+            	
+            	mLogger.info("Provided reputation to "+toAgent+" about "+aboutAgent+" value: "+repValue);
         	}
         	else
         	{
@@ -472,7 +501,9 @@ public abstract class CCMPAgent extends Agent {
             	mTrustNetwork.didNotProvideReputationAfterPayment(toAgent, aboutAgent, era);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
-            	updateDecisionTreeTrustValues(toAgent, era);       		
+            	updateDecisionTreeTrustValues(toAgent, era); 
+            	
+            	mLogger.info("Did not provide reputation to "+toAgent+" about "+aboutAgent);
         	}
         }	
 	}
@@ -500,6 +531,7 @@ public abstract class CCMPAgent extends Agent {
         		{
         			if( toAgent != aboutAgent && mDecisionTree.requestAgentReputationUpdate(toAgent, aboutAgent, era, currentTimestep) )
         			{
+        				mLogger.info("Requesting reputation from " + toAgent + " about " + aboutAgent);
                         ReputationRequestMsg msg = new ReputationRequestMsg(toAgent, null, era, aboutAgent);
                         sendOutgoingMessage(msg);
                         mReputationsRequested.add(msg);
@@ -533,17 +565,18 @@ public abstract class CCMPAgent extends Agent {
 
     private void processFrameResults( )
     {
+    	mLogger.info("Begin Frame: "+currentTimestep);
     	List<OpinionReplyMsg> opinionReplies = getIncomingMessages();
     	
     	mDecisionTree.frameReset();
     	mTrustNetwork.frameReset();
     	
-    	//There may have been era expertise change. Should we tell our decision tree about it?
-    	
         if(finalAppraisals != null)
         {
         	for(Appraisal appraisal: finalAppraisals)
         	{
+//            	mLogger.info("Received )
+        		
         	    //System.out.print("ID: " + appraisal.getPaintingID() + ", real: " + appraisal.getTrueValue());
         		for(OpinionReplyMsg msg: opinionReplies)
         		{
@@ -587,6 +620,16 @@ public abstract class CCMPAgent extends Agent {
         return myExpertiseValues.get(era.getName());
     }
     
+    public String getLogFileName()
+    {
+    	return "CCMPAgentLog.txt";
+    }
+    
+    public List<Era> getEras()
+    {
+    	return eras;
+    }
+    
     abstract DecisionTree createDecisionTree();
-    abstract TrustNetwork createTrustNetwork(List<Era> eras);
+    abstract TrustNetwork createTrustNetwork();
 }

@@ -23,17 +23,15 @@ public abstract class TrustNetwork {
 	public abstract void addAgent( String newAgent );
 	public abstract void removeAgent( String agent );
 	
-	public TrustNetwork() {
+	public TrustNetwork(CCMPAgent agent)
+	{
 		// Initialization
+		mAgent = agent;
 	}
 	
 	public abstract void frameReset();
-	
-	public void setAgent( CCMPAgent agent )
-	{
-		mAgent = agent; 
-	}
-	
+	public abstract void init();
+		
 	public abstract void setOurEraCertainty(Era era);
 	public abstract void setAgentEraCertainty( String agent, Era era, double certainty);	
 
@@ -44,6 +42,7 @@ public abstract class TrustNetwork {
 	
 	//Get our local trust value, for dtlibrary
 	public abstract double getTrustValue( String agent, Era era);
+	
 	//how much do we think the other agent trusts us?
 	public abstract double getInferredTrustValue( String agent, Era era );
 	

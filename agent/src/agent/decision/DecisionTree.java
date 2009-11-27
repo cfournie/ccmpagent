@@ -15,10 +15,11 @@ public abstract class DecisionTree {
 	
 	protected CCMPAgent mAgent;
 	
-	public void setAgent( CCMPAgent agent )
+	public DecisionTree(CCMPAgent agent)
 	{
-		mAgent = agent; 
-	}	
+		// Initialization
+		mAgent = agent;
+	}
 
 	public abstract void addAgent( String newAgent );
 	public abstract void removeAgent( String agent );
