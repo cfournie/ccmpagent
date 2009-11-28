@@ -786,6 +786,11 @@ public abstract class CCMPAgent extends Agent {
     	}
     }
     
+    public CCMPConfigInfo getConfigInfo()
+    {
+    	return mConfigInfo;
+    }
+    
     abstract DecisionTree createDecisionTree();
     abstract TrustNetwork createTrustNetwork();
 }
