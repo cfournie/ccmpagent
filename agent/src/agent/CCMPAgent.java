@@ -11,7 +11,6 @@ import testbed.messages.ReputationReplyMsg;
 import testbed.messages.ReputationRequestMsg;
 import testbed.messages.WeightMsg;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -23,8 +22,11 @@ import testbed.sim.Opinion;
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Appraisal;
 import java.util.logging.*;
-import java.io.*;
+import java.io.IOException;
+import org.xml.sax.SAXException;
+import org.apache.commons.digester.Digester;
 
+import agent.CCMPConfigInfo;
 
 /**
  * 
@@ -47,6 +49,9 @@ public abstract class CCMPAgent extends Agent {
     private List<OpinionRequestMsg>				mOpinionsRequested;
     private List<Era> 							mCurrentEras;
     protected Logger							mLogger;
+    protected Digester							mDigester;
+    protected CCMPConfigInfo					mConfigInfo;
+    boolean										mLogging;
 	
 	/**
 	 * 
@@ -55,14 +60,24 @@ public abstract class CCMPAgent extends Agent {
 	{		
 		mDecisionTree = createDecisionTree();
 		mTrustNetwork = createTrustNetwork();
+	
+		//We shouldn't have to call this here, and use the
+		//pass param argument..but that doesn't seem to work with JAR
+		//I get an missing method exception.
+		//So we'll do it ourselves.
+		parseConfigFile(getConfigFile());
 	}
 
 	/**
 	 * @param paramFile
 	 */
-	public CCMPAgent(String paramFile) {
+	public CCMPAgent(String paramFile)
+	{
 		super(paramFile);
-		// TODO Auto-generated constructor stub
+		
+		//This should work, but it doesn't
+		//if we set passParam to true, we get a missing method function error..wtf?
+		parseConfigFile(paramFile);
 	}
 
 	/* (non-Javadoc)
@@ -74,17 +89,21 @@ public abstract class CCMPAgent extends Agent {
 	    try
 	    {
 	        boolean append = false;
-	        FileHandler fh = new FileHandler(getName()+"_log.txt", append);
-	        fh.setFormatter(new Formatter() {
-	            public String format(LogRecord rec) {
-	               StringBuffer buf = new StringBuffer(1000);
-	               buf.append(formatMessage(rec));
-	               buf.append('\n');
-	               return buf.toString();
-	               }
-	             });
 	        mLogger = Logger.getLogger(getName());
-	       	mLogger.addHandler(fh);
+	        
+	        if( mLogging )
+	        {
+		        FileHandler fh = new FileHandler(getName()+"_log.txt", append);
+		        fh.setFormatter(new Formatter() {
+		            public String format(LogRecord rec) {
+		               StringBuffer buf = new StringBuffer(1000);
+		               buf.append(formatMessage(rec));
+		               buf.append('\n');
+		               return buf.toString();
+		               }
+		             });		        
+	        	mLogger.addHandler(fh);
+	        }
 	       	mLogger.setUseParentHandlers(false);
 	    }
 	    catch (IOException e)
@@ -596,7 +615,7 @@ public abstract class CCMPAgent extends Agent {
         	{
         		for( String aboutAgent: agentNames )
         		{
-        			if( aboutAgent != getName() &&
+        			if( toAgent != getName() &&
         				toAgent != aboutAgent &&
         				mDecisionTree.requestAgentReputationUpdate(toAgent, aboutAgent, era, currentTimestep) )
         			{
@@ -729,14 +748,42 @@ public abstract class CCMPAgent extends Agent {
     	return eras;
     }
     
-    public Logger getLogger()
-    {
-    	return mLogger;
-    }
-    
     public List<AppraisalAssignment> getAppraisalAssignments()
     {
     	return assignedPaintings;
+    }
+    
+    public String getConfigFile()
+    {
+    	return "CCMPAgent_Config.xml";
+    }
+    
+    protected void parseConfigFile( String paramFile )
+    {
+		mConfigInfo = new CCMPConfigInfo();
+        try
+        {
+            mDigester = new Digester();            
+            mDigester.push(mConfigInfo);            
+            mDigester.addCallMethod("agentConfig/CCMPParams/log", "setLogging", 0); 
+            mDigester.parse(paramFile);            
+        } catch (IOException e1) {
+          System.out.println("File not found exception: " + paramFile);
+          System.out.println(e1);
+        } catch (SAXException e2) {
+          System.out.println("Error parsing file: " + paramFile);
+          System.out.println(e2);
+        }
+        
+        mLogging = mConfigInfo.getLogging();
+    }
+    
+    public void writeToLogFile( String toLog )
+    {
+    	if( mLogging )
+    	{
+    		mLogger.info(toLog);
+    	}
     }
     
     abstract DecisionTree createDecisionTree();
