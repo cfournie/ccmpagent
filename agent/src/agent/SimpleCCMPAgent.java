@@ -37,10 +37,5 @@ public class SimpleCCMPAgent extends CCMPAgent {
     TrustNetwork createTrustNetwork()
     {
     	return new SimpleTrust(this);
-    }
-    
-    public String getLogFileName()
-    {
-    	return "SimpleCCMPAgentLog.txt";
-    }     
+    }    
 }

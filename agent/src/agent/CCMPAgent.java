@@ -77,14 +77,10 @@ public abstract class CCMPAgent extends Agent {
 	    try
 	    {
 	        boolean append = false;
-	        FileHandler fh = new FileHandler(getLogFileName(), append);
+	        FileHandler fh = new FileHandler(getName()+"_log.txt", append);
 	        fh.setFormatter(new Formatter() {
 	            public String format(LogRecord rec) {
 	               StringBuffer buf = new StringBuffer(1000);
-	               buf.append("Timestep: "+currentTimestep);
-	               buf.append(' ');
-	               buf.append(rec.getLevel());
-	               buf.append(' ');
 	               buf.append(formatMessage(rec));
 	               buf.append('\n');
 	               return buf.toString();
@@ -128,6 +124,8 @@ public abstract class CCMPAgent extends Agent {
 		List<CertaintyRequestMsg> certRequests = getIncomingMessages();
 		//Store the list of certainty replies we provided to others.
 		mCertaintyReplysProvided = new ArrayList<CertaintyReplyMsg>();
+		
+		mLogger.info("T="+currentTimestep+": Prepare Certainty Replies"+certRequests.size());
 				
         for (CertaintyRequestMsg receivedMsg: certRequests)
         {
@@ -145,7 +143,8 @@ public abstract class CCMPAgent extends Agent {
                 mTrustNetwork.providedCertaintyReply(fromAgent, era, myExpertise);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
-            	updateDecisionTreeTrustValues(fromAgent, era);                
+            	updateDecisionTreeTrustValues(fromAgent, era);
+            	mLogger.info("\t to="+fromAgent+" era="+era+" certainty="+myExpertise);
             }
             else
             {
@@ -153,7 +152,8 @@ public abstract class CCMPAgent extends Agent {
                 mTrustNetwork.didNotAcceptCertaintyRequest(fromAgent, era);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
-            	updateDecisionTreeTrustValues(fromAgent, era);           	
+            	updateDecisionTreeTrustValues(fromAgent, era);
+            	mLogger.info("\t CCMP did not accept certainty request from agent="+fromAgent+" era="+era);
             }
         }
 	}
@@ -162,10 +162,13 @@ public abstract class CCMPAgent extends Agent {
 	 * @see testbed.agent.Agent#prepareCertaintyRequests()
 	 */
 	@Override
-	public void prepareCertaintyRequests() {
+	public void prepareCertaintyRequests()
+	{
 		// first collect the replies to the previous reputation transactions
 	    List<ReputationReplyMsg> reputationReplies = getIncomingMessages();
 	    mCertaintiesRequested = new ArrayList<CertaintyRequestMsg>();
+
+		mLogger.info("T="+currentTimestep+" Parse Reputation Returns:");		
 	    
 	    //determine if everyone who accepted a request, provided a reputation.
 	    //go through each accept msg we stored previously.
@@ -190,6 +193,7 @@ public abstract class CCMPAgent extends Agent {
 					{
 						if( requestMsg.getTransactionID() == acceptMsg.getTransactionID() )
 						{
+							mLogger.info("\t Agent did not accept reputation request agent="+acceptMsg.getSender()+" era="+requestMsg.getEra());
 							mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
 						}
 					}
@@ -200,6 +204,8 @@ public abstract class CCMPAgent extends Agent {
 	    //Now go through the reputation replies and update our trust database.
     	for( ReputationReplyMsg replyMsg: reputationReplies )
     	{
+    		mLogger.info("\t from="+replyMsg.getSender()+" about="+replyMsg.getAppraiserID()
+    				                    +" era="+replyMsg.getEra()+ " reputation="+replyMsg.getReputation());
     		mTrustNetwork.receiveAgentReputationUpdate(replyMsg.getSender(), replyMsg.getAppraiserID(), replyMsg.getEra(), replyMsg.getReputation() );
     	}
     	for( String name: agentNames )
@@ -210,21 +216,34 @@ public abstract class CCMPAgent extends Agent {
         	}
     	}
     	
+		mLogger.info("T="+currentTimestep+" Prepare Certainty Requests:");		    	
+    	
     	//Now handle the certainty requests.
-    	//Go through each painting we are assigned and determine which agents we want to send certainty requests to
+    	//Go through each painting we are assigned get the list of eras we have to evaluate:
+		List<Era> ourEras = new ArrayList<Era>();		
     	for( AppraisalAssignment appraisal: assignedPaintings)
     	{
-    		for( String name: agentNames )
+    		if( !ourEras.contains(appraisal.getEra()) )
     		{
-    			if( name != getName() && mDecisionTree.requestAgentCertainty(name, appraisal.getEra()) )
-    			{
-    		        CertaintyRequestMsg msg = new CertaintyRequestMsg( name, null, appraisal.getEra() );
-    		        sendOutgoingMessage(msg); 
-    		        mCertaintiesRequested.add(msg);
-    		        mDecisionTree.sentCertaintyRequest(name, appraisal.getEra());
-    			}
+    			ourEras.add(appraisal.getEra());
     		}
-    	} 
+    	}
+    			
+    	for( Era era: ourEras )
+    	{
+	    	mLogger.info("\t For era="+era);
+	   		for( String name: agentNames )
+	   		{
+	   			if( name != getName() && mDecisionTree.requestAgentCertainty(name, era ) )
+	   			{
+	   				mLogger.info("\t\t to="+name);
+	   		        CertaintyRequestMsg msg = new CertaintyRequestMsg( name, null, era );
+	   		        sendOutgoingMessage(msg); 
+	   		        mCertaintiesRequested.add(msg);
+	   		        mDecisionTree.sentCertaintyRequest(name, era);
+	   			}
+	   		}
+    	}
 	}
 
 	/* (non-Javadoc)
@@ -243,6 +262,7 @@ public abstract class CCMPAgent extends Agent {
 		List<OpinionRequestMsg> opinionRequests = getIncomingMessages();
 		mOpinionRequests = new ArrayList<OpinionRequestMsg>(); 
 		
+		mLogger.info("T="+currentTimestep+" Parse Opinion Requests:");		
 		//First find out who didn't like our certainty values and didn't ask us for
 		//an opinion
         for (CertaintyReplyMsg previousCertaintyMsg: mCertaintyReplysProvided)
@@ -258,12 +278,16 @@ public abstract class CCMPAgent extends Agent {
 	        }
 	        if( !acceptedCertainty )
 	        {
+	        	mLogger.info("\t "+previousCertaintyMsg.getSender()+" did not request opinion after certainty era="
+	        			          +previousCertaintyMsg.getEra()+" certainty="+previousCertaintyMsg.getCertainty());
 	        	//the agent we sent a certainty to, didn't continue with the opinion transaction, this might affect our internal trust reps.
 	        	mTrustNetwork.agentDidNotAcceptCertainty(previousCertaintyMsg.getSender(), previousCertaintyMsg.getEra(), previousCertaintyMsg.getCertainty());
 	        	updateDecisionTreeTrustValues(previousCertaintyMsg.getSender(), previousCertaintyMsg.getEra());
 	        }
         }
 
+		mLogger.info("T="+currentTimestep+" Prepare Opinion Orders:");		
+        
         // Order an opinion (from the sim) for each opinion request message received
         for (OpinionRequestMsg receivedMsg: opinionRequests)
         {
@@ -275,6 +299,7 @@ public abstract class CCMPAgent extends Agent {
             	double appraisalCost = mDecisionTree.getAppraisalCost(fromAgent, era);
                 OpinionOrderMsg msg = receivedMsg.opinionOrder(appraisalCost);
                 sendOutgoingMessage(msg);
+                
                 mOpinionRequests.add(receivedMsg);
                 
                 //Tell our trust network we generated an opinion
@@ -282,7 +307,8 @@ public abstract class CCMPAgent extends Agent {
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(fromAgent, era);             
-                
+
+            	mLogger.info("\t to="+fromAgent+" era="+era+" appraisalCost="+appraisalCost);               
             }
             else
             {
@@ -290,7 +316,9 @@ public abstract class CCMPAgent extends Agent {
                 mTrustNetwork.didNotProvideOpinionAfterPayment(fromAgent, era);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
-            	updateDecisionTreeTrustValues(fromAgent, era);           	
+            	updateDecisionTreeTrustValues(fromAgent, era);   
+            	
+            	mLogger.info("\t CCMP don't provide opinion after payment to="+fromAgent+" era="+era);
             }        	
         }
 	}
@@ -301,6 +329,7 @@ public abstract class CCMPAgent extends Agent {
 	@Override
 	public void prepareOpinionProviderWeights()
 	{
+		mLogger.info("T="+currentTimestep+" Prepare Opinion Provider Weights:");			
         for (String agentToWeight: agentNames)
         {
             for (Era thisEra: eras)
@@ -310,6 +339,7 @@ public abstract class CCMPAgent extends Agent {
 	            	double weight = mTrustNetwork.getReputationWeight(agentToWeight, thisEra);
 	                WeightMsg msg = new WeightMsg(new Weight(getName(), agentToWeight, weight, thisEra.getName()));
 	                sendOutgoingMessage(msg);
+            		mLogger.info("\t who="+agentToWeight+" era="+thisEra+" weight="+weight);
             	}
             }
         }  
@@ -325,7 +355,8 @@ public abstract class CCMPAgent extends Agent {
 		 * 1. The agent requesting the opinion is the agent appraising the painting.
 		 *    getSender() == getAppraisalAssignment().getAppraiser() - for trust purposes
 		 * 2. DecisionTree may decide to adjust the appraisal value we got form the sim
-		 */		
+		 */
+		mLogger.info("T="+currentTimestep+" Prepare Opinion Replies:");			
         for (OpinionRequestMsg receivedMsg: mOpinionRequests)
         {
         	String toAgent = receivedMsg.getSender();
@@ -337,6 +368,8 @@ public abstract class CCMPAgent extends Agent {
             // Use convenience method for generating an opinion reply message
             OpinionReplyMsg msg = receivedMsg.opinionReply(op);
             sendOutgoingMessage(msg);
+            
+            mLogger.info("\t to="+toAgent+" simValue="+op.getAppraisedValue()+" sentValue="+updateAppraisal+" era="+era);
             
             //Tell our trust network we generated an opinion
             mTrustNetwork.providedOpinion(toAgent, receivedMsg.getAppraisalAssignment(), updateAppraisal);
@@ -355,6 +388,7 @@ public abstract class CCMPAgent extends Agent {
 	{
 		List<CertaintyReplyMsg> certaintyResponses = getIncomingMessages();
 		
+		mLogger.info("T="+currentTimestep+": Parse certainty reply messages:");		
 		//First go through and determine who didn't give us a certainty response.
 		for( CertaintyRequestMsg requestMsg: mCertaintiesRequested )
 		{
@@ -369,12 +403,14 @@ public abstract class CCMPAgent extends Agent {
 			}
 			if( !providedCertainty )
 			{
+				mLogger.info("\t Agent Did not provide certainty agent="+requestMsg.getSender()+" era="+requestMsg.getEra());
 				mTrustNetwork.agentDidNotProvideCertainty(requestMsg.getSender(), requestMsg.getEra());
 			}
 		}
 		
 		for( CertaintyReplyMsg replyMsg: certaintyResponses )
 		{
+			mLogger.info("\tfrom="+replyMsg.getSender()+" era="+replyMsg.getEra()+" certainty="+replyMsg.getCertainty());
 			mDecisionTree.setAgentEraCertainty(replyMsg.getSender(), replyMsg.getEra(), replyMsg.getCertainty());
 			mTrustNetwork.setAgentEraCertainty(replyMsg.getSender(), replyMsg.getEra(), replyMsg.getCertainty());
 		}
@@ -388,14 +424,21 @@ public abstract class CCMPAgent extends Agent {
         	}
     	}
     	
+    	mOpinionsRequested = new ArrayList<OpinionRequestMsg>();
+    	
+		mLogger.info("T="+currentTimestep+": Prepare Opinion Requests:");		    	
     	//Now handle the opinion requests.
     	//Go through each painting we are assigned and determine which agents we want to send opinion requests to
     	for( AppraisalAssignment appraisal: assignedPaintings)
     	{
+			mLogger.info("\t For Appraisal="+appraisal.getPaintingID()+" era="+appraisal.getEra());
+
     		for( String name: agentNames )
     		{
-    			if( mDecisionTree.requestAgentOpinion(name, appraisal) )
+    			if( name != getName() &&
+    				mDecisionTree.requestAgentOpinion(name, appraisal) )
     			{
+    				mLogger.info("\t\t to="+name);
     		        OpinionRequestMsg msg = new OpinionRequestMsg( name, null, appraisal );
     		        sendOutgoingMessage(msg); 
     		        mOpinionsRequested.add(msg);
@@ -414,7 +457,7 @@ public abstract class CCMPAgent extends Agent {
 		List<ReputationRequestMsg> reputationRequests = getIncomingMessages();
 		mReputationRequestsToAccept = new ArrayList<ReputationRequestMsg>();
 		
-		
+		mLogger.info("T="+currentTimestep+": Prepare reputation accept/decline");
         for (ReputationRequestMsg receivedMsg: reputationRequests)
         {
         	String toAgent = receivedMsg.getSender();
@@ -423,6 +466,7 @@ public abstract class CCMPAgent extends Agent {
         	
         	if( mDecisionTree.respondToReputationRequest( toAgent, aboutAgent, era ) )
         	{
+        		mLogger.info("\taccept to="+toAgent+" about="+aboutAgent+" era="+era);
         		mReputationRequestsToAccept.add(receivedMsg);
         		ReputationAcceptOrDeclineMsg msg = receivedMsg.reputationAcceptOrDecline(true);
             	sendOutgoingMessage(msg);
@@ -435,6 +479,7 @@ public abstract class CCMPAgent extends Agent {
         	}
         	else
         	{
+        		mLogger.info("\tdecline to="+toAgent+" about="+aboutAgent+" era="+era);        		
         		ReputationAcceptOrDeclineMsg msg = receivedMsg.reputationAcceptOrDecline(false);
             	sendOutgoingMessage(msg);
             	//Tell our trust network we did not accept the request
@@ -455,6 +500,8 @@ public abstract class CCMPAgent extends Agent {
 		//Stored the accept/decline messages we received from OUR requests;
 		mReputationRequestsAcceptedOrDeclined = getIncomingMessages();
 		
+		mLogger.info("T="+currentTimestep+": Parse returned reputation accept/decline:");
+		
 		//determine who declined our request for reputations, used in prepareCertainties to update
 		//reputations/trust
 		for( ReputationAcceptOrDeclineMsg acceptMsg: mReputationRequestsAcceptedOrDeclined )
@@ -465,13 +512,14 @@ public abstract class CCMPAgent extends Agent {
 				{
 					if( requestMsg.getTransactionID() == acceptMsg.getTransactionID() )
 					{
-        				mLogger.info("Agent " + acceptMsg.getSender() + " did not accept our reputation request about " + requestMsg.getEra());
+        				mLogger.info("\tto="+acceptMsg.getSender()+" about="+requestMsg.getAppraiserID()+" era="+requestMsg.getEra());
 						mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
 					}
 				}
 			}
 		}
-
+		
+		mLogger.info("T="+currentTimestep+" Prepare reputation replies");
 		//Now go through the reputation requests we accepted and generate the results.
         for (ReputationRequestMsg receivedMsg: mReputationRequestsToAccept)
         {
@@ -493,7 +541,7 @@ public abstract class CCMPAgent extends Agent {
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(toAgent, era);   
             	
-            	mLogger.info("Provided reputation to "+toAgent+" about "+aboutAgent+" value: "+repValue);
+            	mLogger.info("\tto="+toAgent+" about="+aboutAgent+" rep="+repValue);
         	}
         	else
         	{
@@ -503,7 +551,7 @@ public abstract class CCMPAgent extends Agent {
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(toAgent, era); 
             	
-            	mLogger.info("Did not provide reputation to "+toAgent+" about "+aboutAgent);
+            	mLogger.info("\tignored to="+toAgent+" about="+aboutAgent);
         	}
         }	
 	}
@@ -520,18 +568,26 @@ public abstract class CCMPAgent extends Agent {
 		 */
 		
 		//This is the first method in a time step, update our trust values based on results from previous time step.
-		processFrameResults();
+		if( currentTimestep != 0 )
+		{
+			processFrameResults();
+		}
+		
+		mLogger.info("T="+currentTimestep+": Prepare Reputation Requests: ");
 		
 		mReputationsRequested = new ArrayList<ReputationRequestMsg>();			
-        for (String toAgent: agentNames)
+        for (Era era: eras)
         {
-        	for( Era era: eras )
+    		mLogger.info("\t Era="+era);
+        	for( String toAgent: agentNames )
         	{
         		for( String aboutAgent: agentNames )
         		{
-        			if( toAgent != aboutAgent && mDecisionTree.requestAgentReputationUpdate(toAgent, aboutAgent, era, currentTimestep) )
+        			if( aboutAgent != getName() &&
+        				toAgent != aboutAgent &&
+        				mDecisionTree.requestAgentReputationUpdate(toAgent, aboutAgent, era, currentTimestep) )
         			{
-        				mLogger.info("Requesting reputation from " + toAgent + " about " + aboutAgent);
+        				mLogger.info("\t\t to="+toAgent+" about="+aboutAgent);
                         ReputationRequestMsg msg = new ReputationRequestMsg(toAgent, null, era, aboutAgent);
                         sendOutgoingMessage(msg);
                         mReputationsRequested.add(msg);
@@ -571,15 +627,38 @@ public abstract class CCMPAgent extends Agent {
     	mDecisionTree.frameReset();
     	mTrustNetwork.frameReset();
     	
+		mLogger.info("T="+currentTimestep+": Parse opinion reply messages:");		
+		//First go through and determine who didn't give us a certainty response.
+		for( OpinionRequestMsg requestMsg: mOpinionsRequested )
+		{
+			boolean providedOpinion = false;
+			for( OpinionReplyMsg replyMsg: opinionReplies )
+			{
+				if( replyMsg.getTransactionID() == requestMsg.getTransactionID() )
+				{
+					providedOpinion = true;
+					break;
+				}
+			}
+			if( !providedOpinion )
+			{
+				mLogger.info("\t Agent Did not provide opinion agent="+requestMsg.getSender()
+						    +" era="+requestMsg.getAppraisalAssignment().getEra());
+				mTrustNetwork.agentDidNotProvideOpinion(requestMsg.getSender(), requestMsg.getAppraisalAssignment().getEra());
+			}
+		}
+		    	
+    	
         if(finalAppraisals != null)
         {
         	for(Appraisal appraisal: finalAppraisals)
         	{
-//            	mLogger.info("Received )
+            	mLogger.info("Received final appraisal: ID="+appraisal.getPaintingID()+" Value="+appraisal.getTrueValue());
         		
         	    //System.out.print("ID: " + appraisal.getPaintingID() + ", real: " + appraisal.getTrueValue());
         		for(OpinionReplyMsg msg: opinionReplies)
         		{
+        			mLogger.info("Opinion: from="+msg.getOpinion().getOpinionProvider()+" opinion="+msg.getOpinion().getAppraisedValue());
         			if(msg.getAppraisalAssignment().getPaintingID().equals(appraisal.getPaintingID()))
         			{
         				mTrustNetwork.updateAgentTrustFromFinalAppraisal(msg.getOpinion().getOpinionProvider(),
@@ -620,14 +699,14 @@ public abstract class CCMPAgent extends Agent {
         return myExpertiseValues.get(era.getName());
     }
     
-    public String getLogFileName()
-    {
-    	return "CCMPAgentLog.txt";
-    }
-    
     public List<Era> getEras()
     {
     	return eras;
+    }
+    
+    public Logger getLogger()
+    {
+    	return mLogger;
     }
     
     abstract DecisionTree createDecisionTree();

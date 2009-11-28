@@ -114,7 +114,7 @@ public class SimpleDT extends DecisionTree {
 	{
 		//If we haven't sent to many requests, and we don't already know the agents
 		//certainty, return true.
-		if( mNumCertaintyRequestsSent >= mAgent.getMaxCertaintyRequests() )
+		if( mNumCertaintyRequestsSent < mAgent.getMaxCertaintyRequests() )
 		{
 		    Map<Era,Double> agCert = mCertainties.get(toAgent); 
 		    if (agCert == null || !agCert.containsKey(era))
@@ -130,7 +130,7 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public boolean requestAgentOpinion(String toAgent, AppraisalAssignment art)
 	{
-		if( mNumOpinionRequestsSent >= mAgent.getMaxOpinionRequests() )
+		if( mNumOpinionRequestsSent < mAgent.getMaxOpinionRequests() )
 		{
             if (mReputations.get(toAgent) > 0.5)
             {
