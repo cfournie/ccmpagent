@@ -12,17 +12,11 @@ import agent.CCMPAgent;
 import agent.decision.DecisionTree;
 
 
-
 /**
  * @author cfournie
  *
  */
 public class SimpleDT extends DecisionTree {
-	
-	private Map<String,Double>          mReputations;
-	private Map<String,Map<Era,Double>> mCertainties;
-	private int							mNumCertaintyRequestsSent;
-	private int							mNumOpinionRequestsSent;
 	
 	public SimpleDT(CCMPAgent agent)
 	{
@@ -130,7 +124,7 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public boolean requestAgentOpinion(String toAgent, AppraisalAssignment art)
 	{
-		if( mNumOpinionRequestsSent < mAgent.getMaxOpinionRequests() )
+		if( mNumOpinionRequestsSent.get(art.getPaintingID()) < mAgent.getMaxOpinionRequests() )
 		{
             if (mReputations.get(toAgent) > 0.5)
             {
@@ -182,7 +176,9 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void sentOpinionRequest(String toAgent, AppraisalAssignment art)
 	{
-		mNumOpinionRequestsSent++;
+		Integer currentSent = mNumOpinionRequestsSent.get(art.getPaintingID());
+		currentSent++;		
+		mNumOpinionRequestsSent.put( art.getPaintingID(), currentSent);
 	}
 
 	/* (non-Javadoc)
@@ -237,9 +233,10 @@ public class SimpleDT extends DecisionTree {
 	{
 		mReputations = new Hashtable<String,Double>();
 		mCertainties = new Hashtable<String,Map<Era,Double>>();
-		
 		mNumCertaintyRequestsSent = 0;
-		mNumOpinionRequestsSent = 0;
+		mNumOpinionRequestsSent = new Hashtable<String,Integer>();
+		
+		mNumOpinionRequestsSent.clear();
 	}
 	
 	/* (non-Javadoc)
@@ -247,8 +244,12 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void frameReset()
 	{
-		mNumCertaintyRequestsSent = 0;
-		mNumOpinionRequestsSent = 0;
+		mNumCertaintyRequestsSent= 0;
+		mNumOpinionRequestsSent.clear();
+		for( AppraisalAssignment art: mAgent.getAppraisalAssignments())
+		{
+			mNumOpinionRequestsSent.put(art.getPaintingID(), 0);
+		}		
 	}	
 
 	/* (non-Javadoc)
@@ -256,7 +257,7 @@ public class SimpleDT extends DecisionTree {
 	 */	
 	public void addAgent( String newAgent )
 	{
-		mReputations.put(newAgent, new Double(1.0));
+		mReputations.put(newAgent, new Double(1.0));	
 	}
 	
 	/* (non-Javadoc)

@@ -18,8 +18,8 @@ public abstract class DecisionTree {
 	protected CCMPAgent mAgent;
 	protected Map<String,Double>            mReputations;
 	protected Map<String,Map<Era,Double>> 	mCertainties;
-	protected int							mNumCertaintyRequestsSent;
-	protected int							mNumOpinionRequestsSent;
+	Integer									mNumCertaintyRequestsSent;
+	protected Map<String,Integer>			mNumOpinionRequestsSent;
 	
 	public DecisionTree(CCMPAgent agent)
 	{
