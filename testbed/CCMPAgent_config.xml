@@ -1,0 +1,5 @@
+<agentConfig typename="simple">
+	<CCMPParams>
+		<log>true</log>
+	</CCMPParams>
+</agentConfig>
