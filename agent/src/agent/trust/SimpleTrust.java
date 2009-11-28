@@ -125,7 +125,7 @@ public class SimpleTrust extends TrustNetwork {
 	 */
 	public double getInferredTrustValue(String agent, Era era)
 	{
-		return mReputations.get(agent);
+		return 0.0;
 	}
 
 	/* (non-Javadoc)
@@ -134,7 +134,7 @@ public class SimpleTrust extends TrustNetwork {
 	public double getReputationWeight(String agent, Era era)
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return mReputations.get(agent).doubleValue();
 	}
 	
 	/* (non-Javadoc)

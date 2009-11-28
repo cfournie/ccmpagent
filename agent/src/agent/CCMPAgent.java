@@ -45,17 +45,14 @@ public abstract class CCMPAgent extends Agent {
     private List<ReputationAcceptOrDeclineMsg>	mReputationRequestsAcceptedOrDeclined;
     private List<CertaintyRequestMsg>			mCertaintiesRequested;
     private List<OpinionRequestMsg>				mOpinionsRequested;
-    private List<Era> 							mEras;
-    protected Logger							mLogger;	
+    private List<Era> 							mCurrentEras;
+    protected Logger							mLogger;
 	
 	/**
 	 * 
 	 */
 	public CCMPAgent()
-	{
-		mEras = new LinkedList<Era>();
-		// TODO: Add list of eras
-		
+	{		
 		mDecisionTree = createDecisionTree();
 		mTrustNetwork = createTrustNetwork();
 	}
@@ -86,7 +83,7 @@ public abstract class CCMPAgent extends Agent {
 	               return buf.toString();
 	               }
 	             });
-	        mLogger = Logger.getLogger("CCMPAgentLog");
+	        mLogger = Logger.getLogger(getName());
 	       	mLogger.addHandler(fh);
 	       	mLogger.setUseParentHandlers(false);
 	    }
@@ -125,7 +122,7 @@ public abstract class CCMPAgent extends Agent {
 		//Store the list of certainty replies we provided to others.
 		mCertaintyReplysProvided = new ArrayList<CertaintyReplyMsg>();
 		
-		mLogger.info("T="+currentTimestep+": Prepare Certainty Replies"+certRequests.size());
+		mLogger.info("T="+currentTimestep+": Prepare Certainty Replies");
 				
         for (CertaintyRequestMsg receivedMsg: certRequests)
         {
@@ -219,17 +216,8 @@ public abstract class CCMPAgent extends Agent {
 		mLogger.info("T="+currentTimestep+" Prepare Certainty Requests:");		    	
     	
     	//Now handle the certainty requests.
-    	//Go through each painting we are assigned get the list of eras we have to evaluate:
-		List<Era> ourEras = new ArrayList<Era>();		
-    	for( AppraisalAssignment appraisal: assignedPaintings)
-    	{
-    		if( !ourEras.contains(appraisal.getEra()) )
-    		{
-    			ourEras.add(appraisal.getEra());
-    		}
-    	}
-    			
-    	for( Era era: ourEras )
+    	//Go through each painting we are assigned get the list of eras we have to evaluate:    			
+    	for( Era era: mCurrentEras )
     	{
 	    	mLogger.info("\t For era="+era);
 	   		for( String name: agentNames )
@@ -286,8 +274,19 @@ public abstract class CCMPAgent extends Agent {
 	        }
         }
 
-		mLogger.info("T="+currentTimestep+" Prepare Opinion Orders:");		
-        
+		mLogger.info("T="+currentTimestep+" Prepare Opinion Orders:");	
+		
+		//First generate an opinion request for ourselves.
+		if( !denyUseOfSelfOpinions )
+		{
+	    	for( AppraisalAssignment appraisal: assignedPaintings)
+	    	{	
+	            OpinionOrderMsg msg = new OpinionOrderMsg(null, appraisal, getOpinionCost()*2);
+	            msg.setAppraisalAssignment(appraisal);
+	            sendOutgoingMessage(msg);
+	        }
+		}
+		
         // Order an opinion (from the sim) for each opinion request message received
         for (OpinionRequestMsg receivedMsg: opinionRequests)
         {
@@ -500,10 +499,12 @@ public abstract class CCMPAgent extends Agent {
 		//Stored the accept/decline messages we received from OUR requests;
 		mReputationRequestsAcceptedOrDeclined = getIncomingMessages();
 		
-		mLogger.info("T="+currentTimestep+": Parse returned reputation accept/decline:");
+		mLogger.info("T="+currentTimestep+" Parse returned reputation accept/decline:");
 		
 		//determine who declined our request for reputations, used in prepareCertainties to update
 		//reputations/trust
+		int numAccepted = 0;
+		int numDeclined = 0;
 		for( ReputationAcceptOrDeclineMsg acceptMsg: mReputationRequestsAcceptedOrDeclined )
 		{
 			if( !acceptMsg.getAccept() )
@@ -512,12 +513,18 @@ public abstract class CCMPAgent extends Agent {
 				{
 					if( requestMsg.getTransactionID() == acceptMsg.getTransactionID() )
 					{
-        				mLogger.info("\tto="+acceptMsg.getSender()+" about="+requestMsg.getAppraiserID()+" era="+requestMsg.getEra());
+        				mLogger.info("\t agent declined rep request: from="+acceptMsg.getSender()+" about="+requestMsg.getAppraiserID()+" era="+requestMsg.getEra());
 						mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
 					}
 				}
 			}
+			else
+			{
+				numAccepted++;
+			}
 		}
+		mLogger.info("\t num received replies="+mReputationRequestsAcceptedOrDeclined.size()+
+				     " num accepted="+numAccepted+" num declined="+numDeclined);
 		
 		mLogger.info("T="+currentTimestep+" Prepare reputation replies");
 		//Now go through the reputation requests we accepted and generate the results.
@@ -572,11 +579,22 @@ public abstract class CCMPAgent extends Agent {
 		{
 			processFrameResults();
 		}
+		else
+		{
+			mCurrentEras = new ArrayList<Era>();		
+	    	for( AppraisalAssignment appraisal: assignedPaintings)
+	    	{
+	    		if( !mCurrentEras.contains(appraisal.getEra()) )
+	    		{
+	    			mCurrentEras.add(appraisal.getEra());
+	    		}
+	    	}   
+		}
 		
 		mLogger.info("T="+currentTimestep+": Prepare Reputation Requests: ");
 		
 		mReputationsRequested = new ArrayList<ReputationRequestMsg>();			
-        for (Era era: eras)
+        for (Era era: mCurrentEras)
         {
     		mLogger.info("\t Era="+era);
         	for( String toAgent: agentNames )
@@ -658,15 +676,24 @@ public abstract class CCMPAgent extends Agent {
         	    //System.out.print("ID: " + appraisal.getPaintingID() + ", real: " + appraisal.getTrueValue());
         		for(OpinionReplyMsg msg: opinionReplies)
         		{
-        			mLogger.info("Opinion: from="+msg.getOpinion().getOpinionProvider()+" opinion="+msg.getOpinion().getAppraisedValue());
         			if(msg.getAppraisalAssignment().getPaintingID().equals(appraisal.getPaintingID()))
         			{
+            			mLogger.info("\t from="+msg.getOpinion().getOpinionProvider()+" opinion="+msg.getOpinion().getAppraisedValue());
         				mTrustNetwork.updateAgentTrustFromFinalAppraisal(msg.getOpinion().getOpinionProvider(),
         						 										 appraisal, msg.getOpinion());
         			}
         		}
         	}
         }
+        
+		mCurrentEras = new ArrayList<Era>();		
+    	for( AppraisalAssignment appraisal: assignedPaintings)
+    	{
+    		if( !mCurrentEras.contains(appraisal.getEra()) )
+    		{
+    			mCurrentEras.add(appraisal.getEra());
+    		}
+    	}   
     }
     
     public int getMaxCertaintyRequests()
