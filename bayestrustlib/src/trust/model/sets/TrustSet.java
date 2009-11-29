@@ -19,7 +19,7 @@ public abstract class TrustSet {
 	
 	/**
 	 * Constructor
-	 * @param stats Statistics instance
+	 * @param stats Statistics helper, holds n
 	 */
 	protected TrustSet(Stats stats) {
 		this.stats = stats;
@@ -30,7 +30,7 @@ public abstract class TrustSet {
 	 * Returns a suitable key for usage in hashmaps from a Context and a Peer
 	 * @param c Context
 	 * @param p Peer
-	 * @return
+	 * @return unique key
 	 */
 	protected String keyFrom(Context c, Peer p) {
 		return c.getName() + "." + p.getName();
@@ -38,7 +38,7 @@ public abstract class TrustSet {
 
 	/**
 	 * Get default trust value for bootstrapping
-	 * @return
+	 * @return default trust value
 	 */
 	protected double defaultTrust() {
 		return 1.0 / this.stats.getN();
@@ -46,11 +46,12 @@ public abstract class TrustSet {
 	
 	/**
 	 * Get default trust value array for bootstrapping
-	 * @return
+	 * @return default trust value array
 	 */
 	protected double[] defaultTrustArray() {
 		double[] trust = new double[this.stats.getN()];
-		Arrays.fill(trust, this.defaultTrust());
+		double defaultVal = this.defaultTrust();
+		Arrays.fill(trust, defaultVal);
 		return trust;
 	}
 }

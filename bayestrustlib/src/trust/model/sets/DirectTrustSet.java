@@ -18,7 +18,7 @@ public class DirectTrustSet extends TrustSet {
 	
 	/**
 	 * Constructor
-	 * @param n
+	 * @param stats Statistics helper, holds n
 	 */
 	public DirectTrustSet(Stats stats)
 	{
@@ -29,11 +29,11 @@ public class DirectTrustSet extends TrustSet {
 	
 	/**
 	 * Set trust n-tuple
-	 * @param p Peer
-	 * @param c Context
+	 * @param py Peer
+	 * @param ck Context
 	 * @param d Set of probabilities that p_x has l_j
-	 * @return Previous value
 	 * @throws MalformedTupleException
+	 * @return Previous value
 	 */
 	public double[] store(Context ck, Peer py, double[] d) throws MalformedTupleException
 	{
@@ -43,9 +43,9 @@ public class DirectTrustSet extends TrustSet {
 	
 	/**
 	 * Get trust n-tuple
-	 * @param p Peer
-	 * @param c Context
-	 * @return
+	 * @param py Peer
+	 * @param ck Context
+	 * @return n-tuple d
 	 */
 	public double[] retrieve(Context ck, Peer py)
 	{

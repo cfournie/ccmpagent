@@ -22,7 +22,7 @@ public class SentRecommendationSet extends TrustSet {
 	
 	/**
 	 * Construct an SRS store.
-	 * @param nLevels number of trust levels
+	 * @param stats Statistics helper, holds n
 	 */
 	public SentRecommendationSet(Stats stats)
 	{

@@ -18,7 +18,7 @@ public abstract class Named {
 	
 	/**
 	 * Get unique identifier name
-	 * @return
+	 * @return unique name
 	 */
 	public String getName() {
 		return this.name;

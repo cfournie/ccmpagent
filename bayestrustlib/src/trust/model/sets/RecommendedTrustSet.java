@@ -16,7 +16,7 @@ public class RecommendedTrustSet extends TrustSet {
 	
 	/**
 	 * Construct an RTS store.
-	 * @param nLevels number of trust levels
+	 * @param stats Statistics helper, holds n
 	 */
 	public RecommendedTrustSet(Stats stats)
 	{

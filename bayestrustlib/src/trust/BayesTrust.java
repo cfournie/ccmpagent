@@ -1,6 +1,3 @@
-/**
- * 
- */
 package trust;
 
 import java.util.LinkedList;
@@ -13,17 +10,27 @@ import trust.model.math.Stats;
 import trust.model.primitives.*;
 
 /**
- * @author cfournie
- *
+ * Implementation of the paper "B-trust: Bayesian Trust Framework for Pervasive
+ * Computing" by Daniele Quercia, Stephen Hailes, Licia Capra (2006).
+ * 
+ * Catalin Patulea, Chris Fournier
  */
 public class BayesTrust implements TrustInterface {
+	/** List of contexts */
 	protected List<Context> c = new LinkedList<Context>();
+	/** List of peers */
 	protected List<Peer> p = new LinkedList<Peer>();
+	/** Direct Trust Set */
 	protected DirectTrustSet dts;
+	/** Direct Experience Set */
 	protected DirectExperienceSet des;
+	/** Recommended Trust Set */
 	protected RecommendedTrustSet rts;
+	/** Sent Recommendation Set */
 	protected SentRecommendationSet srs;
+	/** Statistics helper */
 	protected Stats stats;
+	/** Miscellaneous methods */
 	protected Misc misc;
 	
 	/** Weighting factor sigma, defines how heavily direct trust is considered
@@ -32,10 +39,11 @@ public class BayesTrust implements TrustInterface {
 	
 	/**
 	 * Constructor
-	 * @param n
+	 * @param n Number of levels
+	 * @param contexts All possible contexts
 	 */
-	public BayesTrust(int nLevels, List<Context> contexts) {
-		this.stats = new Stats(nLevels);
+	public BayesTrust(int n, List<Context> contexts) {
+		this.stats = new Stats(n);
 		this.misc = new Misc(stats);
 		
 		this.dts = new DirectTrustSet(stats);
@@ -98,7 +106,6 @@ public class BayesTrust implements TrustInterface {
 	 * @param pr recommender
 	 * @param py subject of recommendation
 	 * @param ctsBeta continuous recommendation level on [0, 1.0]
-	 * @author Catalin Patulea <cat@vv.carleton.ca>
 	 */
 	public void storeRecommendation(Context ck, Peer pr, Peer py, double ctsBeta) throws LevelRangeException {
 		int beta = misc.discretize(ctsBeta);

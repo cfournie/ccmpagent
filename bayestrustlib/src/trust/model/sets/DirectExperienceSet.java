@@ -19,7 +19,7 @@ public class DirectExperienceSet extends TrustSet {
 	
 	/**
 	 * Constructor
-	 * @param nLevels
+	 * @param stats Statistics helper, holds n
 	 */
 	public DirectExperienceSet(Stats stats)
 	{
@@ -47,11 +47,11 @@ public class DirectExperienceSet extends TrustSet {
 	
 	/**
 	 * Set trust n-tuple
-	 * @param p Peer
-	 * @param c Context
-	 * @param d Set of probabilities that p_x has l_j
-	 * @return Previous value
+	 * @param py Peer
+	 * @param ck Context
+	 * @param ec Set of probabilities that p_x has l_j
 	 * @throws MalformedTupleException
+	 * @return Previous n-tuple ec
 	 */
 	public double[][] store(Context ck, Peer py, double[][] ec)
 	{
@@ -61,9 +61,9 @@ public class DirectExperienceSet extends TrustSet {
 	
 	/**
 	 * Get trust n-tuple
-	 * @param p Peer
-	 * @param c Context
-	 * @return
+	 * @param py Peer
+	 * @param ck Context
+	 * @return n-tuple ec
 	 */
 	public double[][] retrieve(Context ck, Peer py)
 	{

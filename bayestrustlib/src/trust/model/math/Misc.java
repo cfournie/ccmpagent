@@ -24,11 +24,11 @@ public class Misc {
 	 * @param l continuous level on [0, 1]
 	 * @return discrete level in [0, N - 1]
 	 */
-	public int discretize(double level) {
-		checkLevel(level);
+	public int discretize(double l) {
+		checkLevel(l);
 		
 		// Approximately map [0, 1] to [0, 1).
-		double exclusive = level * 0.999;
+		double exclusive = l * 0.999;
 		
 		// Map equally-sized intervals [i/N, (i+1)/N) to i.
 		return (int)Math.floor(exclusive * stats.getN());
@@ -36,7 +36,7 @@ public class Misc {
 	
 	/**
 	 * Creates an empty 2d array of size n*n
-	 * @return
+	 * @return empty (zeroed) 2d array
 	 */
 	public double[][] makeMatrix() {
 		double d[][] = {};
@@ -51,7 +51,7 @@ public class Misc {
 	
 	/**
 	 * Creates an filled 2d array of size n*n
-	 * @return
+	 * @return 2d array initialised to value l
 	 */
 	public double[][] makeMatrix(double l) {
 		double d[][] = {};
@@ -66,7 +66,7 @@ public class Misc {
 	
 	/**
 	 * Creates an empty array of size n
-	 * @return
+	 * @return n-tuple initialised to value l
 	 */
 	public double[] makeTuple() {
 		double d[] = {};
@@ -76,7 +76,7 @@ public class Misc {
 	
 	/**
 	 * Creates a filled array of size n
-	 * @return
+	 * @return empty (zeroed) n-tuple
 	 */
 	public double[] makeTuple(double l) {
 		double d[] = {};
@@ -86,16 +86,16 @@ public class Misc {
 	
 	/**
 	 * Checks whether a discrete level is within range
-	 * @param l
+	 * @param l discrete level
 	 */
 	public void checkLevel(int l) throws LevelRangeException {
-		if (l < 0 || l > this.stats.getN())
+		if (l < 0 || l >= this.stats.getN())
 			throw new LevelRangeException(l, stats);
 	}
 	
 	/**
 	 * Checks whether a cts level is within range
-	 * @param l
+	 * @param l cts level
 	 */
 	public void checkLevel(double l) throws LevelRangeException {
 		if (l < 0 || l > 1.0)
@@ -103,8 +103,8 @@ public class Misc {
 	}
 	
 	/**
-	 * Checks whether a tuple size is within range
-	 * @param l
+	 * Checks whether a tuple is within range
+	 * @param d tuple
 	 */
 	public void checkTuple(double[] d) throws MalformedTupleException {
 		if (d.length != this.stats.getN())
@@ -113,7 +113,7 @@ public class Misc {
 	
 	/**
 	 * Checks whether a matrix size is within range
-	 * @param l
+	 * @param d 2d matrix
 	 */
 	public void checkMatrix(double[][] d) throws MalformedTupleException {
 		if (d.length != this.stats.getN())

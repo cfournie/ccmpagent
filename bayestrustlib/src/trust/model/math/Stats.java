@@ -4,21 +4,28 @@ import trust.model.exceptions.*;
 import java.text.*;
 
 public class Stats {
+	/** Number of levels */
 	protected int n = 0;
 	
-	
+	/**
+	 * Constructor
+	 * @param n Number of levels
+	 */
 	public Stats(int n) {
 		this.n = n;
 	}
 	
+	/**
+	 * Gets the number of levels
+	 * @return levels
+	 */
 	public int getN() {
 		return n;
 	}
 	
 	/**
 	 * Mean for a d that is a pmf
-	 * @param n
-	 * @return
+	 * @return mean
 	 */
 	public double meanPmf()
 	{
@@ -27,8 +34,7 @@ public class Stats {
 	
 	/**
 	 * Max variance for a d that is a pmf
-	 * @param n
-	 * @return
+	 * @return confidence
 	 */
 	public double confidencePmfMax()
 	{
@@ -37,8 +43,8 @@ public class Stats {
 	
 	/**
 	 * Variance for a d that is a pmf
-	 * @param d
-	 * @return
+	 * @param d pmf
+	 * @return variance
 	 */
 	public double variancePmf(double[] d)
 	{
@@ -53,8 +59,8 @@ public class Stats {
 	
 	/**
 	 * Mean for a d that is not a pmf
-	 * @param d
-	 * @return
+	 * @param d sample
+	 * @return mean
 	 */
 	public double mean(double[] d)
 	{
@@ -66,8 +72,8 @@ public class Stats {
 	
 	/**
 	 * Variance for a d that is not a pmf
-	 * @param d
-	 * @return
+	 * @param d sample
+	 * @return variance
 	 */
 	public double variance(double[] d)
 	{
@@ -82,7 +88,7 @@ public class Stats {
 	
 	/**
 	 * Shows a pmf, its mean and variance on stdout.
-	 * @param d the pmf
+	 * @param d pmf
 	 */
 	public void printPmf(double[] d) 
 	{
@@ -109,5 +115,13 @@ public class Stats {
 			}
 		}
 		System.out.println("] mean=" + fmt.format(mean) + " var=" + fmt.format(var));
+	}
+	
+	/**
+	 * Get the expected tuple length
+	 * @return length
+	 */
+	public int getExpectedTupleLength() {
+		return this.n;
 	}
 }
