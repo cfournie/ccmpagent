@@ -36,6 +36,7 @@ public class test_dtlib {
 		try {
 			DTLearning myDT = new DTLearning(myARFF);
 			System.out.println(myDT.DTClassify(myTest));
+			myDT.Visualize();
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}

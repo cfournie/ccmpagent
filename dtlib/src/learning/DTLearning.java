@@ -3,11 +3,14 @@
  */
 package learning;
 
+import java.awt.BorderLayout;
 import java.io.StringReader;
+
 
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.classifiers.trees.J48;
+import weka.gui.treevisualizer.*;
 
 /**
  * @author pdinniss
@@ -16,7 +19,6 @@ import weka.classifiers.trees.J48;
 
 public class DTLearning {
 	J48 tree;
-	int nonCatCount;
 	DTWekaARFF arff;
 	
 	public DTLearning(DTWekaARFF Data)
@@ -34,11 +36,9 @@ public class DTLearning {
 			tree = new J48();             // new instance of tree
 			tree.setOptions(options);     // set the options
 			tree.buildClassifier(data);   // build classifier
-			nonCatCount = data.numAttributes();
 			this.arff = Data;
 		} catch (Exception e) {
 			tree = null;
-			nonCatCount = 0;
 			e.printStackTrace();
 		}		
 	}
@@ -78,6 +78,29 @@ public class DTLearning {
 		}
 		
 		return retVal;
+	}
+	
+	public void Visualize()
+	{		
+		try {
+			final javax.swing.JFrame jf = 
+				new javax.swing.JFrame("Weka Classifier Tree Viusualizer");
+			jf.setSize(500,400);
+			jf.getContentPane().setLayout(new BorderLayout());
+			TreeVisualizer tv;
+			tv = new TreeVisualizer(null, tree.graph(), new PlaceNode2());
+			jf.getContentPane().add(tv, BorderLayout.CENTER);
+			jf.addWindowListener(new java.awt.event.WindowAdapter() {
+				public void windowClosing(java.awt.event.WindowEvent e) {
+					jf.dispose();
+				}
+			});
+			jf.setVisible(true);
+			tv.fitToScreen();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }
