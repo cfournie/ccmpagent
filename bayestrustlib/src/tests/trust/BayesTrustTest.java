@@ -1,7 +1,7 @@
 package tests.trust;
 
+import trust.model.BayesTrust;
 import trust.model.primitives.*;
-import trust.*;
 import java.util.*;
 import org.junit.*;
 import static junitx.framework.ArrayAssert.*;

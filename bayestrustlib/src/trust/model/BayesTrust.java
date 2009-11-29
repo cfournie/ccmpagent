@@ -1,7 +1,9 @@
-package trust;
+package trust.model;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import trust.TrustDecision;
 import trust.model.sets.*;
 import trust.model.exceptions.DuplicatePeerException;
 import trust.model.exceptions.LevelRangeException;
@@ -92,10 +94,14 @@ public class BayesTrust implements TrustInterface {
 	 * @param ck
 	 * @param py
 	 * @param lb
+	 * @param td
 	 */
-	public void storeEncounter(Context ck, Peer py, double lb) throws LevelRangeException {
+	public void storeEncounter(Context ck, Peer py, double lb, TrustDecision td) throws LevelRangeException {
+		// Determine previous trust level
+		double la = td.getCondensedTrustValue(getOverallTrust(ck, py));
+		
 		// Encountered trust level lb while interacting with a peer with trust level la (previous trust)
-		des.storeEncounter(ck, py, misc.discretize(lb), misc.discretize(getOverallTrust(ck, py)));
+		des.storeEncounter(ck, py, misc.discretize(lb), misc.discretize(la));
 	}
 	
 	/**
@@ -161,19 +167,21 @@ public class BayesTrust implements TrustInterface {
 	 * @param py Peer
 	 * @return level from 0 to n
 	 */
-	public double getOverallTrust(Context ck, Peer py) {
+	public double[] getOverallTrust(Context ck, Peer py) {
+		double[] t = misc.makeTuple();
 		double[] d = dts.retrieve(ck, py);
 		double[] r = rts.retrieve(ck, py);
-		double dy = 0;
-		double ry = 0;
 		
 		for (int j = 0; j < stats.getN(); j++)
 		{
-			dy += (j+1) * d[j];
-			ry += (j+1) * r[j];
+
+			double dy = (j+1) * d[j];
+			double ry = (j+1) * r[j];
+			
+			t[j] = (SIGMA * dy) + ((1-SIGMA) * ry);
 		}
 		
-		return ((SIGMA * dy) + ((1-SIGMA) * ry)) / (stats.getN());
+		return t;
 	}
 	
 	/**
@@ -193,5 +201,12 @@ public class BayesTrust implements TrustInterface {
 		}
 		
 		return stats.confidencePmfMax() / stats.variancePmf(t);
+	}
+	
+	/**
+	 * Gets the number of levels
+	 */
+	public int getN() {
+		return stats.getN();
 	}
 }

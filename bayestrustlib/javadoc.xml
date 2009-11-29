@@ -13,7 +13,7 @@
         	nonavbar="false"
         	notree="false"
         	overview="src\overview.html"
-        	packagenames="tests.trust.model.math,trust.model.sets,trust.model.primitives,tests.trust.model.sets,trust.model.exceptions,trust.model.math,trust,tests.trust"
+        	packagenames="tests.trust.model.math,trust.model.sets,trust.model.primitives,tests.trust.model.sets,trust.model.exceptions,trust.model.math,trust.model,trust,tests.trust"
         	source="1.5"
         	sourcepath="src"
         	splitindex="true"
