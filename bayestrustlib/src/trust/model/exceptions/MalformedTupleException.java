@@ -2,6 +2,10 @@ package trust.model.exceptions;
 
 import trust.model.math.Stats;
 
+/**
+ * Thrown when a tuple is encountered of an incorrect size.
+ * @author cfournie
+ */
 public class MalformedTupleException extends IllegalArgumentException {
 	/**
 	 * serialVersionUID
@@ -10,7 +14,7 @@ public class MalformedTupleException extends IllegalArgumentException {
 
 	/**
 	 * Constructor
-	 * @param tupleLength Recieved length
+	 * @param tupleLength Received length
 	 * @param stats Statistics instance
 	 */
 	public MalformedTupleException(int tupleLength, Stats stats) {

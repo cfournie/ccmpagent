@@ -7,9 +7,9 @@ import trust.model.math.Stats;
 import trust.model.primitives.*;
 
 /**
- * Direct Trust Set implementation
+ * Direct Trust Set implementation.
  * 
- * See <b>reputation data structures</b>
+ * See <b>reputation data structures</b>.
  * @author cfournie
  */
 public class DirectTrustSet extends TrustSet {

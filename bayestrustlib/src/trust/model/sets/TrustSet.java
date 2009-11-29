@@ -8,7 +8,7 @@ import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
 /**
- * Generic methods for trust sets
+ * Generic methods for trust sets.
  * @author cfournie
  */
 public abstract class TrustSet {

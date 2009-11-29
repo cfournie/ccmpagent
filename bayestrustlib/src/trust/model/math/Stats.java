@@ -3,6 +3,10 @@ package trust.model.math;
 import trust.model.exceptions.*;
 import java.text.*;
 
+/**
+ * Statistics helper class.
+ * @author cfournie
+ */
 public class Stats {
 	/** Number of levels */
 	protected int n = 0;

@@ -3,7 +3,7 @@ package trust;
 import trust.model.TrustInterface;
 
 /**
- * 
+ * Abstract trust decision interface module.
  * @author cfournie
  */
 public abstract class TrustDecision {
@@ -18,10 +18,9 @@ public abstract class TrustDecision {
 		this.trust = trust;
 	}
 	
+
 	/**
-	 * Interpret a trust pmf as a single value
-	 * @param d
-	 * @return cts trust value
+	 * Condenses a trust pmf into a single value
 	 */
 	public abstract double getCondensedTrustValue(double[] d);
 }

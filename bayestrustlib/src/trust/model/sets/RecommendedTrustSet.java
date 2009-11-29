@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Recommended Trust Set implementation
+ * Recommended Trust Set implementation.
  * 
- * See <b>reputation data structures</b>
+ * See <b>reputation data structures</b>.
  * Catalin Patulea <cat@vv.carleton.ca>
  */
 public class RecommendedTrustSet extends TrustSet {

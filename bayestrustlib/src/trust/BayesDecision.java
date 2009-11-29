@@ -22,6 +22,7 @@ public class BayesDecision extends TrustDecision {
 
 	/**
 	 * Translates a trust pmf into one value
+	 * @see trust.TrustDecision#getCondensedTrustValue(double[])
 	 * @param d Trust pmf
 	 * @return Trust level [0,n-1]
 	 */

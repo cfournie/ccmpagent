@@ -1,6 +1,3 @@
-/**
- * 
- */
 package trust.model.math;
 
 import java.util.Arrays;
@@ -9,8 +6,8 @@ import trust.model.exceptions.LevelRangeException;
 import trust.model.exceptions.MalformedTupleException;
 
 /**
+ * Miscellaneous mathematical helper methods.
  * @author cfournie
- *
  */
 public class Misc {
 	Stats stats;

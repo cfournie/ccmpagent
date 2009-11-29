@@ -8,9 +8,9 @@ import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
 /**
- * Direct Experience Set implementation
+ * Direct Experience Set implementation.
  * 
- * See <b>reputation data structures</b>
+ * See <b>reputation data structures</b>.
  * @author cfournie
  */
 public class DirectExperienceSet extends TrustSet {

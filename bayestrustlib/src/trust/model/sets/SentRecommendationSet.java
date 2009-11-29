@@ -10,9 +10,9 @@ import trust.model.primitives.Peer;
 import trust.model.math.Stats;
 
 /**
- * Send Recommendation Set implementation
+ * Send Recommendation Set implementation.
  * 
- * See <b>reputation data structures</b>
+ * See <b>reputation data structures</b>.
  * Catalin Patulea <cat@vv.carleton.ca>
  */
 public class SentRecommendationSet extends TrustSet {
