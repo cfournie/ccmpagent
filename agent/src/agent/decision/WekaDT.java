@@ -44,6 +44,7 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 	
+	
 	/* (non-Javadoc)
 	 * @see agent.learning.LearningInterface#adjustAppraisalValue(java.lang.String, testbed.sim.Era, int)
 	 */
@@ -150,7 +151,7 @@ public class WekaDT extends DecisionTree {
 	{
 		//If we haven't sent to many requests, and we don't already know the agents
 		//certainty, return true.
-		if( mNumCertaintyRequestsSent >= mAgent.getMaxCertaintyRequests() )
+		if( mNumCertaintyRequestsSent < mAgent.getMaxCertaintyRequests() )
 		{
 		    Map<Era,Double> agCert = mCertainties.get(toAgent); 
 		    if (agCert == null || !agCert.containsKey(era))
@@ -166,7 +167,7 @@ public class WekaDT extends DecisionTree {
 	 */
 	public boolean requestAgentOpinion(String toAgent, AppraisalAssignment art)
 	{
-		if( mNumOpinionRequestsSent >= mAgent.getMaxOpinionRequests() )
+		if( mNumOpinionRequestsSent.get(art.getPaintingID()) < mAgent.getMaxOpinionRequests() )
 		{
             if (mReputations.get(toAgent) > 0.5)
             {
@@ -218,7 +219,9 @@ public class WekaDT extends DecisionTree {
 	 */
 	public void sentOpinionRequest(String toAgent, AppraisalAssignment art)
 	{
-		mNumOpinionRequestsSent++;
+		Integer currentSent = mNumOpinionRequestsSent.get(art.getPaintingID());
+		currentSent++;		
+		mNumOpinionRequestsSent.put( art.getPaintingID(), currentSent);
 	}
 
 	/* (non-Javadoc)
@@ -273,9 +276,10 @@ public class WekaDT extends DecisionTree {
 	{
 		mReputations = new Hashtable<String,Double>();
 		mCertainties = new Hashtable<String,Map<Era,Double>>();
-		
 		mNumCertaintyRequestsSent = 0;
-		mNumOpinionRequestsSent = 0;
+		mNumOpinionRequestsSent = new Hashtable<String,Integer>();
+		
+		mNumOpinionRequestsSent.clear();
 	}
 	
 	/* (non-Javadoc)
@@ -283,8 +287,12 @@ public class WekaDT extends DecisionTree {
 	 */
 	public void frameReset()
 	{
-		mNumCertaintyRequestsSent = 0;
-		mNumOpinionRequestsSent = 0;
+		mNumCertaintyRequestsSent= 0;
+		mNumOpinionRequestsSent.clear();
+		for( AppraisalAssignment art: mAgent.getAppraisalAssignments())
+		{
+			mNumOpinionRequestsSent.put(art.getPaintingID(), 0);
+		}
 	}	
 
 	/* (non-Javadoc)
