@@ -1,6 +1,3 @@
-/**
- * 
- */
 package trust.model.primitives;
 
 /**
@@ -8,6 +5,7 @@ package trust.model.primitives;
  * @author cfournie
  */
 public abstract class Named {
+	/** Unique name (intended to be unique per subclass) */
 	protected String name = "";
 	
 	/**
@@ -18,12 +16,16 @@ public abstract class Named {
 		this.name = name;
 	}
 	
+	/**
+	 * Get unique identifier name
+	 * @return
+	 */
 	public String getName() {
 		return this.name;
 	}
 	
 	/**
-	 * Equality operator
+	 * Equality operator that relies upon comparison of unique name
 	 */
 	public boolean equals(Object o) {
 		boolean equal = true;

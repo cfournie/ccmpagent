@@ -6,6 +6,12 @@ import trust.model.exceptions.MalformedTupleException;
 import trust.model.math.Stats;
 import trust.model.primitives.*;
 
+/**
+ * Direct Trust Set implementation
+ * 
+ * See <b>reputation data structures</b>
+ * @author cfournie
+ */
 public class DirectTrustSet extends TrustSet {
 	/** DTS */
 	protected HashMap<String,double []> set;

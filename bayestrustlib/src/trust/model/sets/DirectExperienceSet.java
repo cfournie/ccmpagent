@@ -7,6 +7,12 @@ import trust.model.math.Stats;
 import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
+/**
+ * Direct Experience Set implementation
+ * 
+ * See <b>reputation data structures</b>
+ * @author cfournie
+ */
 public class DirectExperienceSet extends TrustSet {
 	/** DES */
 	protected HashMap<String,double [][]> set;
@@ -22,10 +28,12 @@ public class DirectExperienceSet extends TrustSet {
 	
 	/**
 	 * Updates data structure to represent an encounter
+	 * 
+	 * See <b>Trust evolution through direct experience evaluation</b>
 	 * @param ck Context
 	 * @param py Peer
 	 * @param lb Trust level determined after encounter
-	 * @param la Previous trust level
+	 * @param la Trust level acted upon
 	 */
 	public void storeEncounter(Context ck, Peer py, int lb, int la) {
 		this.misc.checkLevel(la);

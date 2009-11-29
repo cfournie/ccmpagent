@@ -28,7 +28,7 @@ public class StatsTest {
 	
 	@Test
 	public void testNoVariance() {
-		double[] trust = new double[]{0, 1/6, 2/6, 3/6};
+		double[] trust = new double[]{1/TRUST_LEVELS, 1/TRUST_LEVELS, 1/TRUST_LEVELS, 1/TRUST_LEVELS};
 		double variance = stats.variance(trust);
 		assertEquals(0, variance, 0.0);
 	}

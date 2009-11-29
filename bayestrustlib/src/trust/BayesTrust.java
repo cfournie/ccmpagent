@@ -26,10 +26,8 @@ public class BayesTrust implements TrustInterface {
 	protected Stats stats;
 	protected Misc misc;
 	
-	
-	/** A default value to initialize the DTS to */
-	private static final double DEFAULT_TRUST = 0.25;
-	/** Weighting factor sigma */
+	/** Weighting factor sigma, defines how heavily direct trust is considered
+	 *  versus recommended trust */
 	private static final double SIGMA = 0.5;
 	
 	/**
@@ -61,8 +59,8 @@ public class BayesTrust implements TrustInterface {
 		
 		for (Context ck : c)
 		{
-			// Init DTS with no confidence trust values (variance = 0)
-			des.store(ck, py, this.misc.makeMatrix(DEFAULT_TRUST));
+			// Init DTS with trust values resulting in no confidence (variance = 0), or 1/n
+			des.store(ck, py, this.misc.makeMatrix());
 			
 			// Init DES with blank experience counts
 			des.store(ck, py, this.misc.makeMatrix());
@@ -81,16 +79,21 @@ public class BayesTrust implements TrustInterface {
 	
 	/**
 	 * Record an encounter
+	 * 
+	 * See <b>Trust evolution through direct experience evaluation</b>
 	 * @param ck
 	 * @param py
 	 * @param lb
 	 */
-	public void storeEncounter(Context ck, Peer py, double level) throws LevelRangeException {
-		des.storeEncounter(ck, py, misc.discretize(level), misc.discretize(getOverallTrust(ck, py)));
+	public void storeEncounter(Context ck, Peer py, double lb) throws LevelRangeException {
+		// Encountered trust level lb while interacting with a peer with trust level la (previous trust)
+		des.storeEncounter(ck, py, misc.discretize(lb), misc.discretize(getOverallTrust(ck, py)));
 	}
 	
 	/**
 	 * Record a recommendation
+	 * 
+	 * See <b>Trust evolution through direct recommendation evaluation</b>
 	 * @param ck context
 	 * @param pr recommender
 	 * @param py subject of recommendation
@@ -144,19 +147,6 @@ public class BayesTrust implements TrustInterface {
 		return rts.retrieve(ck, py);
 	}
 	
-	/**
-	 * Returns overall trust in a peer for a context
-	 * @param ck Context
-	 * @param py Peer
-	 * @param lj Level
-	 * @return level from 0 to n-1
-	 * @deprecated
-	 */
-	public int getOverallTrust(Context ck, Peer py, int lj) {
-		double dj = dts.retrieve(ck, py)[lj];	// Direct trust
-		double rj = rts.retrieve(ck, py)[lj];	// Recommended trust
-		return this.misc.discretize((SIGMA * dj) + ((1-SIGMA) * rj));
-	}
 	
 	/**
 	 * Returns overall trust in a peer for a context
@@ -170,13 +160,13 @@ public class BayesTrust implements TrustInterface {
 		double dy = 0;
 		double ry = 0;
 		
-		for (int i = 0; i < stats.getN(); i++)
+		for (int j = 0; j < stats.getN(); j++)
 		{
-			dy += (i+1) * d[i];
-			ry += (i+1) * r[i];
+			dy += (j+1) * d[j];
+			ry += (j+1) * r[j];
 		}
 		
-		return ((SIGMA * dy) + ((1-SIGMA) * ry)) / stats.getN();
+		return ((SIGMA * dy) + ((1-SIGMA) * ry)) / (stats.getN());
 	}
 	
 	/**
@@ -190,9 +180,9 @@ public class BayesTrust implements TrustInterface {
 		double[] r = rts.retrieve(ck, py);
 		double[] t = this.misc.makeTuple();
 		
-		for (int i = 0; i < stats.getN(); i++)
+		for (int j = 0; j < stats.getN(); j++)
 		{
-			t[i] = (SIGMA * d[i]) + ((1-SIGMA) * r[i]);
+			t[j] = (SIGMA * d[j]) + ((1-SIGMA) * r[j]);
 		}
 		
 		return stats.confidencePmfMax() / stats.variancePmf(t);

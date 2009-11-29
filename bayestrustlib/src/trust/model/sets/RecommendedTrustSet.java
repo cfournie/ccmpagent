@@ -1,12 +1,16 @@
-/**
- * @author Catalin Patulea <cat@vv.carleton.ca>
- */
 package trust.model.sets;
+
 import trust.model.math.Stats;
 import trust.model.primitives.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Recommended Trust Set implementation
+ * 
+ * See <b>reputation data structures</b>
+ * Catalin Patulea <cat@vv.carleton.ca>
+ */
 public class RecommendedTrustSet extends TrustSet {
 	protected Map<String, double[]> store;
 	
@@ -30,7 +34,7 @@ public class RecommendedTrustSet extends TrustSet {
 	{
 		double[] trust = store.get(keyFrom(ck, py));
 		if (trust == null) {
-			return defaultTrust();
+			return defaultTrustArray();
 		} else {
 			return trust;
 		}

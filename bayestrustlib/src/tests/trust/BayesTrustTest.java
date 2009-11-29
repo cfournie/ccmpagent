@@ -4,10 +4,11 @@ import trust.model.primitives.*;
 import trust.*;
 import java.util.*;
 import org.junit.*;
-import static org.junit.Assert.*;
 import static junitx.framework.ArrayAssert.*;
 
 public class BayesTrustTest {
+	public static final int TRUST_LEVELS = 4;
+	
 	public static final Context[] CONTEXTS = {
 		new Context("roman"),
 		new Context("middleAges"),
@@ -26,7 +27,7 @@ public class BayesTrustTest {
 	
 	@Before
 	public void setUpBayesTrust() {
-		bt = new BayesTrust(4, Arrays.asList(CONTEXTS));
+		bt = new BayesTrust(TRUST_LEVELS, Arrays.asList(CONTEXTS));
 	}
 	
 	@Test
