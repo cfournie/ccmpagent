@@ -49,9 +49,8 @@ public class WekaDT extends DecisionTree {
 	 * @see agent.learning.LearningInterface#adjustAppraisalValue(java.lang.String, testbed.sim.Era, int)
 	 */
 	public int adjustAppraisalValue(String toAgent, Era era, int appraisal) {
-		double certainty, trust;
-		certainty = 0;
-		trust = 0;
+		double certainty = 0;
+		double trust = 0;
 		String dtTest = Double.toString(certainty)+","+Double.toString(trust)+",?"; 
 			
 		String result = dtreeArray[DTLearningNames.DT_ADJUSTAPPRAISAL.ordinal()].DTClassify(dtTest);
@@ -78,8 +77,28 @@ public class WekaDT extends DecisionTree {
 	 * @see agent.learning.LearningInterface#generateOpinion(java.lang.String, testbed.sim.Era)
 	 */
 	public boolean generateOpinion(String requestingAgent, Era era) {
-		// Simple DT always generates an opinion when asked
-		return true;
+		int msgRem = 0;
+		double certainty = 0;
+		double trust = 0;
+		
+		String dtTest = Integer.toString(msgRem)+","+
+						Double.toString(certainty)+","+
+						Double.toString(trust)+",?"; 
+		
+		String result = dtreeArray[DTLearningNames.DT_GENERATEOPINION.ordinal()].DTClassify(dtTest);
+
+		if(result == "DO")
+		{
+			return true;
+		}
+		else if(result == "DONT")
+		{
+			return false;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -87,12 +106,28 @@ public class WekaDT extends DecisionTree {
 	 */
 	public double getAppraisalCost(String requestingAgent, Era era)
 	{
-        // if the requester is trusted we pay 80% for the opinion
-        // otherwise we pay 0.01
-        if (mReputations.get(requestingAgent) > 0.5)
-        	return mAgent.getOpinionCost() * 0.8; // spend 80% of the opinion cost  
-        else 
-            return 0.01;
+		double trust = 0;
+		
+		String dtTest = Double.toString(trust)+",?"; 
+
+		String result = dtreeArray[DTLearningNames.DT_GETAPPRAISAL.ordinal()].DTClassify(dtTest);
+		
+		if (result == "MINIMAL")
+		{
+			return 0.01;
+		}
+		else if(result == "MODERATE")
+		{
+			return mAgent.getOpinionCost()*0.8;
+		}
+		else if(result == "BEST")
+		{
+			return mAgent.getOpinionCost();
+		}
+		else
+		{
+			return 0.01;
+		}
     }
 
 	/* (non-Javadoc)
