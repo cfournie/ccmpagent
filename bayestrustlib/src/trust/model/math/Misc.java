@@ -80,6 +80,10 @@ public class Misc {
 		Arrays.fill(d, 0, this.stats.getN(), l);
 		return d;
 	}
+
+	public double[] defaultTrustTuple() {
+		return makeTuple(1.0 / this.stats.getN());
+	}
 	
 	/**
 	 * Checks whether a discrete level is within range

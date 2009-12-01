@@ -18,8 +18,6 @@ import trust.model.math.Stats;
 public class SentRecommendationSet extends TrustSet {
 	protected Map<String, double[][]> store;
 	
-	public static final double RC_INIT = 0.1;
-	
 	/**
 	 * Construct an SRS store.
 	 * @param stats Statistics helper, holds n
@@ -32,24 +30,12 @@ public class SentRecommendationSet extends TrustSet {
 	
 	public void store(Context ck, Peer pr, double[][] rc) throws IllegalArgumentException
 	{
-		if (rc.length != stats.getN()) {
-			throw new MalformedTupleException(rc.length, stats);
-		}
-		
-		if (rc[0].length != stats.getN()) {
-			throw new MalformedTupleException(rc[0].length, stats);
-		}
-		
+		misc.checkMatrix(rc);
 		store.put(keyFrom(ck, pr), rc);
 	}
 	
 	public double[][] retrieve(Context ck, Peer pr)
 	{
-		double[][] trust = store.get(keyFrom(ck, pr));
-		if (trust == null) {
-			return misc.makeMatrix(RC_INIT);
-		} else {
-			return trust;
-		}
+		return store.get(keyFrom(ck, pr));
 	}
 }
