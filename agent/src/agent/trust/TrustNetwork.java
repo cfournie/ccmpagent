@@ -8,7 +8,6 @@ import testbed.sim.Appraisal;
 import testbed.sim.Era;
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Opinion;
-import trust.TrustInterface;
 
 
 /**
@@ -18,7 +17,6 @@ import trust.TrustInterface;
 public abstract class TrustNetwork {
 	
 	protected CCMPAgent mAgent;
-	protected TrustInterface trust;
 	
 	public abstract void addAgent( String newAgent );
 	public abstract void removeAgent( String agent );

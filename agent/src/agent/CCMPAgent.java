@@ -73,12 +73,11 @@ public abstract class CCMPAgent extends Agent {
 	public CCMPAgent(String paramFile)
 	{
 		super(paramFile);
-
-		mDecisionTree = createDecisionTree();
-		mTrustNetwork = createTrustNetwork();
-		
 		//use the passParam to add config file settings to the agent.xml
 		parseConfigFile(paramFile);
+		
+		mDecisionTree = createDecisionTree();
+		mTrustNetwork = createTrustNetwork();
 	}
 
 	/** 
@@ -848,6 +847,7 @@ public abstract class CCMPAgent extends Agent {
             mDigester = new Digester();            
             mDigester.push(mConfigInfo);            
             mDigester.addCallMethod("agentConfig/CCMPParams/log", "setLogging", 0); 
+            mDigester.addCallMethod("agentConfig/CCMPParams/wekaArfFile", "setWekaARFFile", 0); 
             mDigester.parse(paramFile);            
         } catch (IOException e1) {
           System.out.println("File not found exception: " + paramFile);

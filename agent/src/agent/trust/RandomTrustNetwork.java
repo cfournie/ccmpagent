@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 import testbed.sim.Appraisal;
 import testbed.sim.Opinion;
-import trust.RandomTrust;
-import trust.TrustInterface;
+import trust.model.RandomTrust;
+import trust.model.TrustInterface;
 import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
@@ -28,6 +28,7 @@ import java.util.Hashtable;
 public class RandomTrustNetwork extends TrustNetwork {
 
 	public static final int TRUST_LEVELS = 4;
+	private TrustInterface mTrust;	
 	
 	public RandomTrustNetwork(CCMPAgent agent)
 	{
@@ -39,7 +40,7 @@ public class RandomTrustNetwork extends TrustNetwork {
 			contexts.add(c);
 		}
 		
-		this.trust = new RandomTrust(TRUST_LEVELS, contexts);
+		mTrust = new RandomTrust(TRUST_LEVELS, contexts);
 	}
 	
 	/* (non-Javadoc)
@@ -55,7 +56,7 @@ public class RandomTrustNetwork extends TrustNetwork {
 	public void addAgent(String newAgent)
 	{
 		Peer p = new Peer(newAgent);
-		trust.addPeer(p);
+		mTrust.addPeer(p);
 	}
 
 	/* (non-Javadoc)
@@ -149,7 +150,7 @@ public class RandomTrustNetwork extends TrustNetwork {
 	{
 		Context c = new Context(era.getName());
 		Peer p = new Peer(agent);
-		return trust.getOverallTrust(c, p);
+		return mTrust.getOverallTrust(c, p);
 	}
 
 	/* (non-Javadoc)
@@ -168,7 +169,7 @@ public class RandomTrustNetwork extends TrustNetwork {
 	{
 		Context c = new Context(era.getName());
 		Peer p = new Peer(agent);
-		return trust.getOverallTrust(c, p);
+		return mTrust.getOverallTrust(c, p);
 	}
 
 	/* (non-Javadoc)
@@ -234,7 +235,7 @@ public class RandomTrustNetwork extends TrustNetwork {
 		Context c = new Context(era.getName());
 		Peer p = new Peer(agent);
         
-        trust.storeRecommendation(c, p, certainty);
+		mTrust.storeRecommendation(c, p, certainty);
 	}
 
 	/* (non-Javadoc)
@@ -257,7 +258,7 @@ public class RandomTrustNetwork extends TrustNetwork {
 		double difference = Math.abs(appraisal.getTrueValue() - opinion.getAppraisedValue());
 		difference = difference / ((double)appraisal.getTrueValue());
 		
-		double reputation = trust.getOverallTrust(c, p);
+		double reputation = mTrust.getOverallTrust(c, p);
 		
 		if (difference > 0.5) reputation = reputation - 0.03;
 		else reputation = reputation + 0.03;
@@ -265,7 +266,7 @@ public class RandomTrustNetwork extends TrustNetwork {
 		if (reputation < 0) reputation = 0;
 		
         
-        trust.storeEncounter(c, p, (int)reputation);
+		mTrust.storeEncounter(c, p, (int)reputation);
 		
 		
 	}
