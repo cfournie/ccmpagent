@@ -234,6 +234,7 @@ public abstract class CCMPAgent extends Agent {
 						{
 							mLogger.info("\t Agent did not accept reputation request agent="+acceptMsg.getSender()+" era="+requestMsg.getEra());
 							mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
+							mDecisionTree.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
 						}
 					}
 		    	}	    		
@@ -324,6 +325,7 @@ public abstract class CCMPAgent extends Agent {
 	        			          +previousCertaintyMsg.getEra()+" certainty="+previousCertaintyMsg.getCertainty());
 	        	//the agent we sent a certainty to, didn't continue with the opinion transaction, this might affect our internal trust reps.
 	        	mTrustNetwork.agentDidNotAcceptCertainty(previousCertaintyMsg.getSender(), previousCertaintyMsg.getEra(), previousCertaintyMsg.getCertainty());
+	        	mDecisionTree.agentDidNotAcceptCertainty(previousCertaintyMsg.getSender(), previousCertaintyMsg.getEra(), previousCertaintyMsg.getCertainty());
 	        	updateDecisionTreeTrustValues(previousCertaintyMsg.getSender(), previousCertaintyMsg.getEra());
 	        	numDeclined++;
 	        }
@@ -479,6 +481,7 @@ public abstract class CCMPAgent extends Agent {
 			{
 				mLogger.info("\t Agent Did not provide certainty agent="+requestMsg.getSender()+" era="+requestMsg.getEra());
 				mTrustNetwork.agentDidNotProvideCertainty(requestMsg.getSender(), requestMsg.getEra());
+				mDecisionTree.agentDidNotProvideCertainty(requestMsg.getSender(), requestMsg.getEra());
 			}
 		}
 		
@@ -602,6 +605,7 @@ public abstract class CCMPAgent extends Agent {
 					{
         				mLogger.info("\t agent declined rep request: from="+acceptMsg.getSender()+" about="+requestMsg.getAppraiserID()+" era="+requestMsg.getEra());
 						mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
+						mDecisionTree.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
 					}
 				}
 			}
@@ -769,6 +773,7 @@ public abstract class CCMPAgent extends Agent {
 					mLogger.info("\t Agent Did not provide opinion agent="+requestMsg.getSender()
 							    +" era="+requestMsg.getAppraisalAssignment().getEra());
 					mTrustNetwork.agentDidNotProvideOpinion(requestMsg.getSender(), requestMsg.getAppraisalAssignment().getEra());
+					mDecisionTree.agentDidNotProvideOpinion(requestMsg.getSender(), requestMsg.getAppraisalAssignment().getEra());
 				}
 			}
 			    	

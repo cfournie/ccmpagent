@@ -79,6 +79,13 @@ public abstract class DecisionTree {
 	//Should we provide an weight to the sim?
 	public abstract boolean provideWeight( String aboutAgent, Era era );
 	
+	//Functions used to tell the DT about an agents previous actions.
+	public abstract void agentDidNotAcceptReputationRequest( String agent, Era era );
+	public abstract void agentDidNotProvideReputation( String agent, Era era );
+	public abstract void agentDidNotProvideCertainty( String agent, Era era);
+	public abstract void agentDidNotProvideOpinion( String agent, Era era);
+	public abstract void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue );	
+	
 	private double getBankBalance()
 	{
 		return mAgent.getBankBalance();
