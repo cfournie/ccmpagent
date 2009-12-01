@@ -54,7 +54,8 @@ public abstract class CCMPAgent extends Agent {
     boolean										mLogging;
 	
 	/**
-	 * 
+	 * Create the decision tree and trust network by calling the abstract function
+	 * the specific type of CCMPAgent will then create their specific DT and TN
 	 */
 	public CCMPAgent()
 	{
@@ -64,6 +65,9 @@ public abstract class CCMPAgent extends Agent {
 	}
 
 	/**
+	 * Create the decision tree and trust network by calling the abstract function
+	 * the specific type of CCMPAgent will then create their specific DT and TN
+	 * Then parse the config file using the param file string.
 	 * @param paramFile
 	 */
 	public CCMPAgent(String paramFile)
@@ -77,12 +81,16 @@ public abstract class CCMPAgent extends Agent {
 		parseConfigFile(paramFile);
 	}
 
-	/* (non-Javadoc)
+	/** 
+	 * Initialize the CCMPAgent by setting up the logger (agentName_log.txt)
+	 * Call init on the DT and TN, then add all the agents to the TN.
+	 * Since you've initialized the TN with default values, you should pass this to the DT
 	 * @see testbed.agent.Agent#initializeAgent()
 	 */
 	@Override
 	public void initializeAgent()
 	{
+		//Setup the logger
 	    try
 	    {
 	        boolean append = false;
@@ -108,10 +116,15 @@ public abstract class CCMPAgent extends Agent {
 	    	 e.printStackTrace();
         }
 		
+	    //Call init on the DT and TN, this creates the internal structures required 
+	    //within these classes.
 	    mLogger.warning("Initializing CCMPAgent");
         mDecisionTree.init();
         mTrustNetwork.init();
         
+        //Add all the agents to the TN and DT.
+        //Since we've got default trust values in TN, pass the values
+        //To the DT.
         for (String name: agentNames)
         {
         	mTrustNetwork.addAgent(name);
@@ -124,7 +137,10 @@ public abstract class CCMPAgent extends Agent {
 
 	}
 
-	/* (non-Javadoc)
+	/** 
+	 * Parse the incoming certainty requests from other agents.
+	 * Ask the DT if we should respond to these requests, if so generate the messages.
+	 * The TN (and DT?) may want to know that we did this, therefore pass the info to it.
 	 * @see testbed.agent.Agent#prepareCertaintyReplies()
 	 */
 	@Override
@@ -145,8 +161,11 @@ public abstract class CCMPAgent extends Agent {
             Era era = receivedMsg.getEra();
             String fromAgent = receivedMsg.getSender();
             
+            //Ask the DT if we should provide a certainty reply to this agent.
             if( mDecisionTree.provideCertaintyReply(fromAgent, era) )
             {
+            	//Get the value from the DT that we should send, it could be our actual value
+            	//Or a value we change based on our trust and behaviour to that agent.
             	double myExpertise = mDecisionTree.getCertaintyRequestValue(fromAgent, era);
             	CertaintyReplyMsg msg = receivedMsg.certaintyReply(myExpertise);
                 sendOutgoingMessage(msg);
@@ -171,7 +190,12 @@ public abstract class CCMPAgent extends Agent {
         }
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Parse the incoming reputation replies, based on our requests to other agents.
+	 * Determine if an agent didn't send a response, even after we paid them and update the TN/DT
+	 * Update the TN with the new values. Pass those new values to the DT
+	 * Generate the certainty request messages by going through all the era we have paintings
+	 * in then for each agent, ask the DT is we should request a message from that agent.
 	 * @see testbed.agent.Agent#prepareCertaintyRequests()
 	 */
 	@Override
@@ -184,7 +208,9 @@ public abstract class CCMPAgent extends Agent {
 		mLogger.info("T="+currentTimestep+" Parse Reputation Returns:");		
 	    
 	    //determine if everyone who accepted a request, provided a reputation.
-	    //go through each accept msg we stored previously.
+	    //go through each accept msg we stored previously and make sure there was a reply
+		//if the agent didn't respond, even after we paid them..then tell the DT/TN about
+		//the negative interaction.
 	    for( ReputationAcceptOrDeclineMsg acceptMsg: mReputationRequestsAcceptedOrDeclined )
 	    {
 	    	if( acceptMsg.getAccept() )
@@ -197,8 +223,8 @@ public abstract class CCMPAgent extends Agent {
 		    		{
 		    			providedReputation = true;
 		    		}
-		    	}
-		    	
+		    	}		    	
+		    	//We never got a reponse for our request/payment.
 		    	if( !providedReputation )
 		    	{
 		    		//We need to find the era associated with this request
@@ -232,12 +258,15 @@ public abstract class CCMPAgent extends Agent {
 		mLogger.info("T="+currentTimestep+" Prepare Certainty Requests:");		    	
     	
     	//Now handle the certainty requests.
-    	//Go through each painting we are assigned get the list of eras we have to evaluate:    			
+    	//For each era we have paintings for, go through the list of agents and ask the DT
+		//if we should request a certainty.  The DT is responsible for keeping track of the
+		//number of messages sent and the maximum number of messages we are allowed to send.
     	for( Era era: mCurrentEras )
     	{
 	    	mLogger.info("\t For era="+era);
 	   		for( String name: agentNames )
 	   		{
+	   			//Don't send a message to ourselves,
 	   			if( name != getName() && mDecisionTree.requestAgentCertainty(name, era ) )
 	   			{
 	   				mLogger.info("\t\t to="+name);
@@ -250,7 +279,13 @@ public abstract class CCMPAgent extends Agent {
     	}
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Parse the incoming request messages from the other agents.
+	 * First determine if an agent didn't request an opinion, after we sent them our 
+	 * certainty, tell this to the TN (and DT?) and update the trust values.
+	 * Then go through all the opinion requests and ask the DT whether we should generate an opinion
+	 * creation messages.  If we do create one, ask the DT how much we should spend on the creation order.
+	 * Then tell the TN (and DT?) that we did or did not fulfill the opinion request.
 	 * @see testbed.agent.Agent#prepareOpinionCreationOrders()
 	 */
 	@Override
@@ -304,6 +339,7 @@ public abstract class CCMPAgent extends Agent {
 		//First generate an opinion request for ourselves.
 		if( !denyUseOfSelfOpinions )
 		{
+			//For each painting, create a request with twice the cost.
 	    	for( AppraisalAssignment appraisal: assignedPaintings)
 	    	{	
 	            OpinionOrderMsg msg = new OpinionOrderMsg(null, appraisal, getOpinionCost()*2);
@@ -318,8 +354,10 @@ public abstract class CCMPAgent extends Agent {
             Era era = receivedMsg.getAppraisalAssignment().getEra();
             String fromAgent = receivedMsg.getSender();
             
+            //Ask the DT if we should generate an opinion for the agent.
             if( mDecisionTree.generateOpinion(fromAgent, era) )
             {
+            	//Ask the DT how much we should spend on the creation.
             	double appraisalCost = mDecisionTree.getAppraisalCost(fromAgent, era);
                 OpinionOrderMsg msg = receivedMsg.opinionOrder(appraisalCost);
                 sendOutgoingMessage(msg);
@@ -347,7 +385,9 @@ public abstract class CCMPAgent extends Agent {
         }
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * For each agent and era get the weight from the decision tree and generate a 
+	 * weight message to the sim.
 	 * @see testbed.agent.Agent#prepareOpinionProviderWeights()
 	 */
 	@Override
@@ -369,7 +409,10 @@ public abstract class CCMPAgent extends Agent {
         }  
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Go through the list of opinions we got back from the Sim and ask the DT
+	 * how much we should adjust the value (if we want to be mean to people we don't like)
+	 * Then generate a opinion reply message.
 	 * @see testbed.agent.Agent#prepareOpinionReplies()
 	 */
 	@Override
@@ -387,6 +430,7 @@ public abstract class CCMPAgent extends Agent {
         	Era  era = receivedMsg.getAppraisalAssignment().getEra();
         	
             Opinion op = findOpinion(receivedMsg.getTransactionID());
+            //Ask the DT how much we should adjust the appraisal value by.
             int updateAppraisal = mDecisionTree.adjustAppraisalValue(toAgent, era, op.getAppraisedValue() );
             op.setAppraisedValue(updateAppraisal);
             // Use convenience method for generating an opinion reply message
@@ -404,7 +448,13 @@ public abstract class CCMPAgent extends Agent {
 
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Parse the incoming certainty reply messages, from our requests for certainties.
+	 * Determine if an agent did not provide a certainty reply and tell the TN (and DT)
+	 * Update the certainty values in the TN and DT and then the trust values.
+	 * Go through all the paintings we were assigned and then for each agent ask the DT
+	 * whether we should ask them for an opinion.
+	 * 
 	 * @see testbed.agent.Agent#prepareOpinionRequests()
 	 */
 	@Override
@@ -432,6 +482,7 @@ public abstract class CCMPAgent extends Agent {
 			}
 		}
 		
+		//From the received messages, update the certainty values.
 		for( CertaintyReplyMsg replyMsg: certaintyResponses )
 		{
 			mLogger.info("\tfrom="+replyMsg.getSender()+" era="+replyMsg.getEra()+" certainty="+replyMsg.getCertainty());
@@ -459,6 +510,7 @@ public abstract class CCMPAgent extends Agent {
 
     		for( String name: agentNames )
     		{
+    			//we can't ask ourselves for an opinion.
     			if( name != getName() &&
     				mDecisionTree.requestAgentOpinion(name, appraisal) )
     			{
@@ -472,7 +524,10 @@ public abstract class CCMPAgent extends Agent {
     	} 		
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Parse the incoming reputation request messages, from other Agents.
+	 * Ask the DT whether we should response to the requesting agent, about another agent and era.
+	 * Create the appropriate message and then tell the TN (and DT) that responded.
 	 * @see testbed.agent.Agent#prepareReputationAcceptsAndDeclines()
 	 */
 	@Override
@@ -482,12 +537,14 @@ public abstract class CCMPAgent extends Agent {
 		mReputationRequestsToAccept = new ArrayList<ReputationRequestMsg>();
 		
 		mLogger.info("T="+currentTimestep+": Prepare reputation accept/decline");
+		//Go through each reputation request received...
         for (ReputationRequestMsg receivedMsg: reputationRequests)
         {
         	String toAgent = receivedMsg.getSender();
         	String aboutAgent = receivedMsg.getAppraiserID();
         	Era  era = receivedMsg.getEra();
         	
+        	//Ask the DT if we should respond to this request
         	if( mDecisionTree.respondToReputationRequest( toAgent, aboutAgent, era ) )
         	{
         		mLogger.info("\taccept to="+toAgent+" about="+aboutAgent+" era="+era);
@@ -515,7 +572,12 @@ public abstract class CCMPAgent extends Agent {
         }		
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Parse the incoming reputation requests accept/decline messages, coming
+	 * from our requests for reputations.
+	 * Determine if an agent didn't accept our request, and tell the TN (and DT) about it
+	 * Then, go through the reputation accept/decline messages we generated in the last function
+	 * and ask the DT whether we should actually generate a reputation.
 	 * @see testbed.agent.Agent#prepareReputationReplies()
 	 */
 	@Override
@@ -552,13 +614,14 @@ public abstract class CCMPAgent extends Agent {
 				     " num accepted="+numAccepted+" num declined="+numDeclined);
 		
 		mLogger.info("T="+currentTimestep+" Prepare reputation replies");
-		//Now go through the reputation requests we accepted and generate the results.
+		//Now go through the reputation requests we accepted in the last method and generate the results.
         for (ReputationRequestMsg receivedMsg: mReputationRequestsToAccept)
         {
         	String toAgent = receivedMsg.getSender();
         	String aboutAgent = receivedMsg.getAppraiserID();
         	Era  era = receivedMsg.getEra();
 
+        	//Ask the DT whether we should accept the response.
         	if( mDecisionTree.provideReputationReply( toAgent, aboutAgent, era ) )
         	{
         		double repValue = mDecisionTree.getReputationRequestValue(toAgent,
@@ -588,7 +651,9 @@ public abstract class CCMPAgent extends Agent {
         }	
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Process the results from the last frame (final appraisal values etc)
+	 * Go through each era and agent and ask the DT whether we should ask for a reputation
 	 * @see testbed.agent.Agent#prepareReputationRequests()
 	 */
 	@Override
@@ -604,7 +669,9 @@ public abstract class CCMPAgent extends Agent {
 		
 		mLogger.info("T="+currentTimestep+": Prepare Reputation Requests: ");
 		
-		mReputationsRequested = new ArrayList<ReputationRequestMsg>();			
+		mReputationsRequested = new ArrayList<ReputationRequestMsg>();
+		//Go through each era and then each to and about agent and ask the DT whether we should ask
+		//an agent about another agent, wrt an era.
         for (Era era: mCurrentEras)
         {
     		mLogger.info("\t Era="+era);
@@ -626,7 +693,11 @@ public abstract class CCMPAgent extends Agent {
         	}
         }
 	}
-	
+
+	/**
+	 * For the given agent and era, get the new trust and inferred trust
+	 * from the TN and pass it to the DT.
+	 */	
 	private void updateDecisionTreeTrustValues( String toAgent, Era era )
 	{
     	double ourNewTrust = mTrustNetwork.getTrustValue(toAgent, era);
@@ -635,7 +706,9 @@ public abstract class CCMPAgent extends Agent {
     	mDecisionTree.setAgentPerceivedTrust(toAgent, era, ourNewInferredTrust);		
 	}
 
-    // Use this method to sort through ordered opinions the sim delivers, by transactionID.
+	/**
+	 * Use this method to sort through ordered opinions the sim delivers, by transactionID.
+	 */	
     private Opinion findOpinion(String _transactionID)
     {
         if (createdOpinions != null) {
@@ -648,13 +721,22 @@ public abstract class CCMPAgent extends Agent {
         return null;
     }
 
+    /**
+	 * Reset the DT and TN for the frame.  Determine which eras we have paintings for in this frame
+	 * Parse through the opinion reply messages we received for the last frame.
+	 * Determine if an agent did not respond to us and tell the TN (and DT?) about the negative experience.
+	 * Parse through the final appraisal values and pass the final appraisal and each agents opinion
+	 * to the TN to update the trust values based on the experiences.
+	 */	
     private void processFrameResults( )
     {
     	mLogger.info("Begin Frame: "+currentTimestep);
 
+    	//Reset the DT and TN (counters etc)
     	mDecisionTree.frameReset();
     	mTrustNetwork.frameReset();
-    	
+
+    	//Determine which eras we have paintings for in this round.
 		mCurrentEras = new ArrayList<Era>();		
     	for( AppraisalAssignment appraisal: assignedPaintings)
     	{
@@ -663,7 +745,9 @@ public abstract class CCMPAgent extends Agent {
     			mCurrentEras.add(appraisal.getEra());
     		}
     	}     	
-    	
+
+    	//If we're not in the first round, go through the final appraisal values
+    	//and update the TN based on the results from each agents opinion.
     	if( currentTimestep != 0 )
     	{
     		List<OpinionReplyMsg> opinionReplies = getIncomingMessages();
@@ -691,15 +775,16 @@ public abstract class CCMPAgent extends Agent {
 	    	
 	        if(finalAppraisals != null)
 	        {
+	        	//Go through the final appraisals
 	        	for(Appraisal appraisal: finalAppraisals)
 	        	{
-	            	mLogger.info("Received final appraisal: ID="+appraisal.getPaintingID()+" Value="+appraisal.getTrueValue());
-	        		
-	        	    //System.out.print("ID: " + appraisal.getPaintingID() + ", real: " + appraisal.getTrueValue());
+	            	mLogger.info("Received final appraisal: ID="+appraisal.getPaintingID()+" Value="+appraisal.getTrueValue());	        		
 	        		for(OpinionReplyMsg msg: opinionReplies)
 	        		{
+	        			//Match the final appraisal to a received opinion reply.
 	        			if(msg.getAppraisalAssignment().getPaintingID().equals(appraisal.getPaintingID()))
 	        			{
+	        				//Update the TN based on the opinion reply and final appraisal.
 	            			mLogger.info("\t from="+msg.getOpinion().getOpinionProvider()+" opinion="+msg.getOpinion().getAppraisedValue());
 	        				mTrustNetwork.updateAgentTrustFromFinalAppraisal(msg.getOpinion().getOpinionProvider(),
 	        						 										 appraisal, msg.getOpinion());
