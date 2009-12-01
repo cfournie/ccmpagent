@@ -18,7 +18,24 @@ import java.util.Collections;
  *
  */
 public class SimpleCCMPAgent extends CCMPAgent {
-    		
+
+	/**
+	 * @param paramFile
+	 */
+	public SimpleCCMPAgent()
+	{
+		super();
+	}
+
+	
+	/**
+	 * @param paramFile
+	 */
+	public SimpleCCMPAgent(String paramFile)
+	{
+		super(paramFile);
+	}
+	
 	/**
 	 * 
 	 */ 

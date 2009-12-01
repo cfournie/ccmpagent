@@ -57,15 +57,10 @@ public abstract class CCMPAgent extends Agent {
 	 * 
 	 */
 	public CCMPAgent()
-	{		
+	{
+		super();
 		mDecisionTree = createDecisionTree();
 		mTrustNetwork = createTrustNetwork();
-	
-		//We shouldn't have to call this here, and use the
-		//pass param argument..but that doesn't seem to work with JAR
-		//I get an missing method exception.
-		//So we'll do it ourselves.
-		parseConfigFile(getConfigFile());
 	}
 
 	/**
@@ -74,9 +69,11 @@ public abstract class CCMPAgent extends Agent {
 	public CCMPAgent(String paramFile)
 	{
 		super(paramFile);
+
+		mDecisionTree = createDecisionTree();
+		mTrustNetwork = createTrustNetwork();
 		
-		//This should work, but it doesn't
-		//if we set passParam to true, we get a missing method function error..wtf?
+		//use the passParam to add config file settings to the agent.xml
 		parseConfigFile(paramFile);
 	}
 
@@ -752,12 +749,7 @@ public abstract class CCMPAgent extends Agent {
     {
     	return assignedPaintings;
     }
-    
-    public String getConfigFile()
-    {
-    	return "CCMPAgent_Config.xml";
-    }
-    
+        
     protected void parseConfigFile( String paramFile )
     {
 		mConfigInfo = new CCMPConfigInfo();
