@@ -76,10 +76,10 @@ public class BayesTrust implements TrustInterface {
 			des.store(ck, py, this.misc.makeMatrix());
 			
 			// Init RTS
-			// TODO: Add RTS init here
+			rts.store(ck, py, this.misc.defaultTrustTuple());
 			
 			// Init SRS
-			// TODO: Add SRS init here
+			srs.store(ck, py, this.misc.makeMatrix());
 		}
 		
 		success = this.p.add(py);
