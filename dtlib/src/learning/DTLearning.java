@@ -6,7 +6,6 @@ package learning;
 import java.awt.BorderLayout;
 import java.io.StringReader;
 
-
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.classifiers.trees.J48;
@@ -23,10 +22,9 @@ public class DTLearning {
 	
 	public DTLearning(DTWekaARFF Data)
 	{
-        StringReader srData = new StringReader(Data.toString());		
 		Instances data;
 		try {
-			data = new Instances(srData);
+			data = new Instances(new StringReader(Data.toString()));
 			// setting class attribute if the data format does not provide this information
 			// E.g., the XRFF format saves the class attribute information as well
 			if (data.classIndex() == -1)
@@ -60,12 +58,11 @@ public class DTLearning {
 	
 	public String DTClassify(String nonCatTest)
 	{
-		String retVal = null;
-		StringReader srNonCatTest = new StringReader(BuildTest(nonCatTest));		
+		String retVal = null;	
 		Instances data;
 		double result = 0;
 		try {
-			data = new Instances(srNonCatTest);
+			data = new Instances(new StringReader(BuildTest(nonCatTest)));
 			if (data.classIndex() == -1)
 				data.setClassIndex(data.numAttributes() - 1);
 			

@@ -38,7 +38,7 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
 	
     DecisionTree createDecisionTree()
     {
-    	return new WekaDT(this, mConfigInfo.getWekaARFFile());
+    	return new WekaDT(this, mConfigInfo.getDecisionTrees());
     }
     
     TrustNetwork createTrustNetwork()

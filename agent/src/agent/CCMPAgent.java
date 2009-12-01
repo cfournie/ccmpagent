@@ -847,7 +847,7 @@ public abstract class CCMPAgent extends Agent {
             mDigester = new Digester();            
             mDigester.push(mConfigInfo);            
             mDigester.addCallMethod("agentConfig/CCMPParams/log", "setLogging", 0); 
-            mDigester.addCallMethod("agentConfig/CCMPParams/wekaArfFile", "setWekaARFFile", 0); 
+            mDigester.addCallMethod("agentConfig/CCMPParams/DecisionTrees", "setDecisionTrees", 0); 
             mDigester.parse(paramFile);            
         } catch (IOException e1) {
           System.out.println("File not found exception: " + paramFile);
