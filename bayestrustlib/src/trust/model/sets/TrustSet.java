@@ -1,7 +1,5 @@
 package trust.model.sets;
 
-import java.util.Arrays;
-
 import trust.model.math.Misc;
 import trust.model.math.Stats;
 import trust.model.primitives.Context;

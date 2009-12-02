@@ -3,7 +3,6 @@ package trust.model.sets;
 import java.util.HashMap;
 import java.util.Map;
 
-import trust.model.exceptions.MalformedTupleException;
 import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
