@@ -365,13 +365,13 @@ public class WekaDTTest {
 		
 		System.out.println(xml.toString());
 		
-		BayesWekaCCMPAgent test = new BayesWekaCCMPAgent("../testbed/src/testbed/participants/bayeswekaccmpagent.xml");
+		/*BayesWekaCCMPAgent test = new BayesWekaCCMPAgent("../testbed/src/testbed/participants/bayeswekaccmpagent.xml");
 		WekaDT ttree = test.createDecisionTree();
 		
 		for(DTLearning dt : ttree.dtreeCol)
 		{
 			dt.Visualize();
-		}
+		}*/
 	}
 
 }

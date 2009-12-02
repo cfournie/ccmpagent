@@ -43,8 +43,9 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
 		super(paramFile);		
 	}
 	
-	public WekaDT createDecisionTree()
+	WekaDT createDecisionTree()
     {
+		System.out.println("HERE1!!");
     	return new WekaDT(this, parsedTrees);
     }
     
@@ -54,8 +55,8 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
     }
     
     protected void parseConfigFile( String paramFile )
-    {    	
-    	super.parseConfigFile(paramFile);
+    {      
+    	super.parseConfigFile(paramFile);    	
     	parsedTrees = null;
         try
         {
@@ -72,7 +73,7 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
 			
 			mDigester.addSetNext("agentConfig/CCMPParams/decisiontrees/dt", "addDT");
             
-            parsedTrees = (DTLearningCollection)mDigester.parse(paramFile);         
+            parsedTrees = (DTLearningCollection)mDigester.parse(paramFile);
         } catch (IOException e1) {
           System.out.println("File not found exception: " + paramFile);
           System.out.println(e1);
