@@ -3,7 +3,6 @@ package trust.model;
 import java.util.HashSet;
 import java.util.List;
 
-import trust.TrustDecision;
 import trust.model.exceptions.DuplicatePeerException;
 import trust.model.exceptions.LevelRangeException;
 import trust.model.math.Misc;
@@ -60,7 +59,7 @@ public class RandomTrust implements TrustInterface{
 	/**
 	 * @see trust.model.TrustInterface#storeEncounter(Context, Peer, double, TrustDecision)
 	 */
-	public void storeEncounter(Context ck, Peer py, double level, TrustDecision td) throws LevelRangeException {
+	public void storeEncounter(Context ck, Peer py, double level) throws LevelRangeException {
 		misc.checkLevel(level);
 	}
 

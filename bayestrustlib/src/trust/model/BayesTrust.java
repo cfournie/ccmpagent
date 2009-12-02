@@ -3,7 +3,6 @@ package trust.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import trust.TrustDecision;
 import trust.model.sets.*;
 import trust.model.exceptions.DuplicatePeerException;
 import trust.model.exceptions.LevelRangeException;
@@ -70,7 +69,7 @@ public class BayesTrust implements TrustInterface {
 		for (Context ck : c)
 		{
 			// Init DTS with trust values resulting in no confidence (variance = 0), or 1/n
-			des.store(ck, py, this.misc.makeMatrix());
+			dts.store(ck, py, this.misc.defaultTrustTuple());
 			
 			// Init DES with blank experience counts
 			des.store(ck, py, this.misc.makeMatrix());
@@ -96,12 +95,8 @@ public class BayesTrust implements TrustInterface {
 	 * @param lb
 	 * @param td
 	 */
-	public void storeEncounter(Context ck, Peer py, double lb, TrustDecision td) throws LevelRangeException {
-		// Determine previous trust level
-		double la = td.getCondensedTrustValue(getOverallTrust(ck, py));
-		
-		// Encountered trust level lb while interacting with a peer with trust level la (previous trust)
-		des.storeEncounter(ck, py, misc.discretize(lb), misc.discretize(la));
+	public void storeEncounter(Context ck, Peer py, double lb) throws LevelRangeException {
+		// TODO: Implement
 	}
 	
 	/**

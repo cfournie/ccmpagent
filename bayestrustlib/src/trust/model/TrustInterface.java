@@ -1,6 +1,5 @@
 package trust.model;
 
-import trust.TrustDecision;
 import trust.model.exceptions.DuplicatePeerException;
 import trust.model.exceptions.LevelRangeException;
 import trust.model.primitives.Context;
@@ -27,7 +26,7 @@ public interface TrustInterface {
 	 * @param td
 	 * @throws LevelRangeException
 	 */
-	public void storeEncounter(Context ck, Peer py, double level, TrustDecision td) throws LevelRangeException;
+	public void storeEncounter(Context ck, Peer py, double level) throws LevelRangeException;
 	
 	/**
 	 * Receive a recommendation from one peer relating to another.
