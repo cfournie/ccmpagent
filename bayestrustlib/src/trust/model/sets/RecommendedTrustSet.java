@@ -32,11 +32,12 @@ public class RecommendedTrustSet extends TrustSet {
 	
 	public double[] retrieve(Context ck, Peer py)
 	{
-		double[] trust = store.get(keyFrom(ck, py));
-		if (trust == null) {
-			return defaultTrustArray();
-		} else {
-			return trust;
+		double [] d = store.get(keyFrom(ck, py));
+		if (d == null) {
+			throw new IllegalArgumentException(
+				"Unknown context " + ck.getName() + " and peer " + py.getName());
 		}
+		
+		return d;
 	}
 }
