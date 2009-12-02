@@ -35,4 +35,14 @@ public class MiscTest {
 	public void testDiscretizeGreaterThanOne() {
 		misc.discretize(1.2);
 	}
+	
+	@Test
+	public void testMakeTupleDoesntCrash() {
+		misc.makeTuple();
+	}
+	
+	@Test
+	public void testMakeTupleLDoesntCrash() {
+		misc.makeTuple(3.14);
+	}
 }

@@ -62,22 +62,21 @@ public class Misc {
 	}
 	
 	/**
-	 * Creates an empty array of size n
-	 * @return n-tuple initialised to value l
+	 * Creates an array of size n, filled with 0.0.
+	 * @return n-tuple initialised to 0.0
 	 */
 	public double[] makeTuple() {
-		double d[] = {};
-		Arrays.fill(d, 0, this.stats.getN(), 0.0);
-		return d;
+		return makeTuple(0.0);
 	}
 	
 	/**
-	 * Creates a filled array of size n
+	 * Creates a filled array of size n, filled with a specified value.
+	 * @param v fill value
 	 * @return empty (zeroed) n-tuple
 	 */
-	public double[] makeTuple(double l) {
-		double d[] = {};
-		Arrays.fill(d, 0, this.stats.getN(), l);
+	public double[] makeTuple(double v) {
+		double d[] = new double[this.stats.getN()];
+		Arrays.fill(d, 0, this.stats.getN(), v);
 		return d;
 	}
 
