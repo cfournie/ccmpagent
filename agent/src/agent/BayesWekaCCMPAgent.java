@@ -3,10 +3,8 @@ import agent.CCMPAgent;
 
 import agent.decision.WekaDT;
 import agent.decision.DecisionTree;
-import agent.trust.BayesTrustNetwork;
+import agent.trust.SimpleTrust;
 import agent.trust.TrustNetwork;
-
-import java.util.Collections;
 
 
 /**
@@ -43,6 +41,6 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
     
     TrustNetwork createTrustNetwork()
     {
-    	return new BayesTrustNetwork(this);
+    	return new SimpleTrust(this);
     }    
 }

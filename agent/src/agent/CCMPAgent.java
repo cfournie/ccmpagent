@@ -60,8 +60,8 @@ public abstract class CCMPAgent extends Agent {
 	public CCMPAgent()
 	{
 		super();
-		mDecisionTree = createDecisionTree();
-		mTrustNetwork = createTrustNetwork();
+		mConfigInfo = new CCMPConfigInfo();	
+		mLogging = false;
 	}
 
 	/**
@@ -74,10 +74,7 @@ public abstract class CCMPAgent extends Agent {
 	{
 		super(paramFile);
 		//use the passParam to add config file settings to the agent.xml
-		parseConfigFile(paramFile);
-		
-		mDecisionTree = createDecisionTree();
-		mTrustNetwork = createTrustNetwork();
+		parseConfigFile(paramFile);		
 	}
 
 	/** 
@@ -89,31 +86,27 @@ public abstract class CCMPAgent extends Agent {
 	@Override
 	public void initializeAgent()
 	{
-		//Setup the logger
+		initLogging();
+	    mLogger.warning("Creating DT and TN");
 	    try
 	    {
-	        boolean append = false;
-	        mLogger = Logger.getLogger(getName());
-	        
-	        if( mLogging )
-	        {
-		        FileHandler fh = new FileHandler(getName()+"_log.txt", append);
-		        fh.setFormatter(new Formatter() {
-		            public String format(LogRecord rec) {
-		               StringBuffer buf = new StringBuffer(1000);
-		               buf.append(formatMessage(rec));
-		               buf.append('\n');
-		               return buf.toString();
-		               }
-		             });		        
-	        	mLogger.addHandler(fh);
-	        }
-	       	mLogger.setUseParentHandlers(false);
+			mDecisionTree = createDecisionTree();
 	    }
-	    catch (IOException e)
+	    catch(Exception e)
 	    {
-	    	 e.printStackTrace();
-        }
+	    	mLogger.warning("Failed to create DT");
+	    	mLogger.warning(e.toString());	    	
+	    }
+	    
+	    try
+	    {
+			mTrustNetwork = createTrustNetwork();
+	    }
+	    catch(Exception e)
+	    {
+	    	mLogger.warning("Failed to create TN");
+	    	mLogger.warning(e.toString());	    		    	
+	    }	    
 		
 	    //Call init on the DT and TN, this creates the internal structures required 
 	    //within these classes.
@@ -847,7 +840,7 @@ public abstract class CCMPAgent extends Agent {
             mDigester = new Digester();            
             mDigester.push(mConfigInfo);            
             mDigester.addCallMethod("agentConfig/CCMPParams/log", "setLogging", 0); 
-            mDigester.addCallMethod("agentConfig/CCMPParams/DecisionTrees", "setDecisionTrees", 0); 
+            mDigester.addCallMethod("agentConfig/CCMPParams/decisiontrees", "setDecisionTrees", 0); 
             mDigester.parse(paramFile);            
         } catch (IOException e1) {
           System.out.println("File not found exception: " + paramFile);
@@ -858,6 +851,7 @@ public abstract class CCMPAgent extends Agent {
         }
         
         mLogging = mConfigInfo.getLogging();
+
     }
     
     public void writeToLogFile( String toLog )
@@ -871,6 +865,34 @@ public abstract class CCMPAgent extends Agent {
     public CCMPConfigInfo getConfigInfo()
     {
     	return mConfigInfo;
+    }
+    
+    protected void initLogging()
+    {
+		//Setup the logger
+	    try
+	    {
+	        boolean append = false;
+	        mLogger = Logger.getLogger(getName());
+	        if( mLogging )
+	        {
+		        FileHandler fh = new FileHandler(getName()+"_log.txt", append);
+		        fh.setFormatter(new Formatter() {
+		            public String format(LogRecord rec) {
+		               StringBuffer buf = new StringBuffer(1000);
+		               buf.append(formatMessage(rec));
+		               buf.append('\n');
+		               return buf.toString();
+		               }
+		             });		        
+	        	mLogger.addHandler(fh);
+	        }
+	       	mLogger.setUseParentHandlers(false);
+	    }
+	    catch (IOException e)
+	    {
+	    	 e.printStackTrace();
+        }
     }
     
     abstract DecisionTree createDecisionTree();

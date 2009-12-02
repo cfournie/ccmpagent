@@ -37,6 +37,7 @@ public class WekaDT extends DecisionTree {
 	
 	private DTWekaARFF[] toWekaARFF(String dtConfig)
 	{
+		mAgent.writeToLogFile(dtConfig);
 		DTWekaARFF[] dtData = null;
 		try {
 			Digester digester = new Digester();
