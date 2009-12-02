@@ -1,36 +1,44 @@
 package tests.trust.model.sets;
 
-import org.junit.Test;
+import org.junit.*;
 import static org.junit.Assert.*;
 
-import trust.model.math.Stats;
+import trust.model.math.*;
 import trust.model.primitives.*;
 import trust.model.exceptions.*;
 import trust.model.sets.*;
 
 public class DirectExperienceSetTest {
 	public static final int TRUST_LEVELS = 4;
+
+	private DirectExperienceSet set;
+	private Stats stats;
+	private Misc misc;
+	
+	@Before
+	public void setUpDirectExperienceSet() {
+		stats = new Stats(TRUST_LEVELS);
+		misc = new Misc(stats);
+		set = new DirectExperienceSet(stats);
+	}
 	
 	@Test
 	public void testStoreRetrieve() {
-		Stats stats = new Stats(TRUST_LEVELS);
-		RecommendedTrustSet set = new RecommendedTrustSet(stats);
+		double[][] storedEc = misc.makeMatrix(0.123);
+		set.store(new Context("renaissance"), new Peer("picasso"), storedEc);
+		double[][] ec = set.retrieve(new Context("renaissance"), new Peer("picasso"));
+		assertTrue(storedEc.equals(ec));
 		
-		double[] trust = new double[]{0.1, 0.2, 0.3, 0.4};
-		set.store(new Context("renaissance"), new Peer("picasso"), trust);
-		assertEquals(trust, set.retrieve(new Context("renaissance"), new Peer("picasso")));
-		
-		double[] trust2 = new double[]{0.2, 0.2, 0.2, 0.4};
-		set.store(new Context("renaissance"), new Peer("picasso"), trust2);
-		assertEquals(trust2, set.retrieve(new Context("renaissance"), new Peer("picasso")));
+		storedEc = misc.makeMatrix(0.789);
+		set.store(new Context("roman"), new Peer("dali"), storedEc);
+		ec = set.retrieve(new Context("roman"), new Peer("dali"));
+		assertTrue(storedEc.equals(ec));
 	}
 	
 	@Test(expected=MalformedTupleException.class)
 	public void testStoreValidatesLength() throws Exception {
-		Stats stats = new Stats(TRUST_LEVELS);
-		RecommendedTrustSet set = new RecommendedTrustSet(stats);
-		
-		double[] trust = new double[TRUST_LEVELS + 1];
+		Misc misc2 = new Misc(new Stats(TRUST_LEVELS + 1));
+		double[][] trust = misc2.makeMatrix(0.567);
 		
 		set.store(new Context("renaissance"), new Peer("picasso"), trust);
 	}

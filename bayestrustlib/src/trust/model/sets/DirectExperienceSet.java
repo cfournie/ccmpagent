@@ -1,6 +1,6 @@
 package trust.model.sets;
 
-import java.util.HashMap;
+import java.util.*;
 
 import trust.model.exceptions.MalformedTupleException;
 import trust.model.math.Stats;
@@ -15,7 +15,7 @@ import trust.model.primitives.Peer;
  */
 public class DirectExperienceSet extends TrustSet {
 	/** DES */
-	protected HashMap<String,double [][]> set;
+	protected Map<String,double [][]> set;
 	
 	/**
 	 * Constructor
@@ -24,6 +24,7 @@ public class DirectExperienceSet extends TrustSet {
 	public DirectExperienceSet(Stats stats)
 	{
 		super(stats);
+		set = new HashMap<String, double[][]>();
 	}
 	
 	/**
