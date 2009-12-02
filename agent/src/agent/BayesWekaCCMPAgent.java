@@ -31,7 +31,7 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
 	 */
 	public BayesWekaCCMPAgent()
 	{
-		super();
+		super();	
 	}
 
 	
@@ -45,7 +45,6 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
 	
 	WekaDT createDecisionTree()
     {
-		System.out.println("HERE1!!");
     	return new WekaDT(this, parsedTrees);
     }
     
@@ -60,7 +59,8 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
     	parsedTrees = null;
         try
         {
-            mDigester = new Digester();              
+            mDigester = new Digester();
+            mDigester.setClassLoader(this.getClass().getClassLoader());
             mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees", DTLearningCollection.class);
 			
 			mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees/dt", DTWekaARFF.class);
