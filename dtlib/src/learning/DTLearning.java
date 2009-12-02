@@ -18,7 +18,7 @@ import weka.gui.treevisualizer.*;
 
 public class DTLearning {
 	J48 tree;
-	DTWekaARFF arff;
+	DTWekaARFF arff;	
 	
 	public DTLearning(DTWekaARFF Data)
 	{
@@ -69,7 +69,7 @@ public class DTLearning {
 			Instance testInst = data.firstInstance();
 			testInst.setClassMissing();
 			result = tree.classifyInstance(testInst);
-			retVal = this.arff.attributes[this.arff.attributes.length-1].type.split("[,]")[(int)result];
+			retVal = this.arff.attributes.get(this.arff.attributes.size()-1).type.split("[,]")[(int)result];
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}

@@ -1,5 +1,6 @@
 package tests;
 
+import agent.BayesWekaCCMPAgent;
 import agent.decision.WekaDT;
 import agent.decision.WekaDT.DTLearningNames;
 import learning.*;
@@ -364,8 +365,10 @@ public class WekaDTTest {
 		
 		System.out.println(xml.toString());
 		
-		WekaDT test = new WekaDT(null, "<?xml version=\"1.0\"?>\n\n"+xml.toString());
-		for(DTLearning dt : test.dtreeArray)
+		BayesWekaCCMPAgent test = new BayesWekaCCMPAgent("../testbed/src/testbed/participants/bayeswekaccmpagent.xml");
+		WekaDT ttree = test.createDecisionTree();
+		
+		for(DTLearning dt : ttree.dtreeCol)
 		{
 			dt.Visualize();
 		}

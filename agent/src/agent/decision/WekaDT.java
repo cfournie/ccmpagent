@@ -1,11 +1,9 @@
 package agent.decision;
 
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.apache.commons.digester.Digester;
 import learning.*;
 
 import agent.CCMPAgent;
@@ -15,7 +13,7 @@ import testbed.sim.Era;
 
 public class WekaDT extends DecisionTree {
 	
-	public DTLearning[] dtreeArray;
+	public DTLearningCollection dtreeCol;
 	
 	public enum DTLearningNames{
 		DT_ADJUSTAPPRAISAL,
@@ -35,48 +33,10 @@ public class WekaDT extends DecisionTree {
 		DT_NUMDT
 	}
 	
-	private DTWekaARFF[] toWekaARFF(String dtConfig)
-	{
-		mAgent.writeToLogFile(dtConfig);
-		DTWekaARFF[] dtData = null;
-		try {
-			Digester digester = new Digester();
-			digester.setValidating(false);
-			
-			digester.addObjectCreate("decisiontrees", DTXML.class);
-			
-			digester.addObjectCreate("decisiontrees/dt", DTXMLDT.class);
-			
-			digester.addObjectCreate("decisiontrees/dt/attribute", DTXMLAttribute.class);
-			digester.addSetProperties("decisiontrees/dt/attribute", "name", "name");
-			digester.addSetProperties("decisiontrees/dt/attribute", "type", "type");
-			digester.addSetNext("decisiontrees/dt/attribute", "addAttribute");
-			digester.addBeanPropertySetter("decisiontrees/dt/data", "data");
-			
-			digester.addSetNext("decisiontrees/dt", "addDT");
-			
-			DTXML temp = (DTXML)digester.parse(new StringReader(dtConfig));
-			dtData = temp.toWekaARFF();
-			if(dtData.length != DTLearningNames.DT_NUMDT.ordinal())
-			{
-				System.out.println("Improper number of Decision Trees!!\n");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return dtData;
-	}
-	
-	public WekaDT(CCMPAgent agent, String dtConfig)
+	public WekaDT(CCMPAgent agent, DTLearningCollection treeCol)
 	{
 		super(agent);
-		DTWekaARFF[] dtData = toWekaARFF(dtConfig);
-		dtreeArray = new DTLearning[DTLearningNames.DT_NUMDT.ordinal()];
-		for( int i = 0; i < dtData.length && i < DTLearningNames.DT_NUMDT.ordinal(); i++ )
-		{
-			dtreeArray[i] = new DTLearning(dtData[i]);
-		}
+		this.dtreeCol = treeCol;
 	}
 	
 	
@@ -88,7 +48,7 @@ public class WekaDT extends DecisionTree {
 		double trust = 0;
 		String dtTest = Double.toString(certainty)+","+Double.toString(trust)+",?"; 
 			
-		String result = dtreeArray[DTLearningNames.DT_ADJUSTAPPRAISAL.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_ADJUSTAPPRAISAL.ordinal()).DTClassify(dtTest);
 		
 		if(result=="UNCHANGED")
 		{
@@ -120,7 +80,7 @@ public class WekaDT extends DecisionTree {
 						Double.toString(certainty)+","+
 						Double.toString(trust)+",?"; 
 		
-		String result = dtreeArray[DTLearningNames.DT_GENERATEOPINION.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_GENERATEOPINION.ordinal()).DTClassify(dtTest);
 
 		if(result == "DO")
 		{
@@ -144,7 +104,7 @@ public class WekaDT extends DecisionTree {
 		double trust = 0;
 		
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_GETAPPRAISAL.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_GETAPPRAISAL.ordinal()).DTClassify(dtTest);
 		
 		if(result == "MINIMAL")
 		{
@@ -175,7 +135,7 @@ public class WekaDT extends DecisionTree {
         
         double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_GETCERTAINTY.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_GETCERTAINTY.ordinal()).DTClassify(dtTest);
 
 		if(result == "TRUTH")
 		{
@@ -202,7 +162,7 @@ public class WekaDT extends DecisionTree {
 		
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_GETREPUTATION.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_GETREPUTATION.ordinal()).DTClassify(dtTest);
 
 		if(result == "TRUTH")
 		{
@@ -225,7 +185,7 @@ public class WekaDT extends DecisionTree {
 	{
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_PROVIDECERTAINTY.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_PROVIDECERTAINTY.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
 		{
@@ -248,7 +208,7 @@ public class WekaDT extends DecisionTree {
 	{
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_PROVIDEOPINION.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEOPINION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
 		{
@@ -272,7 +232,7 @@ public class WekaDT extends DecisionTree {
 	{
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_PROVIDEREPUTATION.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEREPUTATION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
 		{
@@ -306,7 +266,7 @@ public class WekaDT extends DecisionTree {
 		return false;*/
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_REQUESTCERTAINTY.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_REQUESTCERTAINTY.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
 		{
@@ -337,7 +297,7 @@ public class WekaDT extends DecisionTree {
 		return false;*/
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_REQUESTOPINION.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_REQUESTOPINION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
 		{
@@ -361,7 +321,7 @@ public class WekaDT extends DecisionTree {
 	{
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_REQUESTREPUTATION.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_REQUESTREPUTATION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
 		{
@@ -384,7 +344,7 @@ public class WekaDT extends DecisionTree {
 	{
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_RESPONDCERTAINTY.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_RESPONDCERTAINTY.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
 		{
@@ -408,7 +368,7 @@ public class WekaDT extends DecisionTree {
 	{
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_RESPONDREPUTATION.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_RESPONDREPUTATION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
 		{
@@ -537,7 +497,7 @@ public class WekaDT extends DecisionTree {
         	return false;*/
 		double trust = 0;
 		String dtTest = Double.toString(trust)+",?"; 
-		String result = dtreeArray[DTLearningNames.DT_PROVIDEWEIGHT.ordinal()].DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEWEIGHT.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
 		{
