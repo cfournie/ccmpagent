@@ -71,7 +71,7 @@ public class BayesTrust implements TrustInterface {
 			// Init DTS with trust values resulting in no confidence (variance = 0), or 1/n
 			dts.store(ck, py, this.misc.defaultTrustTuple());
 			
-			// Init DES with blank experience counts
+			// Init DES with blank experience
 			des.store(ck, py, this.misc.makeMatrix());
 			
 			// Init RTS
@@ -90,13 +90,39 @@ public class BayesTrust implements TrustInterface {
 	 * Record an encounter
 	 * 
 	 * See <b>Trust evolution through direct experience evaluation</b>
-	 * @param ck
-	 * @param py
-	 * @param lb
-	 * @param td
+	 * @param ck Context encountered during
+	 * @param py Peer encountered
+	 * @param ctsBeta Satisfaction level of encounter (cts level [0, 1])
 	 */
-	public void storeEncounter(Context ck, Peer py, double lb) throws LevelRangeException {
-		// TODO: Implement
+	public void storeEncounter(Context ck, Peer py, double ctsBeta) throws LevelRangeException {
+		int beta = misc.discretize(ctsBeta);
+		
+		// Prior belief of direct trust in py.
+		double[] d = this.dts.retrieve(ck, py);
+		
+		// Prior belief of what px has experienced with py.
+		double [][] ec = srs.retrieve(ck, py);
+		
+		// Calculate d^t_a (line 2, fig 1 of paper)
+		double [] newD = misc.makeTuple();
+		for (int alpha = 0; alpha < stats.getN(); alpha++) {
+			double denom = 0.0;
+			for (int gamma = 0; gamma < stats.getN(); gamma++) {
+				denom += d[gamma] * pDEgivenDT(ec, beta, gamma);
+			}
+			newD[alpha] = d[alpha] * pDEgivenDT(ec, beta, alpha) / denom;
+		}
+		
+		// Update direct trust
+		dts.store(ck, py, newD);
+		
+		// Calculate new EC_{b}
+		for (int alpha = 0; alpha < stats.getN(); alpha++) {
+			ec[alpha][beta] = ec[alpha][beta] + newD[alpha];
+		}
+
+		// Update direct experience
+		des.store(ck, py, ec);
 	}
 	
 	/**
@@ -135,6 +161,30 @@ public class BayesTrust implements TrustInterface {
 		srs.store(ck, pr, rc);
 	}
 	
+	/**
+	 * Probability of DE_{x,y} = beta,given DT=_{x,y} = alpha
+	 * See Fig 1: trust evolution formulae, line 1
+	 * @param ec
+	 * @param beta
+	 * @param alpha
+	 * @return
+	 */
+	private double pDEgivenDT(double [][] ec, int beta, int alpha) {
+		double denom = 0.0;
+		for (int gamma = 0; gamma < stats.getN(); gamma++) {
+			denom += ec[alpha][gamma]; 
+		}
+		return ec[alpha][beta] / denom;
+	}
+	
+	/**
+	 * Probability of SR_{r,x} = beta,given RT=_{x,y} = alpha
+	 * See Fig 1: trust evolution formulae, line 3
+	 * @param ec
+	 * @param beta
+	 * @param alpha
+	 * @return
+	 */
 	private double pSRgivenRT(double [][] rc, int beta, int alpha) {
 		double denom = 0.0;
 		for (int gamma = 0; gamma < stats.getN(); gamma++) {
