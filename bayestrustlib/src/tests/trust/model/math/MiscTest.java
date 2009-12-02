@@ -9,6 +9,7 @@ import trust.model.math.*;
 import trust.model.exceptions.*;
 
 public class MiscTest {
+	public static final int TRUST_LEVELS = 4;
 
 	private Misc misc;
 	
@@ -44,5 +45,15 @@ public class MiscTest {
 	@Test
 	public void testMakeTupleLDoesntCrash() {
 		misc.makeTuple(3.14);
+	}
+	
+	@Test
+	public void testExpectedTupleLength() {
+		assertEquals(TRUST_LEVELS, this.misc.getExpectedTupleLength());
+	}
+	
+	@Test
+	public void testMaxDiscreteLevel() {
+		assertEquals(TRUST_LEVELS - 1, this.misc.getMaxDiscreteLevel());
 	}
 }
