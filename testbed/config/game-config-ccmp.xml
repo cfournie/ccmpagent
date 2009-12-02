@@ -93,21 +93,28 @@
             <owner>user</owner>
             <agentConfigFile>src/testbed/participants/CheatingAgent.xml</agentConfigFile>
             <dummy>false</dummy>
-            <quantity>2</quantity>
+            <quantity>1</quantity>
         </agentGroup>
         <agentGroup>
-            <agentID>HonestAgent_$c$</agentID>
+            <agentID>SimpleAgent_$c$</agentID>
             <owner>user</owner>
-            <agentConfigFile>src/testbed/participants/HonestAgent.xml</agentConfigFile>
+            <agentConfigFile>src/testbed/participants/SimpleAgent.xml</agentConfigFile>
             <dummy>false</dummy>
-            <quantity>2</quantity>
+            <quantity>1</quantity>
         </agentGroup>
         <agentGroup>
             <agentID>SimpleCCMPAgent_$c$</agentID>
             <owner>user</owner>
             <agentConfigFile>src/testbed/participants/SimpleCCMPAgent.xml</agentConfigFile>
             <dummy>false</dummy>
-            <quantity>2</quantity>
+            <quantity>1</quantity>
         </agentGroup>
+        <agentGroup>
+            <agentID>BayesWekaCCMPAgent_$c$</agentID>
+            <owner>user</owner>
+            <agentConfigFile>src/testbed/participants/BayesWekaCCMPAgent.xml</agentConfigFile>
+            <dummy>false</dummy>
+            <quantity>1</quantity>
+        </agentGroup>		
     </participants>
 </gameDefinition>
