@@ -5,21 +5,18 @@ import testbed.sim.Era;
 import agent.CCMPAgent;
 import agent.trust.TrustNetwork;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import testbed.sim.Appraisal;
 import testbed.sim.Opinion;
 import trust.model.BayesTrust;
-import trust.model.TrustInterface;
 import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
 public class BayesTrustNetwork extends TrustNetwork {
 
 		public static final int TRUST_LEVELS = 4;
-		private TrustInterface mTrust;
+		private BayesTrust mTrust;
 		
 		public BayesTrustNetwork(CCMPAgent agent)
 		{
@@ -139,9 +136,11 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public double getInferredTrustValue(String agent, Era era)
 		{
-			Context c = new Context(era.getName());
-			Peer p = new Peer(agent);
-			return mTrust.getOverallTrust(c, p);
+			Context ck = new Context(era.getName());
+			Peer py = new Peer(agent);
+			
+			// TODO: Implement
+			return 0.5;
 		}
 
 		/* (non-Javadoc)
@@ -160,7 +159,9 @@ public class BayesTrustNetwork extends TrustNetwork {
 		{
 			Context c = new Context(era.getName());
 			Peer p = new Peer(agent);
-			return mTrust.getOverallTrust(c, p);
+			
+			// TODO: Implement
+			return 0.5;
 		}
 
 		/* (non-Javadoc)
@@ -226,7 +227,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 			Context c = new Context(era.getName());
 			Peer p = new Peer(agent);
 	        
-			mTrust.storeRecommendation(c, p, certainty);
+			// TODO: Implement
 		}
 
 		/* (non-Javadoc)
@@ -249,7 +250,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 			double difference = Math.abs(appraisal.getTrueValue() - opinion.getAppraisedValue());
 			difference = difference / ((double)appraisal.getTrueValue());
 			
-			double reputation = mTrust.getOverallTrust(c, p);
+			double reputation = mTrust.getCondensedOverallTrust(c, p);
 			
 			if (difference > 0.5) reputation = reputation - 0.03;
 			else reputation = reputation + 0.03;

@@ -16,7 +16,7 @@ import trust.model.primitives.*;
  * 
  * Catalin Patulea, Chris Fournier
  */
-public class BayesTrust implements TrustInterface {
+public class BayesTrust {
 	/** List of contexts */
 	protected List<Context> c = new LinkedList<Context>();
 	/** List of peers */
@@ -167,7 +167,7 @@ public class BayesTrust implements TrustInterface {
 	 * @param ec
 	 * @param beta
 	 * @param alpha
-	 * @return
+	 * @return Probability of DE given DT
 	 */
 	private double pDEgivenDT(double [][] ec, int beta, int alpha) {
 		double denom = 0.0;
@@ -180,10 +180,10 @@ public class BayesTrust implements TrustInterface {
 	/**
 	 * Probability of SR_{r,x} = beta,given RT=_{x,y} = alpha
 	 * See Fig 1: trust evolution formulae, line 3
-	 * @param ec
+	 * @param rc
 	 * @param beta
 	 * @param alpha
-	 * @return
+	 * @return Probability of SR given RT
 	 */
 	private double pSRgivenRT(double [][] rc, int beta, int alpha) {
 		double denom = 0.0;
@@ -228,6 +228,24 @@ public class BayesTrust implements TrustInterface {
 		
 		return t;
 	}
+
+	/**
+	 * Mean, or condensed, overall trust value
+	 * @param ck
+	 * @param py
+	 * @return Cts trust value [0,1]
+	 */
+	public double getCondensedOverallTrust(Context ck, Peer py) {
+		double cTxy = 0.0;
+		double [] pTxy = getOverallTrust(ck, py);
+		
+		for(int j = 0; j < stats.getN(); j++) {
+			cTxy += pTxy[j] * ((j+1)/stats.getN());
+		}
+		
+		return cTxy / stats.getN();
+	}
+	
 	
 	/**
 	 * Returns the confidence in the overall trust as a probability

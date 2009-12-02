@@ -27,7 +27,6 @@ public class LevelRangeException extends IllegalArgumentException {
 	/**
 	 * Continuous level from [0,1]
 	 * @param l cts level
-	 * @param stats
 	 */
 	public LevelRangeException(double l) {
 		super("Invalid continuous level " + l + " is outside of [0, 1]");
