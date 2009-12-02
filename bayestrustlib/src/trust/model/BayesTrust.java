@@ -233,17 +233,13 @@ public class BayesTrust {
 	 * Mean, or condensed, overall trust value
 	 * @param ck
 	 * @param py
-	 * @return Cts trust value [0,1]
+	 * @return Cts trust value [0,1)
 	 */
 	public double getCondensedOverallTrust(Context ck, Peer py) {
-		double cTxy = 0.0;
 		double [] pTxy = getOverallTrust(ck, py);
+		double cTxy = stats.mean(pTxy);
 		
-		for(int j = 0; j < stats.getN(); j++) {
-			cTxy += pTxy[j] * ((j+1)/stats.getN());
-		}
-		
-		return cTxy / stats.getN();
+		return misc.continuate(cTxy);
 	}
 	
 	
@@ -251,7 +247,7 @@ public class BayesTrust {
 	 * Returns the confidence in the overall trust as a probability
 	 * @param ck Context
 	 * @param py Peer
-	 * @return cts value from 0,1
+	 * @return cts value from [0,1]
 	 */
 	public double getOverallTrustConfidence(Context ck, Peer py) {
 		double[] d = dts.retrieve(ck, py);

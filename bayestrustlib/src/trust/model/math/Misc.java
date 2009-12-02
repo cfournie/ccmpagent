@@ -32,6 +32,17 @@ public class Misc {
 	}
 	
 	/**
+	 * Maps a continuous level on [0, n-1) to a continuous level on [0,1).
+	 * @param l continuous level on [0, n-1)
+	 * @return continuous level in [0, 1)
+	 */
+	public double continuate(double l) {
+		checkRangedLevel(l);
+		
+		return l / (double)this.getMaxDiscreteLevel();
+	}
+	
+	/**
 	 * Creates an empty 2d array of size n*n, initialized to 0.0.
 	 * @return empty (zeroed) 2d array
 	 */
@@ -93,6 +104,15 @@ public class Misc {
 	 */
 	public void checkLevel(double l) throws LevelRangeException {
 		if (l < 0 || l > 1.0)
+			throw new LevelRangeException(l);
+	}
+	
+	/**
+	 * Checks whether a cts level is within range [0,n-1]
+	 * @param l cts level
+	 */
+	public void checkRangedLevel(double l) throws LevelRangeException {
+		if (l < 0 || l > getMaxDiscreteLevel())
 			throw new LevelRangeException(l);
 	}
 	
