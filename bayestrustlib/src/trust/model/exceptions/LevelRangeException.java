@@ -1,5 +1,6 @@
 package trust.model.exceptions;
 
+import trust.model.math.Misc;
 import trust.model.math.Stats;
 
 /**
@@ -20,8 +21,7 @@ public class LevelRangeException extends IllegalArgumentException {
 	 * @param stats
 	 */
 	public LevelRangeException(int l, Stats stats) {
-		super("Invalid discrete level " + l + " is outside of [0, " +
-			(stats.getN() - 1) + "]");
+		super("Invalid discrete level " + l + " is outside of [0, " + new Misc(stats).getMaxDiscreteLevel() + "]");
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class LevelRangeException extends IllegalArgumentException {
 	 * @param l cts level
 	 * @param stats
 	 */
-	public LevelRangeException(double l, Stats stats) {
+	public LevelRangeException(double l) {
 		super("Invalid continuous level " + l + " is outside of [0, 1]");
 	}
 }

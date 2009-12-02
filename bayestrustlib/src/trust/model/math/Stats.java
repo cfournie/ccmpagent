@@ -120,12 +120,4 @@ public class Stats {
 		}
 		System.out.println("] mean=" + fmt.format(mean) + " var=" + fmt.format(var));
 	}
-	
-	/**
-	 * Get the expected tuple length
-	 * @return length
-	 */
-	public int getExpectedTupleLength() {
-		return this.n;
-	}
 }

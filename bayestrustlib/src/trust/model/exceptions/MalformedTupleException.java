@@ -1,5 +1,6 @@
 package trust.model.exceptions;
 
+import trust.model.math.Misc;
 import trust.model.math.Stats;
 
 /**
@@ -18,6 +19,6 @@ public class MalformedTupleException extends IllegalArgumentException {
 	 * @param stats Statistics instance
 	 */
 	public MalformedTupleException(int tupleLength, Stats stats) {
-		super("Received " + tupleLength + "expected " + stats.getExpectedTupleLength());
+		super("Received tuple length " + tupleLength + ", expected " + new Misc(stats).getExpectedTupleLength());
 	}
 }

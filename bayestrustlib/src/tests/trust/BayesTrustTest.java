@@ -1,6 +1,7 @@
 package tests.trust;
 
 import trust.model.BayesTrust;
+import trust.model.exceptions.DuplicatePeerException;
 import trust.model.primitives.*;
 import java.util.*;
 import org.junit.*;
@@ -37,5 +38,13 @@ public class BayesTrustTest {
 				bt.getRecommendedTrust(CONTEXTS[0], p),
 				0.001);
 		}
+	}
+	
+	@Test(expected=DuplicatePeerException.class)
+	public void testDuplicatePeerAddition() {
+		Peer px = new Peer("joe");
+		Peer py = new Peer("joe");
+		this.bt.addPeer(px);
+		this.bt.addPeer(py);
 	}
 }

@@ -99,7 +99,7 @@ public class Misc {
 	 */
 	public void checkLevel(double l) throws LevelRangeException {
 		if (l < 0 || l > 1.0)
-			throw new LevelRangeException(l, stats);
+			throw new LevelRangeException(l);
 	}
 	
 	/**
@@ -122,5 +122,21 @@ public class Misc {
 		for(int i = 0; i < d.length; i++)
 			if (d[i].length != this.stats.getN())
 				throw new MalformedTupleException(d[i].length, this.stats);
+	}
+	
+	/**
+	 * Get the expected tuple length
+	 * @return length
+	 */
+	public int getExpectedTupleLength() {
+		return this.stats.getN();
+	}
+	
+	/**
+	 * Get the maximum discrete level
+	 * @return length n-1
+	 */
+	public int getMaxDiscreteLevel() {
+		return this.stats.getN() - 1;
 	}
 }
