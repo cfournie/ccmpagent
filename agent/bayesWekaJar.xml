@@ -5,7 +5,6 @@
     <property name="dtlib.dir" value="../dtlib"/>
     <property name="dtlib.build.dir" value="${dtlib.dir}/bin"/>
     <property name="agent.build.dir" value="bin"/>
-    <property name="weka.dir" value="${dtlib.dir}/lib"/>
 	<property name="jar.dir" value=".."/>
 	
     <property name="main-class" value="agent.BayesWekaCCMPAgent"/>
@@ -21,13 +20,10 @@
             </fileset>
             <fileset dir="${agent.build.dir}/">
               <exclude name="**/*.html"/>
-            </fileset>
-            <fileset dir="${weka.dir}/">
-              <exclude name="**/*.html"/>
-              <exclude name="**/*.jar"/>
-            </fileset>        	
+            </fileset>      	
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
+                <attribute name="Class-Path" value="dtlib/lib/weka.jar"/>            	
             </manifest>
         </jar>
     </target>
