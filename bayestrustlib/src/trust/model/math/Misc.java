@@ -32,30 +32,24 @@ public class Misc {
 	}
 	
 	/**
-	 * Creates an empty 2d array of size n*n
+	 * Creates an empty 2d array of size n*n, initialized to 0.0.
 	 * @return empty (zeroed) 2d array
 	 */
 	public double[][] makeMatrix() {
-		double d[][] = {};
-		
-		for(int i = 0; i < this.stats.getN(); i++)
-		{
-			Arrays.fill(d[i], 0, this.stats.getN(), 0.0);
-		}
-		
-		return d;
+		return makeMatrix(0.0);
 	}
 	
 	/**
-	 * Creates an filled 2d array of size n*n
-	 * @return 2d array initialised to value l
+	 * Creates an filled 2d array of size n*n, initialized with value v.
+	 * @param v initializing value
+	 * @return 2d array initialised to value v
 	 */
-	public double[][] makeMatrix(double l) {
-		double d[][] = {};
+	public double[][] makeMatrix(double v) {
+		double d[][] = new double[this.stats.getN()][this.stats.getN()];
 		
-		for(int i = 0; i < this.stats.getN(); i++)
+		for(double[] a : d)
 		{
-			Arrays.fill(d[i], 0, this.stats.getN(), l);
+			Arrays.fill(a, 0, this.stats.getN(), v);
 		}
 		
 		return d;
