@@ -35,23 +35,4 @@ public abstract class TrustSet {
 	protected String keyFrom(Context c, Peer p) {
 		return c.getName() + "." + p.getName();
 	}
-
-	/**
-	 * Get default trust value for bootstrapping
-	 * @return default trust value
-	 */
-	protected double defaultTrust() {
-		return 1.0 / this.stats.getN();
-	}
-	
-	/**
-	 * Get default trust value array for bootstrapping
-	 * @return default trust value array
-	 */
-	protected double[] defaultTrustArray() {
-		double[] trust = new double[this.stats.getN()];
-		double defaultVal = this.defaultTrust();
-		Arrays.fill(trust, defaultVal);
-		return trust;
-	}
 }
