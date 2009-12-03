@@ -116,6 +116,7 @@ public abstract class CCMPAgent extends Agent {
         {
         	if( name != getName() )
         	{
+        		mLogger.info("adding agent="+name);
 	        	mTrustNetwork.addAgent(name);
 	        	mDecisionTrees.addAgent(name);
 	        	for( Era era: eras )
