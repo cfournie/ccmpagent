@@ -143,9 +143,8 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public double getInferredTrustValue(String agent, Era era)
 		{
-			Context ck = new Context(era.getName());
-			Peer py = new Peer(agent);
-			return mTrust.getCondensedOverallTrust(ck, py);
+			// B-Trust doesn't calculate inferred trust, so we will return 50% all the time
+			return 0.5;
 		}
 
 		/* (non-Javadoc)
@@ -163,8 +162,9 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public double getTrustValue(String agent, Era era)
 		{
-			// TODO: Evaluate whether different from inferred or not
-			return getInferredTrustValue(agent, era);
+			Context ck = new Context(era.getName());
+			Peer py = new Peer(agent);
+			return mTrust.getCondensedOverallTrust(ck, py);
 		}
 
 		/* (non-Javadoc)
