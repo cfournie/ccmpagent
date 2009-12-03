@@ -1,7 +1,7 @@
 package tests.trust;
 
 import trust.model.BayesTrust;
-import trust.model.math.Stats;
+import trust.model.math.*;
 import trust.model.exceptions.*;
 import trust.model.primitives.*;
 import java.util.*;
@@ -27,11 +27,13 @@ public class BayesTrustTest {
 	
 	private BayesTrust bt;
 	private Stats stats;
+	private Misc misc;
 	
 	@Before
 	public void setUpBayesTrust() {
 		bt = new BayesTrust(TRUST_LEVELS, Arrays.asList(CONTEXTS));
 		stats = new Stats(TRUST_LEVELS);
+		misc = new Misc(stats);
 		
 		for (Peer p: PEERS) {
 			bt.addPeer(p);
@@ -53,5 +55,34 @@ public class BayesTrustTest {
 		Peer py = new Peer("joe");
 		this.bt.addPeer(px);
 		this.bt.addPeer(py);
+	}
+	
+	public static void main(String[] args) {
+		new BayesTrustTest().main();
+	}
+	
+	private void main() {
+		final Context ctx = CONTEXTS[0];
+		final Peer alice = PEERS[0];
+		final Peer bob = PEERS[1];
+		setUpBayesTrust();
+		
+		bt.storeRecommendation(ctx, alice, bob, 0.7);
+		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		
+		bt.storeRecommendation(ctx, alice, bob, 0.7);
+		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		bt.storeRecommendation(ctx, alice, bob, 0.7);
+		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		bt.storeRecommendation(ctx, alice, bob, 0.3);
+		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+
+		/*double[][] m = /misc.makeIdentityMatrix()/misc.makeMatrix(0.1);
+		for (int i = 0; i < stats.getN(); i++) {
+			for (int j = 0; j < stats.getN(); j++) {
+				m[i][j] += 0.1;
+			}
+		}
+		System.out.println(bt.pSRgivenRT(m, 0, 0));*/
 	}
 }

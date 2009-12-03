@@ -67,6 +67,20 @@ public class Misc {
 	}
 	
 	/**
+	 * Creates an n*n array with 1.0 on its diagonal and 0.0 elsewhere.
+	 * @return n*n identity matrix
+	 */
+	public double[][] makeIdentityMatrix() {
+		double [][] m = makeMatrix();
+		
+		for (int i = 0; i < m.length; i++) {
+			m[i][i] = 1.0;
+		}
+		
+		return m;
+	}
+	
+	/**
 	 * Creates an array of size n, filled with 0.0.
 	 * @return n-tuple initialised to 0.0
 	 */

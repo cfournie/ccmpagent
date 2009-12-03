@@ -38,6 +38,13 @@ public class BayesTrust {
 	 *  versus recommended trust */
 	private static final double SIGMA = 0.5;
 	
+	/** Initial recommended trust evolution rate. Range:
+	 * 0.25 - all recommenders are untrustworthy
+	 * 1.0  - all recommenders are completely trustworthy
+	 * (initial value of EC matrix diagonal) 
+	 */
+	private static final double ETA = 0.4;
+	
 	/**
 	 * Constructor
 	 * @param n Number of levels
@@ -78,7 +85,11 @@ public class BayesTrust {
 			rts.store(ck, py, this.misc.defaultTrustTuple());
 			
 			// Init SRS
-			srs.store(ck, py, this.misc.makeMatrix());
+			double[][] m = this.misc.makeMatrix(1.0 - 3 * ETA);
+			for (int i = 0; i < m.length; i++) {
+				m[i][i] = ETA;
+			}
+			srs.store(ck, py, m);
 		}
 		
 		success = this.p.add(py);
@@ -145,11 +156,26 @@ public class BayesTrust {
 		
 		double [] newR = misc.makeTuple();
 		for (int alpha = 0; alpha < stats.getN(); alpha++) {
-			double denom = 0.0;
+			System.out.println("Alpha = " + alpha + ":");
+			
+			double pSRandRT = r[alpha] * pSRgivenRT(rc, beta, alpha);
+			System.out.println(
+				"  p(Sent " + beta + " | Rcmd " + alpha + ") = " + pSRgivenRT(rc, beta, alpha) + " * " +
+				"p(Rcmd " + alpha + ") = " + r[alpha]);
+			
+			double pSR = 0.0;
 			for (int gamma = 0; gamma < stats.getN(); gamma++) {
-				denom += r[gamma] * pSRgivenRT(rc, beta, gamma);
+				System.out.println(
+					"    p(Sent " + beta + " | Rcmd " + gamma + ") = " + pSRgivenRT(rc, beta, gamma) + " * " +
+					"p(Rcmd " + gamma + ") = " + r[gamma]);
+				pSR += r[gamma] * pSRgivenRT(rc, beta, gamma);
 			}
-			newR[alpha] = r[alpha] * pSRgivenRT(rc, beta, alpha) / denom;
+			
+			System.out.println(
+				"  p(Sent " + beta + "; Rcmd " + alpha + ") = " + pSRandRT + " / " +
+				"p(Sent " + beta + ") = " + pSR);
+			newR[alpha] = pSRandRT / pSR;
+			System.out.println("  p(new Rcmd " + alpha + ") = " + newR[alpha]);
 		}
 		
 		rts.store(ck, py, newR);
@@ -185,7 +211,7 @@ public class BayesTrust {
 	 * @param alpha
 	 * @return Probability of SR given RT
 	 */
-	private double pSRgivenRT(double [][] rc, int beta, int alpha) {
+	public double pSRgivenRT(double [][] rc, int beta, int alpha) {
 		double denom = 0.0;
 		for (int gamma = 0; gamma < stats.getN(); gamma++) {
 			denom += rc[alpha][gamma]; 
