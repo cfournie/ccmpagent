@@ -239,10 +239,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void setAgentEraCertainty(String agent, Era era, double certainty)
 		{
-			Context c = new Context(era.getName());
-			Peer p = new Peer(agent);
-	        
-			// TODO: Evaluate implementation
+			// Ignored, trust does not care about agent era certainty.
 		}
 
 		/* (non-Javadoc)
