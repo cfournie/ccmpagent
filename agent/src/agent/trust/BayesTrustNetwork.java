@@ -14,15 +14,16 @@ import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
 /**
- * Bayesian Trust shim for agent
+ * Bayesian Trust agent shim.
  */
 public class BayesTrustNetwork extends TrustNetwork {
-
+		/** Trust levels */
 		public static final int TRUST_LEVELS = 4;
+		/** B-trust framework */
 		private BayesTrust mTrust;
 		
 		/**
-		 * Contructor
+		 * Constructor.
 		 * @param agent Requires the agent to interrogate ART for problem parameters
 		 */
 		public BayesTrustNetwork(CCMPAgent agent)

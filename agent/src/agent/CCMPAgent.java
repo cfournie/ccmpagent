@@ -29,12 +29,7 @@ import org.apache.commons.digester.Digester;
 import agent.CCMPConfigInfo;
 
 /**
- * 
- */
-
-/**
- * @author cfournie
- *
+ * Abstract CCMP Agent.
  */
 public abstract class CCMPAgent extends Agent {
 
@@ -51,7 +46,7 @@ public abstract class CCMPAgent extends Agent {
     protected Logger							mLogger;
     protected Digester							mDigester;
     protected CCMPConfigInfo					mConfigInfo;
-    boolean										mLogging;
+    protected boolean							mLogging;
 	
 	/**
 	 * Create the decision tree and trust network by calling the abstract function
@@ -922,6 +917,6 @@ public abstract class CCMPAgent extends Agent {
         }
     }
     
-    abstract DecisionTree createDecisionTree();
-    abstract TrustNetwork createTrustNetwork();
+    protected abstract DecisionTree createDecisionTree();
+    protected abstract TrustNetwork createTrustNetwork();
 }

@@ -4,13 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 
 import testbed.sim.*;
 
 import agent.*;
 import agent.trust.BayesTrustNetwork;
 
+/**
+ * Crash tests for BayesTrustNetwork.
+ * @author cfournie
+ */
 public class BayesTrustNetworkTest {
 
 	private BayesTrustNetwork trustNetwork;

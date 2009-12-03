@@ -1,6 +1,3 @@
-/**
- * 
- */
 package agent.trust;
 
 import agent.CCMPAgent;
@@ -9,10 +6,8 @@ import testbed.sim.Era;
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Opinion;
 
-
 /**
- * @author cfournie
- *
+ * Abstract trust shim.
  */
 public abstract class TrustNetwork {
 	
@@ -21,6 +16,10 @@ public abstract class TrustNetwork {
 	public abstract void addAgent( String newAgent );
 	public abstract void removeAgent( String agent );
 	
+	/**
+	 * Constructor
+	 * @param agent Requires the agent to interrogate ART for problem parameters
+	 */
 	public TrustNetwork(CCMPAgent agent)
 	{
 		// Initialization

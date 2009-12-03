@@ -8,14 +8,8 @@ import agent.trust.TrustNetwork;
 
 import java.util.Collections;
 
-
 /**
- * 
- */
-
-/**
- * @author cfournie
- *
+ * Simple CCMP Agent.
  */
 public class SimpleCCMPAgent extends CCMPAgent {
 
@@ -46,12 +40,12 @@ public class SimpleCCMPAgent extends CCMPAgent {
 		super.prepareCertaintyRequests();
 	}
 	
-    DecisionTree createDecisionTree()
+	protected DecisionTree createDecisionTree()
     {
     	return new SimpleDT(this);
     }
     
-    TrustNetwork createTrustNetwork()
+	protected TrustNetwork createTrustNetwork()
     {
     	return new SimpleTrust(this);
     }    

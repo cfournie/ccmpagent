@@ -1,5 +1,8 @@
 package agent;
 
+/**
+ * CCMP Agent configuration.
+ */
 public class CCMPConfigInfo
 {
 	private boolean mLoggingEnabled;

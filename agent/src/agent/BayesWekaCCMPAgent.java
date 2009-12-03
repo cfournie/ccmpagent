@@ -1,4 +1,5 @@
 package agent;
+
 import java.io.IOException;
 
 import learning.DTAttribute;
@@ -14,20 +15,14 @@ import agent.decision.WekaDT;
 import agent.trust.SimpleTrust;
 import agent.trust.TrustNetwork;
 
-
 /**
- * 
- */
-
-/**
- * @author cfournie
- *
+ * CCMPAgent using B-Trust and WEKA-DT Learning.
  */
 public class BayesWekaCCMPAgent extends CCMPAgent {
 	private DTLearningCollection parsedTrees;
 
 	/**
-	 * @param paramFile
+	 * Constructor
 	 */
 	public BayesWekaCCMPAgent()
 	{
@@ -36,6 +31,7 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
 
 	
 	/**
+	 * Constructor
 	 * @param paramFile
 	 */
 	public BayesWekaCCMPAgent(String paramFile)
@@ -43,12 +39,12 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
 		super(paramFile);		
 	}
 	
-	WekaDT createDecisionTree()
+	protected WekaDT createDecisionTree()
     {
     	return new WekaDT(this, parsedTrees);
     }
     
-    TrustNetwork createTrustNetwork()
+	protected TrustNetwork createTrustNetwork()
     {
     	return new SimpleTrust(this);
     }

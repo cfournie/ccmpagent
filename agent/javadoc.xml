@@ -4,7 +4,7 @@
         <javadoc
         	access="private"
         	author="true"
-        	classpath="lib/junit-addons-1.4.jar;../agent/lib/art-2.1.1.jar;lib/junit.jar"
+        	classpath="lib/junit-addons-1.4.jar;lib/art-2.1.1.jar;lib/junit.jar"
         	destdir="doc"
         	doctitle="B-trust Framework"
         	nodeprecated="false"
@@ -13,7 +13,7 @@
         	nonavbar="false"
         	notree="false"
         	overview="src\overview.html"
-        	packagenames="tests.trust,tests.trust.model.exceptions,tests.trust.model.math,tests.trust.model.primitives,tests.trust.model.sets,trust.model.sets,trust.model.primitives,trust.model.exceptions,trust.model.math,trust.model,trust"
+        	packagenames="agent,agent.decision,agent.trust,tests,tests.agent.trust"
         	source="1.5"
         	sourcepath="src"
         	splitindex="true"

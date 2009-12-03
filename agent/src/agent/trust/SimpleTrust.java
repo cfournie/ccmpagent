@@ -15,14 +15,17 @@ import testbed.sim.Opinion;
 import java.util.Hashtable;
 
 /**
- * @author cfournie
- *
+ * Simple trust shim.
  */
 public class SimpleTrust extends TrustNetwork {
 
 	private Map<String,Double>          mReputations;
 	private Map<String,Map<Era,Double>> mCertainties;
 	
+	/**
+	 * Constructor.
+	 * @param agent Requires the agent to interrogate ART for problem parameters
+	 */
 	public SimpleTrust(CCMPAgent agent)
 	{
 		super(agent);
