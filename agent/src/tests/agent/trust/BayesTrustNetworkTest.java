@@ -20,7 +20,7 @@ public class BayesTrustNetworkTest {
 	
 	public static final double certainty = 0.5;
 	public static final double hoursSpent = 200;
-	public static final double reputation = 0.5;
+	public static final double reputation = 1.0;
 	public static final int appraised = 100;
 	
 	public static final String agent = "agent";
@@ -176,6 +176,12 @@ public class BayesTrustNetworkTest {
 	
 	@Test
 	public void testCrashFrameReset() {
+		this.trustNetwork.getTrustValue(aboutAgent, era);
+		this.trustNetwork.getTrustValue(toAgent, era);
+		this.trustNetwork.receiveAgentReputationUpdate(fromAgent, aboutAgent, era, reputation);
+		this.trustNetwork.receiveAgentReputationUpdate(aboutAgent, fromAgent, era, reputation);		
+		this.trustNetwork.getTrustValue(aboutAgent, era);
+		this.trustNetwork.getTrustValue(toAgent, era);				
 		this.trustNetwork.frameReset();
 	}
 }
