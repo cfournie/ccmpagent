@@ -24,6 +24,7 @@ public class BayesTrustNetworkTest {
 	public static final String fromAgent = "fromAgent";
 	public static final String aboutAgent = "aboutAgent";
 	public static final String toAgent = "toAgent";
+	public static final String unrelatedAgent = "unrelatedAgent";
 	
 	public static final String painting = "Magnificat";
 	public static final Era era = new Era("renaissance");
@@ -32,14 +33,19 @@ public class BayesTrustNetworkTest {
 	
 	@Before
 	public void setup() {
-		CCMPAgent agent = new BayesWekaCCMPAgent();
-		agent.setName("agentAlpha");
+		CCMPAgent ccmpAgent = new BayesWekaCCMPAgent();
+		ccmpAgent.setName("agentAlpha");
 		
 		List<Era> eras = new LinkedList<Era>();
 		eras.add(era);
-		agent.receiveEras(eras);
+		ccmpAgent.receiveEras(eras);
 		
-		this.trustNetwork = new BayesTrustNetwork(agent);
+		this.trustNetwork = new BayesTrustNetwork(ccmpAgent);
+
+		this.trustNetwork.addAgent(agent);
+		this.trustNetwork.addAgent(fromAgent);
+		this.trustNetwork.addAgent(aboutAgent);
+		this.trustNetwork.addAgent(toAgent);
 	}
 	
 	@Test
@@ -50,7 +56,7 @@ public class BayesTrustNetworkTest {
 
 	@Test
 	public void testCrashaddAgent() {
-		this.trustNetwork.addAgent(agent);
+		this.trustNetwork.addAgent(unrelatedAgent);
 	}
 	
 	@Test

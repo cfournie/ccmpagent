@@ -267,9 +267,10 @@ public class BayesTrustNetwork extends TrustNetwork {
 	        
 			// What is the satisfaction level of this encounter
 			// TODO: Calculate satisfaction
+			double satisfaction = 0.0; // range [0,1]
 			
 			// Record the encounter
-			mTrust.storeEncounter(ck, py, (int)difference);
+			mTrust.storeEncounter(ck, py, (int)satisfaction);
 		}
 		
 		public void frameReset()

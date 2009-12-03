@@ -240,14 +240,15 @@ public class BayesTrust {
 	 */
 	public double[] getOverallTrust(Context ck, Peer py) {
 		double[] t = misc.makeTuple();
+		
 		double[] d = dts.retrieve(ck, py);
 		double[] r = rts.retrieve(ck, py);
 		
 		for (int j = 0; j < stats.getN(); j++)
 		{
 
-			double dy = (j+1) * d[j];
-			double ry = (j+1) * r[j];
+			double dy = d[j];
+			double ry = r[j];
 			
 			t[j] = (SIGMA * dy) + ((1-SIGMA) * ry);
 		}
