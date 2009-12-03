@@ -12,8 +12,9 @@ import org.xml.sax.SAXException;
 import agent.CCMPAgent;
 
 import agent.decision.WekaDT;
-import agent.trust.SimpleTrust;
+import agent.trust.BayesTrustNetwork;
 import agent.trust.TrustNetwork;
+import agent.trust.SimpleTrust;
 
 /**
  * CCMPAgent using B-Trust and WEKA-DT Learning.
@@ -46,7 +47,7 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
     
 	protected TrustNetwork createTrustNetwork()
     {
-    	return new SimpleTrust(this);
+    	return new BayesTrustNetwork(this);
     }
     
     protected void parseConfigFile( String paramFile )
