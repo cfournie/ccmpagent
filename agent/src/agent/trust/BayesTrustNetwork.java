@@ -13,11 +13,18 @@ import trust.model.BayesTrust;
 import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
+/**
+ * Bayesian Trust shim for agent
+ */
 public class BayesTrustNetwork extends TrustNetwork {
 
 		public static final int TRUST_LEVELS = 4;
 		private BayesTrust mTrust;
 		
+		/**
+		 * Contructor
+		 * @param agent Requires the agent to interrogate ART for problem parameters
+		 */
 		public BayesTrustNetwork(CCMPAgent agent)
 		{
 			super(agent);
@@ -53,7 +60,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void agentDidNotAcceptCertainty(String agent, Era era,
 				double certaintyValue)
 		{
-			// Don't care about this in RandomTrust
+			// TODO: Evaluate implementation
 		}
 
 		/* (non-Javadoc)
@@ -61,7 +68,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void agentDidNotAcceptReputationRequest(String agent, Era era)
 		{
-			// Simple Trust doesn't pay attention
+			// TODO: Evaluate implementation
 		}
 
 		/* (non-Javadoc)
@@ -69,7 +76,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void agentDidNotProvideCertainty(String agent, Era era)
 		{
-			// Simple Trust doesn't pay attention
+			// TODO: Evaluate implementation
 		}
 
 		/* (non-Javadoc)
@@ -77,7 +84,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void agentDidNotProvideOpinion(String agent, Era era)
 		{
-			// Simple Trust doesn't pay attention
+			// Ignored, no encounter, assumed to be a benign response
 		}
 
 		/* (non-Javadoc)
@@ -85,7 +92,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void agentDidNotProvideReputation(String agent, Era era)
 		{
-			// Simple Trust doesn't pay attention to whether an agent provided a reputation after payment
+			// Ignored, no encounter, assumed to be a benign response
 		}
 
 		/* (non-Javadoc)
@@ -93,7 +100,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void didNotAcceptCertaintyRequest(String fromAgent, Era era)
 		{
-			// Simple Trust doesn't pay attention to whether we accepted a certainty request 
+			// Ignored, no encounter, assumed to be a benign response
 		}
 
 		/* (non-Javadoc)
@@ -102,7 +109,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void didNotProvideAcceptReputationRequest(String fromAgent,
 				String aboutAgent, Era era)
 		{
-			// Simple Trust doesn't pay attention to whether we provided an accept reputation request 
+			// Ignored, no encounter, assumed to be a benign response 
 		}
 
 		/* (non-Javadoc)
@@ -110,7 +117,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void didNotProvideOpinionAfterPayment(String fromAgent, Era era)
 		{
-			// Simple Trust doesn't pay attention to whether we provided an opinion or not 
+			// Ignored, no encounter, assumed to be a benign response
 		}
 
 		/* (non-Javadoc)
@@ -119,7 +126,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void didNotProvideReputationAfterPayment(String fromAgent,
 				String aboutAgent, Era era)
 		{
-			// Simple Trust doesn't pay attention to whether we provided a reputation or not 
+			// Ignored, no encounter, assumed to be a benign response 
 		}
 
 		/* (non-Javadoc)
@@ -128,7 +135,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void generatedOpinion(String toAgent, AppraisalAssignment art,
 				double hoursSpent)
 		{
-			// Simple Trust doesn't care how much time we spent generating an opinion
+			// TODO: Evaluate implementation: Affects certainty
 		}
 
 		/* (non-Javadoc)
@@ -138,9 +145,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		{
 			Context ck = new Context(era.getName());
 			Peer py = new Peer(agent);
-			
-			// TODO: Implement
-			return 0.5;
+			return mTrust.getCondensedOverallTrust(ck, py);
 		}
 
 		/* (non-Javadoc)
@@ -148,8 +153,9 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public double getReputationWeight(String agent, Era era)
 		{
-			// TODO Auto-generated method stub
-			return 0;
+			Context ck = new Context(era.getName());
+			Peer py = new Peer(agent);
+			return mTrust.getOverallTrustConfidence(ck, py);
 		}
 		
 		/* (non-Javadoc)
@@ -157,11 +163,8 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public double getTrustValue(String agent, Era era)
 		{
-			Context c = new Context(era.getName());
-			Peer p = new Peer(agent);
-			
-			// TODO: Implement
-			return 0.5;
+			// TODO: Evaluate whether different from inferred or not
+			return getInferredTrustValue(agent, era);
 		}
 
 		/* (non-Javadoc)
@@ -170,6 +173,8 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void providedAcceptReputationRequest(String toAgent,
 				String aboutAgent, Era era)
 		{
+			// TODO: Evaluate implementation
+			
 			// Simple Trust doesn't care that we decided to accept a reputation request
 			//from another agent.
 
@@ -181,6 +186,8 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void providedCertaintyReply(String toAgent, Era era,
 				double certaintyValue)
 		{
+			// TODO: Evaluate implementation
+			
 			// Simple Trust doesn't care that we provided a certainty value to another agent
 		}
 
@@ -190,6 +197,8 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void providedOpinion(String toAgent, AppraisalAssignment art,
 				int appraisedValue)
 		{
+			// TODO: Evaluate implementation
+			
 			// Simple trust doesn't care that we provided an opinion to another agent
 		}
 
@@ -205,10 +214,16 @@ public class BayesTrustNetwork extends TrustNetwork {
 		/* (non-Javadoc)
 		 * @see agent.trust.TrustInterface#receiveAgentReputationUpdate(java.lang.String, java.lang.String, testbed.sim.Era, double)
 		 */
-		public void receiveAgentReputationUpdate(String fromAgent,
-				String aboutAgent, Era era, double reputation)
+		public void receiveAgentReputationUpdate(String fromAgent, String aboutAgent, Era era, double reputation)
 		{
-			// Simple Trust never asks (or receives) reputation updates
+			Context ck = new Context(era.getName());
+			Peer py = new Peer(fromAgent);
+			Peer pr = new Peer(aboutAgent);
+			
+			// TODO: Evaluate beta calculation
+			double ctsBeta = reputation;
+			
+			mTrust.storeRecommendation(ck, pr, py, ctsBeta);
 		}
 
 		/* (non-Javadoc)
@@ -216,7 +231,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void removeAgent(String agent)
 		{
-			// Trustlib does not care about agent removal
+			// Ignored, trust does not care about agent removal
 		}
 
 		/* (non-Javadoc)
@@ -227,7 +242,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 			Context c = new Context(era.getName());
 			Peer p = new Peer(agent);
 	        
-			// TODO: Implement
+			// TODO: Evaluate implementation
 		}
 
 		/* (non-Javadoc)
@@ -235,7 +250,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void setOurEraCertainty(Era era)
 		{
-			// Simple Trust doesn't store our era certainty.
+			// Ignored, trust does not care about our era certainty.
 		}
 
 		/* (non-Javadoc)
@@ -244,26 +259,24 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void updateAgentTrustFromFinalAppraisal(String agent, Appraisal appraisal, Opinion opinion)
 		{
 
-			Context c = new Context(appraisal.getEra().getName());
-			Peer p = new Peer(agent);
+			Context ck = new Context(appraisal.getEra().getName());
+			Peer py = new Peer(agent);
 			
+			// What was the difference encountered
 			double difference = Math.abs(appraisal.getTrueValue() - opinion.getAppraisedValue());
+			
+			// What is that difference in percent
 			difference = difference / ((double)appraisal.getTrueValue());
-			
-			double reputation = mTrust.getCondensedOverallTrust(c, p);
-			
-			if (difference > 0.5) reputation = reputation - 0.03;
-			else reputation = reputation + 0.03;
-			if (reputation > 1) reputation = 1;
-			if (reputation < 0) reputation = 0;
-			
 	        
-			mTrust.storeEncounter(c, p, (int)reputation);
+			// What is the satisfaction level of this encounter
+			// TODO: Calculate satisfaction
 			
-			
+			// Record the encounter
+			mTrust.storeEncounter(ck, py, (int)difference);
 		}
 		
 		public void frameReset()
 		{
+			// TODO: Evaluate implementation: requires changes to BayesTrust
 		}	
 }
