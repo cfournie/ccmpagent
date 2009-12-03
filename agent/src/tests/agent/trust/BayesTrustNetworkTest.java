@@ -1,5 +1,7 @@
 package tests.agent.trust;
 
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -23,14 +25,20 @@ public class BayesTrustNetworkTest {
 	public static final String aboutAgent = "aboutAgent";
 	public static final String toAgent = "toAgent";
 	
+	public static final String painting = "Magnificat";
 	public static final Era era = new Era("renaissance");
 	AppraisalAssignment appraisalAssignment = new AppraisalAssignment(agent, era, agent);
 	
 	
 	@Before
 	public void setup() {
-		CCMPAgent agent = new SimpleCCMPAgent();
-		agent.initializeAgent();
+		CCMPAgent agent = new BayesWekaCCMPAgent();
+		agent.setName("agentAlpha");
+		
+		List<Era> eras = new LinkedList<Era>();
+		eras.add(era);
+		agent.receiveEras(eras);
+		
 		this.trustNetwork = new BayesTrustNetwork(agent);
 	}
 	
@@ -152,9 +160,9 @@ public class BayesTrustNetworkTest {
 	
 	@Test
 	public void testCrashUpdateAgentTrustFromFinalAppraisal() {
-		//Appraisal a = new Appraisal();
-		//Opinion o = new Opinion();
-		//this.trustNetwork.updateAgentTrustFromFinalAppraisal(agent, a, o);
+		Appraisal a = new Appraisal(fromAgent, painting, era, appraised);
+		Opinion o = new Opinion(fromAgent, painting, appraised + 100, agent, "transactionID");
+		this.trustNetwork.updateAgentTrustFromFinalAppraisal(agent, a, o);
 	}
 	
 	@Test
