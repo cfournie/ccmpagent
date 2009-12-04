@@ -68,10 +68,14 @@ public class Stats {
 	 */
 	public double mean(double[] d)
 	{
+		Misc misc = new Misc(this);
+		misc.checkPmf(d);
+		
 		double sum = 0;
 		for(int j = 0; j < d.length; j++)
-			sum += j * d[j];
-		return sum;
+			sum += (j+1) * d[j];
+		
+		return sum - 1;
 	}
 	
 	/**
@@ -81,11 +85,14 @@ public class Stats {
 	 */
 	public double variance(double[] d)
 	{
+		Misc misc = new Misc(this);
+		misc.checkPmf(d);
+		
 		double mean = this.mean(d);
 		
 		double sum = 0;
 		for(int j = 0; j < d.length; j++)
-			sum += Math.pow(j, 2) * d[j];
+			sum += Math.pow(j+1, 2) * d[j];
 		
 		return sum - Math.pow(mean, 2);
 	}

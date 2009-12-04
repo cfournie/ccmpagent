@@ -180,7 +180,9 @@ public class Misc {
 			sum += d[j];
 		}
 		
-		if (sum < 0.999 || sum > 1)
+		double acceptableError = 0.01;
+		
+		if (sum < (double)(1.0 - acceptableError) || sum > 1.0)
 			throw new MalformedTupleException(sum);
 	}
 }

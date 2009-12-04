@@ -20,15 +20,43 @@ public class StatsTest {
 	}
 	
 	@Test
-	public void testMean() {
-		double[] trust = new double[]{0.1, 0.2, 0.3, 0.4};
+	public void testMean3() {
+		double[] trust = new double[]{0, 0, 0, 1};
 		double mean = stats.mean(trust);
-		assertTrue(mean == TRUST_LEVELS * 0.5);
+		assertTrue(mean == 3);
+	}
+	
+	@Test
+	public void testMean2() {
+		double[] trust = new double[]{0, 0, 1, 0};
+		double mean = stats.mean(trust);
+		assertTrue(mean == 2);
+	}
+	
+	@Test
+	public void testMean1() {
+		double[] trust = new double[]{0, 1, 0, 0};
+		double mean = stats.mean(trust);
+		assertTrue(mean == 1);
+	}
+	
+	@Test
+	public void testMean0() {
+		double[] trust = new double[]{1, 0, 0, 0};
+		double mean = stats.mean(trust);
+		assertTrue(mean == 0);
+	}
+	
+	@Test
+	public void testMean() {
+		double[] trust = new double[]{0.25, 0.25, 0.25, 0.25};
+		double mean = stats.mean(trust);
+		assertTrue(mean == (0.25*1 + 0.25*2 + 0.25*3 + 0.25*4 - 1));
 	}
 	
 	@Test
 	public void testNoVariance() {
-		double[] trust = new double[]{1/TRUST_LEVELS, 1/TRUST_LEVELS, 1/TRUST_LEVELS, 1/TRUST_LEVELS};
+		double[] trust = new double[]{0.25, 0.25, 0.25, 0.25};
 		double variance = stats.variance(trust);
 		assertEquals(0, variance, 0.0);
 	}

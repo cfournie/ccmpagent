@@ -19,4 +19,12 @@ public class MalformedTupleExceptionTest {
 		
 		assertEquals("Received tuple length 5, expected 4", message);
 	}
+	
+	@Test
+	public void testMessageSum() {
+		MalformedTupleException exception = new MalformedTupleException(2.5);
+		String message = exception.getMessage();
+		
+		assertEquals("Received tuple with a sum of 2.5, expected 1.0", message);
+	}
 }

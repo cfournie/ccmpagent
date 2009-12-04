@@ -118,4 +118,35 @@ public class MiscTest {
 		double[][] matrix = new double[TRUST_LEVELS][TRUST_LEVELS + 1];
 		this.misc.checkMatrix(matrix);
 	}
+	
+	@Test(expected=MalformedTupleException.class)
+	public void testcheckPmfPositive() {
+		double[] d = {0.25, 0.25, 0.25, 0.5};
+		this.misc.checkPmf(d);
+	}
+	
+	@Test(expected=MalformedTupleException.class)
+	public void testcheckPmfNegative() {
+		double[] d = {0.25, 0.25, 0.25, -2.0};
+		this.misc.checkPmf(d);
+	}
+	
+	@Test(expected=MalformedTupleException.class)
+	public void testcheckPmfShort() {
+		double[] d = {0.25, 0.25, 0.25, 0.0};
+		this.misc.checkPmf(d);
+	}
+	
+	@Test
+	public void testcheckPmfEven() {
+		double[] d = {0.25, 0.25, 0.25, 0.25};
+		this.misc.checkPmf(d);
+	}
+	
+	@Test
+	public void testcheckPmfDispersed() {
+		double val = 1.0/3.0;
+		double[] d = {val, val, val};
+		this.misc.checkPmf(d);
+	}
 }

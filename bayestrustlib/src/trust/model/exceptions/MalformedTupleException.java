@@ -14,7 +14,7 @@ public class MalformedTupleException extends IllegalArgumentException {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param tupleLength Received length
 	 * @param stats Statistics instance
 	 */
@@ -23,9 +23,8 @@ public class MalformedTupleException extends IllegalArgumentException {
 	}
 	
 	/**
-	 * Constructor
-	 * @param tupleLength Received length
-	 * @param stats Statistics instance
+	 * Constructor.
+	 * @param sum Sum that the pmf equals
 	 */
 	public MalformedTupleException(double sum) {
 		super("Received tuple with a sum of " + sum + ", expected 1.0");
