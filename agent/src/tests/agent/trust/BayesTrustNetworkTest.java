@@ -175,7 +175,12 @@ public class BayesTrustNetworkTest {
 	}
 	
 	@Test
-	public void testCrashFrameReset() {
+	public void testCrashFrameReset() {			
+		this.trustNetwork.frameReset();
+	}
+	
+	@Test
+	public void testCallSequence() {
 		this.trustNetwork.getTrustValue(aboutAgent, era);
 		this.trustNetwork.getTrustValue(toAgent, era);
 		this.trustNetwork.receiveAgentReputationUpdate(fromAgent, aboutAgent, era, reputation);

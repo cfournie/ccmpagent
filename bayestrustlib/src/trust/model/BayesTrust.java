@@ -231,30 +231,6 @@ public class BayesTrust {
 		return rts.retrieve(ck, py);
 	}
 	
-	
-	/**
-	 * Returns overall trust in a peer for a context
-	 * @param ck Context
-	 * @param py Peer
-	 * @return level from 0 to n
-	 */
-	public double[] getOverallTrust(Context ck, Peer py) {
-		double[] t = misc.makeTuple();
-		
-		double[] d = dts.retrieve(ck, py);
-		double[] r = rts.retrieve(ck, py);
-		
-		for (int j = 0; j < stats.getN(); j++)
-		{
-
-			double dy = d[j];
-			double ry = r[j];
-			
-			t[j] = (SIGMA * dy) + ((1-SIGMA) * ry);
-		}
-		
-		return t;
-	}
 
 	/**
 	 * Mean, or condensed, overall trust value
@@ -263,10 +239,16 @@ public class BayesTrust {
 	 * @return Cts trust value [0,1)
 	 */
 	public double getCondensedOverallTrust(Context ck, Peer py) {
-		double [] pTxy = getOverallTrust(ck, py);
-		double cTxy = stats.mean(pTxy);
+		double[] d = dts.retrieve(ck, py);
+		double[] r = rts.retrieve(ck, py);
 		
-		return misc.continuate(cTxy);
+		this.misc.checkPmf(d);
+		this.misc.checkPmf(r);
+		
+		double dE = stats.mean(d);
+		double rE = stats.mean(r);
+		
+		return misc.continuate((SIGMA * dE) + ((1-SIGMA) * rE));
 	}
 	
 	

@@ -167,4 +167,20 @@ public class Misc {
 	public int getMaxDiscreteLevel() {
 		return this.stats.getN() - 1;
 	}
+	
+	/**
+	 * Checks to ensure that the sum of the elements in a pmf approx. equals 1.0
+	 * @param d Pmf
+	 * @throws MalformedTupleException if the pmf doesn't approx. equal 1.0
+	 */
+	public void checkPmf(double[] d) {
+		double sum = 0.0;
+		
+		for (int j = 0; j < d.length; j++) {
+			sum += d[j];
+		}
+		
+		if (sum < 0.999 || sum > 1)
+			throw new MalformedTupleException(sum);
+	}
 }

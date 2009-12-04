@@ -21,4 +21,13 @@ public class MalformedTupleException extends IllegalArgumentException {
 	public MalformedTupleException(int tupleLength, Stats stats) {
 		super("Received tuple length " + tupleLength + ", expected " + new Misc(stats).getExpectedTupleLength());
 	}
+	
+	/**
+	 * Constructor
+	 * @param tupleLength Received length
+	 * @param stats Statistics instance
+	 */
+	public MalformedTupleException(double sum) {
+		super("Received tuple with a sum of " + sum + ", expected 1.0");
+	}
 }
