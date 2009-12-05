@@ -114,18 +114,25 @@ public abstract class CCMPAgent extends Agent {
         //To the DT.
         for (String name: agentNames)
         {
-        	if( name != getName() )
+        	if( !name.equals(getName()) )
         	{
-        		mLogger.info("adding agent="+name);
-	        	mTrustNetwork.addAgent(name);
-	        	mDecisionTrees.addAgent(name);
+        		try
+        		{
+	        		mLogger.info("adding agent="+name);
+		        	mTrustNetwork.addAgent(name);
+		        	mDecisionTrees.addAgent(name);
+        		}
+        		catch( Exception e)
+        		{
+        			mLogger.warning("Exception caught adding agent.");
+        			mLogger.warning(e.toString());
+        		}
 	        	for( Era era: eras )
 	        	{
 	        		updateDecisionTreeTrustValues(name, era);
 	        	}
         	}
         }
-
 	}
 
 	/** 
@@ -209,7 +216,7 @@ public abstract class CCMPAgent extends Agent {
 		    	//then go through the reply messages to see if we got the reply for the request.
 		    	for( ReputationReplyMsg replyMsg: reputationReplies )
 		    	{
-		    		if( acceptMsg.getTransactionID() == replyMsg.getTransactionID() )
+		    		if( acceptMsg.getTransactionID().equals(replyMsg.getTransactionID()) )
 		    		{
 		    			providedReputation = true;
 		    		}
@@ -220,7 +227,7 @@ public abstract class CCMPAgent extends Agent {
 		    		//We need to find the era associated with this request
 					for( ReputationRequestMsg requestMsg: mReputationsRequested )
 					{
-						if( requestMsg.getTransactionID() == acceptMsg.getTransactionID() )
+						if( requestMsg.getTransactionID().equals(acceptMsg.getTransactionID()) )
 						{
 							mLogger.info("\t Agent did not accept reputation request agent="+acceptMsg.getSender()+" era="+requestMsg.getEra());
 							mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
@@ -240,10 +247,11 @@ public abstract class CCMPAgent extends Agent {
     	}
     	for( String name: agentNames )
     	{
-    		if( name != getName() )
+    		if( !name.equals(getName()) )
     		{
 	        	for( Era era: eras )
 	        	{
+	        		mLogger.info("update trust values for="+name+" era="+era);
 	        		updateDecisionTreeTrustValues(name, era);
 	        	}
     		}
@@ -267,7 +275,7 @@ public abstract class CCMPAgent extends Agent {
 					break;
 				}	   			
 	   			//Don't send a message to ourselves,
-	   			if( name != getName() && mDecisionTrees.requestAgentCertainty(name, era ) )
+	   			if( !name.equals(getName()) && mDecisionTrees.requestAgentCertainty(name, era ) )
 	   			{
 	   				mLogger.info("\t\t to="+name);
 	   		        CertaintyRequestMsg msg = new CertaintyRequestMsg( name, null, era );
@@ -314,7 +322,7 @@ public abstract class CCMPAgent extends Agent {
 	        for (OpinionRequestMsg receivedMsg: opinionRequests)
 	        {
 	        	//Check to see if the opinion message is the same as the certain message.
-	        	if( receivedMsg.getTransactionID() == previousCertaintyMsg.getTransactionID() )
+	        	if( receivedMsg.getTransactionID().equals(previousCertaintyMsg.getTransactionID()) )
 	        	{
 	        		acceptedCertainty = true;
 	        	}
@@ -395,7 +403,7 @@ public abstract class CCMPAgent extends Agent {
 		mLogger.info("T="+currentTimestep+" Prepare Opinion Provider Weights:");			
         for (String agentToWeight: agentNames)
         {
-        	if( agentToWeight != getName() )
+        	if( !agentToWeight.equals(getName()) )
         	{
 	            for (Era thisEra: eras)
 	            {
@@ -470,7 +478,7 @@ public abstract class CCMPAgent extends Agent {
 			boolean providedCertainty = false;
 			for( CertaintyReplyMsg replyMsg: certaintyResponses )
 			{
-				if( replyMsg.getTransactionID() == requestMsg.getTransactionID() )
+				if( replyMsg.getTransactionID().equals(requestMsg.getTransactionID()) )
 				{
 					providedCertainty = true;
 					break;
@@ -495,7 +503,7 @@ public abstract class CCMPAgent extends Agent {
 		//perhaps changing the era certainties updated our trust network.
     	for( String name: agentNames )
     	{
-    		if( name != getName() )
+    		if( !name.equals(getName()) )
     		{
 	        	for( Era era: eras )
 	        	{
@@ -523,7 +531,7 @@ public abstract class CCMPAgent extends Agent {
     				break;
     			}
     			//we can't ask ourselves for an opinion.
-    			if( name != getName() &&
+    			if( !name.equals(getName()) &&
     				mDecisionTrees.requestAgentOpinion(name, appraisal) )
     			{
     				mLogger.info("\t\t to="+name);
@@ -559,7 +567,7 @@ public abstract class CCMPAgent extends Agent {
         	Era  era = receivedMsg.getEra();
         	
         	//Ask the DT if we should respond to this request
-        	if( aboutAgent != getName() && mDecisionTrees.respondToReputationRequest( toAgent, aboutAgent, era ) )
+        	if( !aboutAgent.equals(getName()) && mDecisionTrees.respondToReputationRequest( toAgent, aboutAgent, era ) )
         	{
         		mLogger.info("\taccept to="+toAgent+" about="+aboutAgent+" era="+era);
         		mReputationRequestsToAccept.add(receivedMsg);
@@ -609,7 +617,7 @@ public abstract class CCMPAgent extends Agent {
 			{
 				for( ReputationRequestMsg requestMsg: mReputationsRequested )
 				{
-					if( requestMsg.getTransactionID() == acceptMsg.getTransactionID() )
+					if( requestMsg.getTransactionID().equals(acceptMsg.getTransactionID()) )
 					{
         				mLogger.info("\t agent declined rep request: from="+acceptMsg.getSender()+" about="+requestMsg.getAppraiserID()+" era="+requestMsg.getEra());
 						mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
@@ -688,9 +696,9 @@ public abstract class CCMPAgent extends Agent {
         		for( String aboutAgent: agentNames )
         		{
         			//We don't ask other agents about the trust for ourselves.
-        			if( toAgent != getName() &&
-        				toAgent != aboutAgent &&
-        				aboutAgent != getName() &&
+        			if( !toAgent.equals(getName()) &&
+        				!toAgent.equals(aboutAgent) &&
+        				!aboutAgent.equals(getName()) &&
         				mDecisionTrees.requestAgentReputationUpdate(toAgent, aboutAgent, era, currentTimestep) )
         			{
         				mLogger.info("\t\t to="+toAgent+" about="+aboutAgent);
@@ -710,8 +718,17 @@ public abstract class CCMPAgent extends Agent {
 	 */	
 	private void updateDecisionTreeTrustValues( String toAgent, Era era )
 	{
-    	double ourNewTrust = mTrustNetwork.getTrustValue(toAgent, era);
-    	mDecisionTrees.setAgentTrust(toAgent, era, ourNewTrust);		
+		try
+		{
+	    	double ourNewTrust = mTrustNetwork.getTrustValue(toAgent, era);
+	    	mDecisionTrees.setAgentTrust(toAgent, era, ourNewTrust);			
+		}
+		catch( Exception e)
+		{
+			mLogger.warning("Caught exception in update decision Tree Trust Values");
+			mLogger.warning(e.toString());
+		}
+		
 	}
 
 	/**
@@ -767,7 +784,7 @@ public abstract class CCMPAgent extends Agent {
 				boolean providedOpinion = false;
 				for( OpinionReplyMsg replyMsg: opinionReplies )
 				{
-					if( replyMsg.getTransactionID() == requestMsg.getTransactionID() )
+					if( replyMsg.getTransactionID().equals(requestMsg.getTransactionID()) )
 					{
 						providedOpinion = true;
 						break;
@@ -876,6 +893,11 @@ public abstract class CCMPAgent extends Agent {
     public CCMPConfigInfo getConfigInfo()
     {
     	return mConfigInfo;
+    }
+    
+    public int getCurrentTimestep()
+    {
+    	return currentTimestep;
     }
     
     protected void initLogging()
