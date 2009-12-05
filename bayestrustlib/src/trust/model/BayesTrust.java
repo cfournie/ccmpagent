@@ -275,8 +275,7 @@ public class BayesTrust {
 		double varR = stats.variance(r);
 		
 		double varTotal = SIGMA * varD + (1 - SIGMA) * varR;
-		double confidence = stats.maxVariance() / varTotal;
-		
+		double confidence = stats.confidenceFromVariance(varTotal);
 		this.misc.checkLevel(confidence);
 		
 		return confidence;
