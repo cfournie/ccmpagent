@@ -69,7 +69,8 @@ public class DTLearning {
 			Instance testInst = data.firstInstance();
 			testInst.setClassMissing();
 			result = tree.classifyInstance(testInst);
-			retVal = this.arff.attributes.get(this.arff.attributes.size()-1).type.split("[,]")[(int)result];
+			String catType = this.arff.attributes.get(this.arff.attributes.size()-1).type;
+			retVal = catType.substring(1,catType.length()-2).split("[,]")[(int)result];
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}
