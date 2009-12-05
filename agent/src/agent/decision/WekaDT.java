@@ -62,11 +62,11 @@ public class WekaDT extends DecisionTree {
 		
 		for(String att : treeAtts.get(tree.ordinal()))
 		{
-			if(att == "stategy")
+			if(att.equals("strategy"))
 			{
 				test.append(strategy+",");
 			}
-			else if(att == "msgrem")
+			else if(att.equals("msgrem"))
 			{
 				switch (tree)
 				{
@@ -82,7 +82,7 @@ public class WekaDT extends DecisionTree {
 				}
 				test.append(",");
 			}
-			else if(att == "certainty")
+			else if(att.equals("certainty"))
 			{
 				if(ourCertainty)
 				{
@@ -94,7 +94,7 @@ public class WekaDT extends DecisionTree {
 				}
 				test.append(",");
 			}
-			else if(att == "trust")
+			else if(att.equals("trust"))
 			{
 				test.append(Double.toString(mReputations.get(agent))+",");
 			}
@@ -115,15 +115,15 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_ADJUSTAPPRAISAL, toAgent, era, true, null);			
 		String result = dtreeCol.get(DTLearningNames.DT_ADJUSTAPPRAISAL.ordinal()).DTClassify(dtTest);
 		
-		if(result=="UNCHANGED")
+		if(result.equals("UNCHANGED"))
 		{
 			return appraisal;
 		}
-		else if(result=="INFLATEx2")
+		else if(result.equals("INFLATEx2"))
 		{
 			return 2*appraisal;
 		}
-		else if(result=="INFLATEx10")
+		else if(result.equals("INFLATEx10"))
 		{
 			return 10*appraisal;
 		}
@@ -140,11 +140,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_GENERATEOPINION, requestingAgent, era, true, null);	
 		String result = dtreeCol.get(DTLearningNames.DT_GENERATEOPINION.ordinal()).DTClassify(dtTest);
 
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
@@ -162,15 +162,15 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_GETAPPRAISAL, requestingAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_GETAPPRAISAL.ordinal()).DTClassify(dtTest);
 		
-		if(result == "MINIMAL")
+		if(result.equals("MINIMAL"))
 		{
 			return 0.01;
 		}
-		else if(result == "MODERATE")
+		else if(result.equals("MODERATE"))
 		{
 			return mAgent.getOpinionCost()*0.8;
 		}
-		else if(result == "BEST")
+		else if(result.equals("BEST"))
 		{
 			return mAgent.getOpinionCost();
 		}
@@ -192,11 +192,11 @@ public class WekaDT extends DecisionTree {
         String dtTest = BuildTest(DTLearningNames.DT_GETCERTAINTY, agent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_GETCERTAINTY.ordinal()).DTClassify(dtTest);
 
-		if(result == "TRUTH")
+		if(result.equals("TRUTH"))
 		{
 			return 1-myExpertise;
 		}
-		else if(result == "LIE")
+		else if(result.equals("LIE"))
 		{
 			return myExpertise;
 		}
@@ -218,11 +218,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_GETREPUTATION, requestingAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_GETREPUTATION.ordinal()).DTClassify(dtTest);
 
-		if(result == "TRUTH")
+		if(result.equals("TRUTH"))
 		{
 			return repValue;
 		}
-		else if(result == "LIE")
+		else if(result.equals("LIE"))
 		{
 			return 1-repValue;
 		}
@@ -240,11 +240,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_PROVIDECERTAINTY, agent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_PROVIDECERTAINTY.ordinal()).DTClassify(dtTest);
 		
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
@@ -262,11 +262,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEOPINION, requestionAgent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEOPINION.ordinal()).DTClassify(dtTest);
 		
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
@@ -285,11 +285,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEREPUTATION, requestingAgent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEREPUTATION.ordinal()).DTClassify(dtTest);
 		
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
@@ -307,11 +307,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_REQUESTCERTAINTY, toAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_REQUESTCERTAINTY.ordinal()).DTClassify(dtTest);
 		
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
@@ -329,11 +329,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_REQUESTOPINION, toAgent, null, false, art);
 		String result = dtreeCol.get(DTLearningNames.DT_REQUESTOPINION.ordinal()).DTClassify(dtTest);
 		
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
@@ -352,11 +352,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_REQUESTREPUTATION, toAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_REQUESTREPUTATION.ordinal()).DTClassify(dtTest);
 		
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
@@ -374,11 +374,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_RESPONDCERTAINTY, agent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_RESPONDCERTAINTY.ordinal()).DTClassify(dtTest);
 		
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
@@ -397,11 +397,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_RESPONDREPUTATION, requestingAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_RESPONDREPUTATION.ordinal()).DTClassify(dtTest);
 		
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
@@ -507,11 +507,11 @@ public class WekaDT extends DecisionTree {
 		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEWEIGHT, aboutAgent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEWEIGHT.ordinal()).DTClassify(dtTest);
 		
-		if(result == "DO")
+		if(result.equals("DO"))
 		{
 			return true;
 		}
-		else if(result == "DONT")
+		else if(result.equals("DONT"))
 		{
 			return false;
 		}
