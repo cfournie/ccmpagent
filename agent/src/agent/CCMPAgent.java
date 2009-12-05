@@ -182,7 +182,7 @@ public abstract class CCMPAgent extends Agent {
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(fromAgent, era);
-            	writeToLogFile("CCMP did not accept certainty request from agent="+fromAgent+" era="+era);
+            	writeToLogFile("do not accept certainty request from agent="+fromAgent+" era="+era);
             }
         }
 	}
@@ -392,7 +392,7 @@ public abstract class CCMPAgent extends Agent {
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(fromAgent, era);   
             	
-            	writeToLogFile("CCMP don't provide opinion after payment to="+fromAgent+" era="+era);
+            	writeToLogFile("don't provide opinion after payment to="+fromAgent+" era="+era);
             }        	
         }
 	}
