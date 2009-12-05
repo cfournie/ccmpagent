@@ -1,0 +1,15 @@
+\section{Introduction}
+The CCMP Agent, for the ART testbed, is a framework that uses two components to
+control its behaviour in an evolving multi-agent environment: the Trust Network
+and the Decision Tree.  The trust network manages and updates the trust values
+for each agent in the ART testbed. The decision tree provides a methodolgy for
+the agent to make decisions on the actions to take based on the knowledge in the
+trust network. 
+
+In this project an abstract agent framework was developed to provide the
+interactions with the ART testbed and other agents.  This framework makes use
+of Java interface classes to work with abstract implementations of the trust
+network and decision tree components.  To implement an accurate trust network a
+baysian approach was used based on the paper B-trust: Bayesian Trust Framework for Pervasive
+Computing.  To provide a flexible decision tree environment the Weka Java API
+was used to design and execute decision tree graphs.
