@@ -276,10 +276,34 @@ public class BayesTrust {
 		return confidence;
 	}
 	
-	/**
-	 * Gets the number of levels
-	 */
-	public int getN() {
-		return stats.getN();
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		final DecimalFormat fmt = new DecimalFormat("0.000");
+
+		b.append("BayesTrust {\n");
+		for (Context ctx : c) {
+			b.append("  " + ctx + " {\n");
+			for (Peer peer : p) {
+				double mean, confidence;
+				b.append("    " + peer + " {\n");
+				
+				double [] d = dts.retrieve(ctx, peer);
+				mean = stats.mean(d);
+				confidence = stats.confidenceFromVariance(stats.variance(d));
+				b.append("      DirectTrust(mean=" + fmt.format(mean) +
+						 ", confidence=" + fmt.format(confidence) + ")\n");
+				
+				double [] r = rts.retrieve(ctx, peer);
+				mean = stats.mean(r);
+				confidence = stats.confidenceFromVariance(stats.variance(r));
+				b.append("      RecommendedTrust(mean=" + fmt.format(mean) +
+						 ", confidence=" + fmt.format(confidence) + ")\n");
+				
+				b.append("    }\n");
+			}
+			b.append("  }\n");
+		}
+		b.append("}\n");
+		return b.toString();
 	}
 }

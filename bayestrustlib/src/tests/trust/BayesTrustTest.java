@@ -24,7 +24,9 @@ public class BayesTrustTest {
 	public static final Peer ALICE = new Peer("alice");
 	public static final Peer BOB = new Peer("bob");
 	public static final Peer CHARLIE = new Peer("charlie");
-	public static final Peer[] PEERS = {ALICE, BOB, CHARLIE};
+	public static final Peer DAVID = new Peer("david");
+	public static final Peer EARL = new Peer("earl");
+	public static final Peer[] PEERS = {ALICE, BOB, CHARLIE, DAVID, EARL};
 	
 	private BayesTrust bt;
 	private Stats stats;
@@ -93,26 +95,21 @@ public class BayesTrustTest {
 	private void main() {
 		setUpBayesTrust();
 		
-		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
-		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
+		bt.storeRecommendation(ROMAN, BOB, ALICE, 0.5);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, ALICE));
+		System.out.println(bt);
 		
-		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
-		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
-
-		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
-		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
-
-		bt.storeRecommendation(ROMAN, CHARLIE, BOB, 0.2);
-		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
+		bt.storeRecommendation(ROMAN, CHARLIE, ALICE, 0.5);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, ALICE));
 		
-		bt.storeRecommendation(ROMAN, CHARLIE, BOB, 0.0);
-		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
+		bt.storeRecommendation(ROMAN, DAVID, ALICE, 0.5);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, ALICE));
 
-		bt.storeRecommendation(ROMAN, CHARLIE, BOB, 0.0);
-		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
-
-		bt.storeRecommendation(ROMAN, CHARLIE, BOB, 0.0);
-		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
+		bt.storeRecommendation(ROMAN, EARL, ALICE, 0.0);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, ALICE));
+		
+		bt.storeRecommendation(ROMAN, EARL, ALICE, 1.0);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, ALICE));
 
 		/*double[][] m = /misc.makeIdentityMatrix()/misc.makeMatrix(0.1);
 		for (int i = 0; i < stats.getN(); i++) {

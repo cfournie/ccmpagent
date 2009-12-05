@@ -41,4 +41,8 @@ public abstract class Named {
 		
 		return equal;
 	}
+	
+	public String toString() {
+		return getClass().getSimpleName() + "(\"" + getName() + "\")";
+	}
 }

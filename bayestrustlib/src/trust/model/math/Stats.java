@@ -74,6 +74,16 @@ public class Stats {
 	}
 	
 	/**
+	 * Converts a variance to a confidence value.
+	 * @param v variance in [0,maxVariance()]
+	 * @return confidence value in [0,1]
+	 */
+	public double confidenceFromVariance(double v)
+	{
+		return 1 - v / maxVariance();
+	}
+	
+	/**
 	 * Shows a pmf, its mean and variance on stdout.
 	 * @param d pmf
 	 */
