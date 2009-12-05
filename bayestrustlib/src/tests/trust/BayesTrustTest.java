@@ -91,32 +91,28 @@ public class BayesTrustTest {
 	}
 	
 	private void main() {
-		final Context ctx = CONTEXTS[0];
-		final Peer alice = PEERS[0];
-		final Peer bob = PEERS[1];
-		final Peer charlie = PEERS[2];
 		setUpBayesTrust();
 		
-		bt.storeRecommendation(ctx, alice, bob, 0.7);
-		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
 		
-		bt.storeRecommendation(ctx, alice, bob, 0.7);
-		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
 
-		bt.storeRecommendation(ctx, alice, bob, 0.7);
-		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
 
-		bt.storeRecommendation(ctx, charlie, bob, 0.2);
-		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		bt.storeRecommendation(ROMAN, CHARLIE, BOB, 0.2);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
 		
-		bt.storeRecommendation(ctx, charlie, bob, 0.0);
-		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		bt.storeRecommendation(ROMAN, CHARLIE, BOB, 0.0);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
 
-		bt.storeRecommendation(ctx, charlie, bob, 0.0);
-		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		bt.storeRecommendation(ROMAN, CHARLIE, BOB, 0.0);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
 
-		bt.storeRecommendation(ctx, charlie, bob, 0.0);
-		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		bt.storeRecommendation(ROMAN, CHARLIE, BOB, 0.0);
+		stats.printPmf(bt.getRecommendedTrust(ROMAN, BOB));
 
 		/*double[][] m = /misc.makeIdentityMatrix()/misc.makeMatrix(0.1);
 		for (int i = 0; i < stats.getN(); i++) {
