@@ -3,6 +3,7 @@ package trust.model.sets;
 import java.util.*;
 
 import trust.model.exceptions.MalformedTupleException;
+import trust.model.exceptions.PeerContextUnfoundException;
 import trust.model.math.Stats;
 import trust.model.primitives.*;
 
@@ -49,6 +50,11 @@ public class DirectTrustSet extends TrustSet {
 	 */
 	public double[] retrieve(Context ck, Peer py)
 	{
-		return set.get(super.keyFrom(ck, py));
+		double[] tuple = this.set.get(super.keyFrom(ck, py));
+		
+		if (tuple == null)
+			throw new PeerContextUnfoundException(ck, py);
+		
+		return tuple;
 	}
 }

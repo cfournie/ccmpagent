@@ -6,6 +6,7 @@ import java.util.Map;
 import trust.model.primitives.Context;
 import trust.model.primitives.Peer;
 
+import trust.model.exceptions.PeerContextUnfoundException;
 import trust.model.math.Stats;
 
 /**
@@ -35,6 +36,11 @@ public class SentRecommendationSet extends TrustSet {
 	
 	public double[][] retrieve(Context ck, Peer pr)
 	{
-		return store.get(keyFrom(ck, pr));
+		double[][]tuple = store.get(keyFrom(ck, pr));
+
+		if (tuple == null)
+			throw new PeerContextUnfoundException(ck, pr);
+		
+		return tuple;
 	}
 }

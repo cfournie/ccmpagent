@@ -1,5 +1,6 @@
 package trust.model.sets;
 
+import trust.model.exceptions.PeerContextUnfoundException;
 import trust.model.math.Stats;
 import trust.model.primitives.*;
 import java.util.HashMap;
@@ -32,12 +33,11 @@ public class RecommendedTrustSet extends TrustSet {
 	
 	public double[] retrieve(Context ck, Peer py)
 	{
-		double [] d = store.get(keyFrom(ck, py));
-		if (d == null) {
-			throw new IllegalArgumentException(
-				"Unknown context " + ck.getName() + " and peer " + py.getName());
-		}
+		double [] tuple = store.get(keyFrom(ck, py));
+
+		if (tuple == null)
+			throw new PeerContextUnfoundException(ck, py);
 		
-		return d;
+		return tuple;
 	}
 }
