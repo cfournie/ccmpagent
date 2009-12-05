@@ -28,40 +28,6 @@ public class Stats {
 	}
 	
 	/**
-	 * Mean for a d that is a pmf
-	 * @return mean
-	 */
-	public double meanPmf()
-	{
-		return 1/this.n;
-	}
-	
-	/**
-	 * Max variance for a d that is a pmf
-	 * @return confidence
-	 */
-	public double confidencePmfMax()
-	{
-		return (1-this.meanPmf());
-	}
-	
-	/**
-	 * Variance for a d that is a pmf
-	 * @param d pmf
-	 * @return variance
-	 */
-	public double variancePmf(double[] d)
-	{
-		double mean = this.meanPmf();
-		
-		double sum = 0;
-		for(int i = 0; i < d.length; i++)
-			sum += Math.pow(d[i] - mean, 2);
-		
-		return sum / (d.length - 1);
-	}
-	
-	/**
 	 * Mean for a d that is not a pmf
 	 * @param d sample
 	 * @return mean
@@ -71,11 +37,11 @@ public class Stats {
 		Misc misc = new Misc(this);
 		misc.checkPmf(d);
 		
-		double sum = 0;
+		double sum = 0.0;
 		for(int j = 0; j < d.length; j++)
-			sum += (j+1) * d[j];
+			sum += j * d[j];
 		
-		return sum - 1;
+		return sum; // * getN() / (getN() - 1);
 	}
 	
 	/**
@@ -92,9 +58,9 @@ public class Stats {
 		
 		double sum = 0;
 		for(int j = 0; j < d.length; j++)
-			sum += Math.pow(j+1, 2) * d[j];
+			sum += j * j * d[j];
 		
-		return sum - Math.pow(mean, 2);
+		return sum - mean * mean;
 	}
 	
 	/**
@@ -109,8 +75,9 @@ public class Stats {
 
 		// mean = E(X)
 		// var = E(X^2) - mean^2
-		double mean = 0.0, var = 0.0;
+		double sum = 0.0, mean = 0.0, var = 0.0;
 		for (int j = 0; j < getN(); j++) {
+			sum += d[j];
 			mean += j * d[j];
 			var += j * j * d[j];
 		}
@@ -125,6 +92,10 @@ public class Stats {
 				System.out.print(" ");
 			}
 		}
-		System.out.println("] mean=" + fmt.format(mean) + " var=" + fmt.format(var));
+		
+		mean = mean * getN() / (getN() - 1);
+		System.out.print("] sum=" + fmt.format(sum));
+		System.out.print(" mean=" + fmt.format(mean(d)));
+		System.out.println(" var=" + fmt.format(variance(d)));
 	}
 }

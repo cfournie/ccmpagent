@@ -6,24 +6,25 @@ import trust.model.exceptions.*;
 import trust.model.primitives.*;
 import java.util.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 import static junitx.framework.ArrayAssert.*;
 
 public class BayesTrustTest {
 	public static final int TRUST_LEVELS = 4;
 	
+	public static final Context ROMAN = new Context("roman");
+	public static final Context MIDDLE_AGES = new Context("middleAges");
+	public static final Context RENAISSANCE = new Context("renaissance");
+	public static final Context BAROQUE = new Context("baroque");
+	public static final Context SURREALISM = new Context("surrealism");
 	public static final Context[] CONTEXTS = {
-		new Context("roman"),
-		new Context("middleAges"),
-		new Context("renaissance"),
-		new Context("baroque"),
-		new Context("surrealism")
+		ROMAN, MIDDLE_AGES, RENAISSANCE, BAROQUE, SURREALISM
 	};
 	
-	public static final Peer[] PEERS = {
-		new Peer("alice"),
-		new Peer("bob"),
-		new Peer("charlie")
-	};
+	public static final Peer ALICE = new Peer("alice");
+	public static final Peer BOB = new Peer("bob");
+	public static final Peer CHARLIE = new Peer("charlie");
+	public static final Peer[] PEERS = {ALICE, BOB, CHARLIE};
 	
 	private BayesTrust bt;
 	private Stats stats;
@@ -44,7 +45,7 @@ public class BayesTrustTest {
 	public void testRecommendedTrustInit() {
 		for (Peer p: PEERS) {
 			assertEquals(new double[] {0.25, 0.25, 0.25, 0.25},
-				bt.getRecommendedTrust(CONTEXTS[0], p),
+				bt.getRecommendedTrust(ROMAN, p),
 				0.001);
 		}
 	}
@@ -55,6 +56,34 @@ public class BayesTrustTest {
 		Peer py = new Peer("joe");
 		this.bt.addPeer(px);
 		this.bt.addPeer(py);
+	}
+	
+	@Test
+	public void testConsistentRecommendation() {
+		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
+		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
+		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
+		double [] r = bt.getRecommendedTrust(ROMAN, BOB);
+		stats.printPmf(r);
+		assertEquals(Math.floor(0.7 * 4), stats.mean(r), 1);
+	}
+	
+	@Test
+	public void testVaryingRecommendation() {
+		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.1);
+		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.9);
+		double [] r = bt.getRecommendedTrust(ROMAN, BOB);
+		stats.printPmf(r);
+		assertEquals(2, stats.mean(r), 1);
+	}
+	
+	@Test
+	public void testTwoRecommenders() {
+		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.0);
+		bt.storeRecommendation(ROMAN, CHARLIE, BOB, 0.4);
+		double [] r = bt.getRecommendedTrust(ROMAN, BOB);
+		stats.printPmf(r);
+		assertEquals(1, stats.mean(r), 1);
 	}
 	
 	public static void main(String[] args) {

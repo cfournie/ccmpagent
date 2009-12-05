@@ -85,17 +85,13 @@ public class BayesTrust {
 			dts.store(ck, py, this.misc.defaultTrustTuple());
 			
 			// Init DES with blank experience
-			des.store(ck, py, this.misc.makeMatrix());
+			des.store(ck, py, this.misc.defaultTrustMatrix(ETA));
 			
 			// Init RTS
 			rts.store(ck, py, this.misc.defaultTrustTuple());
 			
 			// Init SRS
-			double[][] m = this.misc.makeMatrix((1.0 - ETA) / (this.stats.getN() - 1));
-			for (int i = 0; i < m.length; i++) {
-				m[i][i] = ETA;
-			}
-			srs.store(ck, py, m);
+			srs.store(ck, py, this.misc.defaultTrustMatrix(ETA));
 		}
 		
 		success = this.p.add(py);
@@ -123,11 +119,11 @@ public class BayesTrust {
 		// Calculate d^t_a (line 2, fig 1 of paper)
 		double [] newD = misc.makeTuple();
 		for (int alpha = 0; alpha < stats.getN(); alpha++) {
-			double denom = 0.0;
+			double pDE = EPSILON;
 			for (int gamma = 0; gamma < stats.getN(); gamma++) {
-				denom += d[gamma] * pDEgivenDT(ec, beta, gamma);
+				pDE += d[gamma] * pDEgivenDT(ec, beta, gamma);
 			}
-			newD[alpha] = d[alpha] * pDEgivenDT(ec, beta, alpha) / denom;
+			newD[alpha] = d[alpha] * pDEgivenDT(ec, beta, alpha) / pDE;
 		}
 		
 		// Update direct trust
@@ -203,11 +199,11 @@ public class BayesTrust {
 	 * @return Probability of DE given DT
 	 */
 	private double pDEgivenDT(double [][] ec, int beta, int alpha) {
-		double denom = 0.0;
+		double denom = EPSILON;
 		for (int gamma = 0; gamma < stats.getN(); gamma++) {
 			denom += ec[alpha][gamma]; 
 		}
-		return ec[alpha][beta] / denom;
+		return (ec[alpha][beta] + EPSILON) / denom;
 	}
 	
 	/**
@@ -275,7 +271,9 @@ public class BayesTrust {
 			t[j] = (SIGMA * d[j]) + ((1-SIGMA) * r[j]);
 		}
 		
-		return stats.confidencePmfMax() / stats.variancePmf(t);
+		//return stats.confidencePmfMax() / stats.variancePmf(t);
+		// TODO
+		return 0.666;
 	}
 	
 	/**

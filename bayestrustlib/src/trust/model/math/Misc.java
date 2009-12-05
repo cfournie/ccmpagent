@@ -81,6 +81,21 @@ public class Misc {
 	}
 	
 	/**
+	 * Creates an n*n array with eta on its diagonal and such that rows
+	 * add to 1.0.
+	 * @param eta value on the diagonal
+	 * @return n*n matrix
+	 */
+	public double[][] defaultTrustMatrix(double eta) {
+		double offDiagonal = (1.0 - eta) / (this.stats.getN() - 1);
+		double [][] m = makeMatrix(offDiagonal);
+		for (int i = 0; i < this.stats.getN(); i++) {
+			m[i][i] = eta;
+		}
+		return m;
+	}
+	
+	/**
 	 * Creates an array of size n, filled with 0.0.
 	 * @return n-tuple initialised to 0.0
 	 */
@@ -182,7 +197,7 @@ public class Misc {
 		
 		double acceptableError = 0.01;
 		
-		if (sum < (double)(1.0 - acceptableError) || sum > 1.0)
+		if (Math.abs(sum - 1.0) > acceptableError)
 			throw new MalformedTupleException(sum);
 	}
 }
