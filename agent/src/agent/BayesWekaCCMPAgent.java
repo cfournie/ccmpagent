@@ -61,6 +61,7 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
             mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees", DTLearningCollection.class);
 			
 			mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees/dt", DTWekaARFF.class);
+			mDigester.addSetProperties("agentConfig/CCMPParams/decisiontrees/dt", "name", "name");
 			
 			mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees/dt/attribute", DTAttribute.class);
 			mDigester.addSetProperties("agentConfig/CCMPParams/decisiontrees/dt/attribute", "name", "name");

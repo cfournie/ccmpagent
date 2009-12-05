@@ -6,6 +6,7 @@ import java.util.Vector;
 public class DTWekaARFF {
 	public Vector<DTAttribute> attributes;
 	public String[] data;
+	public String name;
 	
 	public DTWekaARFF() {
 		attributes = new Vector<DTAttribute>();
@@ -25,6 +26,11 @@ public class DTWekaARFF {
 	public void setData(String rhs)
 	{
 		data = rhs.replaceAll("\t","").split("\r\n|\r|\n");
+	}
+	
+	public void setName(String rhs)
+	{
+		name = rhs;
 	}
 	
 	public String toString()

@@ -18,7 +18,7 @@ import weka.gui.treevisualizer.*;
 
 public class DTLearning {
 	J48 tree;
-	DTWekaARFF arff;	
+	public DTWekaARFF arff;
 	
 	public DTLearning(DTWekaARFF Data)
 	{

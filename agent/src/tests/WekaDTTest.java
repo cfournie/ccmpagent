@@ -41,12 +41,14 @@ public class WekaDTTest {
 		StringBuffer xml = new StringBuffer();		
 		xml.append("\t<decisiontrees>\n");
 
+		// If you make changes here makes sure you update WekaDT.BuildTest
 		DTAttribute[] nonCatAtt = {new DTAttribute("strategy", "{NICE,REFLEX}"),
-										  new DTAttribute("msgrem", "numeric"),
-										  new DTAttribute("certainty", "numeric"),
-				                          new DTAttribute("trust", "numeric")
+								   new DTAttribute("msgrem", "numeric"),
+								   new DTAttribute("certainty", "numeric"),
+				                   new DTAttribute("trust", "numeric")
 		};
 		
+		// If you make changes here make sure you update corresponding code in WekaDT
 		DTAttribute[] catAtt = {new DTAttribute("adjustAppraisal", "{UNCHANGED,INFLATEx2,INFLATEx10}"),
 								new DTAttribute("generateOpinion", "{DO,DONT}"),
 								new DTAttribute("appraisalCost", "{MINIMAL,MODERATE,BEST}"),
@@ -365,8 +367,8 @@ public class WekaDTTest {
 		
 		System.out.println(xml.toString());
 		
-		/*BayesWekaCCMPAgent test = new BayesWekaCCMPAgent("../testbed/src/testbed/participants/bayeswekaccmpagent.xml");
-		WekaDT ttree = test.createDecisionTree();
+		BayesWekaCCMPAgent test = new BayesWekaCCMPAgent("../testbed/src/testbed/participants/bayeswekaccmpagent.xml");
+		/*WekaDT ttree = test.createDecisionTree();
 		
 		for(DTLearning dt : ttree.dtreeCol)
 		{
