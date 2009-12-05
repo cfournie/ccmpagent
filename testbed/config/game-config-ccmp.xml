@@ -89,16 +89,9 @@
     </gameParameters>
     <participants>
         <agentGroup>
-            <agentID>CheatingAgent_$c$</agentID>
+            <agentID>BadCCMPAgent_$c$</agentID>
             <owner>user</owner>
-            <agentConfigFile>src/testbed/participants/CheatingAgent.xml</agentConfigFile>
-            <dummy>false</dummy>
-            <quantity>1</quantity>
-        </agentGroup>
-        <agentGroup>
-            <agentID>SimpleAgent_$c$</agentID>
-            <owner>user</owner>
-            <agentConfigFile>src/testbed/participants/SimpleAgent.xml</agentConfigFile>
+            <agentConfigFile>src/testbed/participants/BadCCMPAgent.xml</agentConfigFile>
             <dummy>false</dummy>
             <quantity>1</quantity>
         </agentGroup>
