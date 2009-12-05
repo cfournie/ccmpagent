@@ -14,7 +14,6 @@ import agent.CCMPAgent;
 import agent.decision.WekaDT;
 import agent.trust.BayesTrustNetwork;
 import agent.trust.TrustNetwork;
-import agent.trust.SimpleTrust;
 
 /**
  * CCMPAgent using B-Trust and WEKA-DT Learning.

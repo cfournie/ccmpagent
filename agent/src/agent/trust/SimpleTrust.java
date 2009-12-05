@@ -124,14 +124,6 @@ public class SimpleTrust extends TrustNetwork {
 	}
 
 	/* (non-Javadoc)
-	 * @see agent.trust.TrustInterface#getInferredTrustValue(java.lang.String, testbed.sim.Era)
-	 */
-	public double getInferredTrustValue(String agent, Era era)
-	{
-		return 0.0;
-	}
-
-	/* (non-Javadoc)
 	 * @see agent.trust.TrustInterface#getReputationWeight(java.lang.String, testbed.sim.Era)
 	 */
 	public double getReputationWeight(String agent, Era era)

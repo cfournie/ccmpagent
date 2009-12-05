@@ -1,6 +1,5 @@
 package agent.trust;
 
-import testbed.sim.AppraisalAssignment;
 import testbed.sim.Era;
 import agent.CCMPAgent;
 import agent.trust.TrustNetwork;
@@ -97,58 +96,6 @@ public class BayesTrustNetwork extends TrustNetwork {
 		}
 
 		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#didNotAcceptCertaintyRequest(java.lang.String, testbed.sim.Era)
-		 */
-		public void didNotAcceptCertaintyRequest(String fromAgent, Era era)
-		{
-			// Ignored, no encounter, assumed to be a benign response
-		}
-
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#didNotProvideAcceptReputationRequest(java.lang.String, java.lang.String, testbed.sim.Era)
-		 */
-		public void didNotProvideAcceptReputationRequest(String fromAgent,
-				String aboutAgent, Era era)
-		{
-			// Ignored, no encounter, assumed to be a benign response 
-		}
-
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#didNotProvideOpinionAfterPayment(java.lang.String, testbed.sim.Era)
-		 */
-		public void didNotProvideOpinionAfterPayment(String fromAgent, Era era)
-		{
-			// Ignored, no encounter, assumed to be a benign response
-		}
-
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#didNotProvideReputationAfterPayment(java.lang.String, java.lang.String, testbed.sim.Era)
-		 */
-		public void didNotProvideReputationAfterPayment(String fromAgent,
-				String aboutAgent, Era era)
-		{
-			// Ignored, no encounter, assumed to be a benign response 
-		}
-
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#generatedOpinion(java.lang.String, testbed.sim.AppraisalAssignment, double)
-		 */
-		public void generatedOpinion(String toAgent, AppraisalAssignment art,
-				double hoursSpent)
-		{
-			// TODO: Evaluate implementation: Affects certainty
-		}
-
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#getInferredTrustValue(java.lang.String, testbed.sim.Era)
-		 */
-		public double getInferredTrustValue(String agent, Era era)
-		{
-			// B-Trust doesn't calculate inferred trust, so we will return 50% all the time
-			return 0.5;
-		}
-
-		/* (non-Javadoc)
 		 * @see agent.trust.TrustInterface#getReputationWeight(java.lang.String, testbed.sim.Era)
 		 */
 		public double getReputationWeight(String agent, Era era)
@@ -166,50 +113,6 @@ public class BayesTrustNetwork extends TrustNetwork {
 			Context ck = new Context(era.getName());
 			Peer py = new Peer(agent);
 			return mTrust.getCondensedOverallTrust(ck, py);
-		}
-
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#providedAcceptReputationRequest(java.lang.String, java.lang.String, testbed.sim.Era)
-		 */
-		public void providedAcceptReputationRequest(String toAgent,
-				String aboutAgent, Era era)
-		{
-			// TODO: Evaluate implementation
-			
-			// Simple Trust doesn't care that we decided to accept a reputation request
-			//from another agent.
-
-		}
-
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#providedCertaintyReply(java.lang.String, testbed.sim.Era, double)
-		 */
-		public void providedCertaintyReply(String toAgent, Era era,
-				double certaintyValue)
-		{
-			// TODO: Evaluate implementation
-			
-			// Simple Trust doesn't care that we provided a certainty value to another agent
-		}
-
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#providedOpinion(java.lang.String, testbed.sim.AppraisalAssignment, int)
-		 */
-		public void providedOpinion(String toAgent, AppraisalAssignment art,
-				int appraisedValue)
-		{
-			// TODO: Evaluate implementation
-			
-			// Simple trust doesn't care that we provided an opinion to another agent
-		}
-
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#providedReputationReply(java.lang.String, java.lang.String, testbed.sim.Era, double)
-		 */
-		public void providedReputationReply(String toAgent, String aboutAgent,
-				Era era, double reputationValue)
-		{
-			// Simple Trust doesn't care whether we provided a reputation update to an agent
 		}
 
 		/* (non-Javadoc)

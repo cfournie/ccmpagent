@@ -88,36 +88,6 @@ public class BayesTrustNetworkTest {
 	}
 	
 	@Test
-	public void testCrashDidNotAcceptCertaintyRequest() {
-		this.trustNetwork.didNotAcceptCertaintyRequest(fromAgent, era);
-	}
-	
-	@Test
-	public void testCrashDidNotProvideAcceptReputationRequest() {
-		this.trustNetwork.didNotProvideAcceptReputationRequest(fromAgent, aboutAgent, era);
-	}
-	
-	@Test
-	public void testCrashDidNotProvideOpinionAfterPayment() {
-		this.trustNetwork.didNotProvideOpinionAfterPayment(fromAgent, era);
-	}
-	
-	@Test
-	public void testCrashDidNotProvideReputationAfterPayment() {
-		this.trustNetwork.didNotProvideReputationAfterPayment(fromAgent, aboutAgent, era);
-	}
-	
-	@Test
-	public void testCrashGeneratedOpinion() {
-		this.trustNetwork.generatedOpinion(toAgent, appraisalAssignment, hoursSpent);
-	}
-	
-	@Test
-	public void testCrashGetInferredTrustValue() {
-		this.trustNetwork.getInferredTrustValue(agent, era);
-	}
-	
-	@Test
 	public void testCrashGetReputationWeight() {
 		this.trustNetwork.getReputationWeight(agent, era);
 	}
@@ -125,26 +95,6 @@ public class BayesTrustNetworkTest {
 	@Test
 	public void testCrashGetTrustValue() {
 		this.trustNetwork.getTrustValue(agent, era);
-	}
-	
-	@Test
-	public void testCrashProvidedAcceptReputationRequest() {
-		this.trustNetwork.providedAcceptReputationRequest(toAgent, aboutAgent, era);
-	}
-	
-	@Test
-	public void testCrashProvidedCertaintyReply() {
-		this.trustNetwork.providedCertaintyReply(toAgent, era, certainty);
-	}
-	
-	@Test
-	public void testCrashProvidedOpinion() {
-		this.trustNetwork.providedOpinion(toAgent, appraisalAssignment, appraised);
-	}
-	
-	@Test
-	public void testCrashProvidedReputationReply() {
-		this.trustNetwork.providedReputationReply(toAgent, aboutAgent, era, reputation);
 	}
 	
 	@Test

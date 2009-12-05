@@ -3,7 +3,6 @@ package agent.trust;
 import agent.CCMPAgent;
 import testbed.sim.Appraisal;
 import testbed.sim.Era;
-import testbed.sim.AppraisalAssignment;
 import testbed.sim.Opinion;
 
 /**
@@ -47,14 +46,4 @@ public abstract class TrustNetwork {
 	public abstract void agentDidNotProvideCertainty( String agent, Era era);
 	public abstract void agentDidNotProvideOpinion( String agent, Era era);
 	public abstract void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue );
-	
-	public abstract void providedAcceptReputationRequest( String toAgent, String aboutAgent, Era era );
-	public abstract void didNotProvideAcceptReputationRequest( String fromAgent, String aboutAgent, Era era);
-	public abstract void providedReputationReply( String toAgent, String aboutAgent, Era era, double reputationValue );
-	public abstract void didNotProvideReputationAfterPayment( String fromAgent, String aboutAgent, Era era );
-	public abstract void providedCertaintyReply( String toAgent, Era era, double certaintyValue );
-	public abstract void didNotAcceptCertaintyRequest( String fromAgent, Era era );
-	public abstract void providedOpinion( String toAgent, AppraisalAssignment art, int appraisedValue );
-	public abstract void generatedOpinion( String toAgent, AppraisalAssignment art, double hoursSpent );
-	public abstract void didNotProvideOpinionAfterPayment( String fromAgent, Era era );
 }

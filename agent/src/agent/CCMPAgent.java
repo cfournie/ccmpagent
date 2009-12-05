@@ -135,12 +135,14 @@ public abstract class CCMPAgent extends Agent {
 	 * @see testbed.agent.Agent#prepareCertaintyReplies()
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void prepareCertaintyReplies()
 	{
 		/* Assumptions for this behaviour
 		 * 1. DecisionTree may or may not decide to provide a certainty
 		 * 2. DecisionTree provides the certainty in the format required by the message (1 - e*alpha ?)
 		 */		
+		
 		List<CertaintyRequestMsg> certRequests = getIncomingMessages();
 		//Store the list of certainty replies we provided to others.
 		mCertaintyReplysProvided = new ArrayList<CertaintyReplyMsg>();
@@ -162,8 +164,6 @@ public abstract class CCMPAgent extends Agent {
                 sendOutgoingMessage(msg);
             	mCertaintyReplysProvided.add(msg);
                 
-                //Tell our trust network we provided a certainty value in our reply
-                mTrustNetwork.providedCertaintyReply(fromAgent, era, myExpertise);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(fromAgent, era);
@@ -171,8 +171,6 @@ public abstract class CCMPAgent extends Agent {
             }
             else
             {
-                //Tell our trust network we did not accept a certainty request
-                mTrustNetwork.didNotAcceptCertaintyRequest(fromAgent, era);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(fromAgent, era);
@@ -189,6 +187,7 @@ public abstract class CCMPAgent extends Agent {
 	 * in then for each agent, ask the DT is we should request a message from that agent.
 	 * @see testbed.agent.Agent#prepareCertaintyRequests()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void prepareCertaintyRequests()
 	{
@@ -291,6 +290,7 @@ public abstract class CCMPAgent extends Agent {
 	 * @see testbed.agent.Agent#prepareOpinionCreationOrders()
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void prepareOpinionCreationOrders()
 	{
 		/* Assumptions for this behaviour
@@ -367,9 +367,7 @@ public abstract class CCMPAgent extends Agent {
                 
                 mOpinionsCreated.add(receivedMsg);
                 
-                //Tell our trust network we generated an opinion
-                mTrustNetwork.generatedOpinion(fromAgent, receivedMsg.getAppraisalAssignment(), appraisalCost);
-            	//The trust network may have updated its trust values based on this action,
+                //The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(fromAgent, era);             
 
@@ -377,9 +375,7 @@ public abstract class CCMPAgent extends Agent {
             }
             else
             {
-                //Tell our trust network we did not accept a certainty request
-                mTrustNetwork.didNotProvideOpinionAfterPayment(fromAgent, era);
-            	//The trust network may have updated its trust values based on this action,
+                //The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(fromAgent, era);   
             	
@@ -445,9 +441,7 @@ public abstract class CCMPAgent extends Agent {
             
             mLogger.info("\t to="+toAgent+" simValue="+op.getAppraisedValue()+" sentValue="+updateAppraisal+" era="+era);
             
-            //Tell our trust network we generated an opinion
-            mTrustNetwork.providedOpinion(toAgent, receivedMsg.getAppraisalAssignment(), updateAppraisal);
-        	//The trust network may have updated its trust values based on this action,
+            //The trust network may have updated its trust values based on this action,
         	//propagate the new values to our decision tree.
         	updateDecisionTreeTrustValues(toAgent, era);                         
         }
@@ -464,6 +458,7 @@ public abstract class CCMPAgent extends Agent {
 	 * @see testbed.agent.Agent#prepareOpinionRequests()
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void prepareOpinionRequests()
 	{
 		List<CertaintyReplyMsg> certaintyResponses = getIncomingMessages();
@@ -549,6 +544,7 @@ public abstract class CCMPAgent extends Agent {
 	 * @see testbed.agent.Agent#prepareReputationAcceptsAndDeclines()
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void prepareReputationAcceptsAndDeclines()
 	{
 		List<ReputationRequestMsg> reputationRequests = getIncomingMessages();
@@ -570,8 +566,6 @@ public abstract class CCMPAgent extends Agent {
         		ReputationAcceptOrDeclineMsg msg = receivedMsg.reputationAcceptOrDecline(true);
             	sendOutgoingMessage(msg);
             	
-            	//Tell our trust network we accept the request
-            	mTrustNetwork.providedAcceptReputationRequest(toAgent, aboutAgent, era);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(toAgent, era);
@@ -581,8 +575,6 @@ public abstract class CCMPAgent extends Agent {
         		mLogger.info("\tdecline to="+toAgent+" about="+aboutAgent+" era="+era);        		
         		ReputationAcceptOrDeclineMsg msg = receivedMsg.reputationAcceptOrDecline(false);
             	sendOutgoingMessage(msg);
-            	//Tell our trust network we did not accept the request
-            	mTrustNetwork.didNotProvideAcceptReputationRequest(toAgent, aboutAgent, era);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(toAgent, era);            	
@@ -599,6 +591,7 @@ public abstract class CCMPAgent extends Agent {
 	 * @see testbed.agent.Agent#prepareReputationReplies()
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void prepareReputationReplies()
  {
 		//Stored the accept/decline messages we received from OUR requests;
@@ -649,8 +642,6 @@ public abstract class CCMPAgent extends Agent {
                 ReputationReplyMsg msg = receivedMsg.reputationReply(repValue);
                 sendOutgoingMessage(msg);
                 
-            	//Tell our trust network we provided a reputation and it's value
-            	mTrustNetwork.providedReputationReply(toAgent, aboutAgent, era, repValue);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(toAgent, era);   
@@ -659,8 +650,6 @@ public abstract class CCMPAgent extends Agent {
         	}
         	else
         	{
-            	//Tell our trust network we accept the request
-            	mTrustNetwork.didNotProvideReputationAfterPayment(toAgent, aboutAgent, era);
             	//The trust network may have updated its trust values based on this action,
             	//propagate the new values to our decision tree.
             	updateDecisionTreeTrustValues(toAgent, era); 
@@ -747,6 +736,7 @@ public abstract class CCMPAgent extends Agent {
 	 * Parse through the final appraisal values and pass the final appraisal and each agents opinion
 	 * to the TN to update the trust values based on the experiences.
 	 */	
+	@SuppressWarnings("unchecked")
     private void processFrameResults( )
     {
     	mLogger.info("Begin Frame: "+currentTimestep);
