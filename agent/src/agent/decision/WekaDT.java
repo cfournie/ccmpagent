@@ -40,6 +40,7 @@ public class WekaDT extends DecisionTree {
 	{
 		super(agent);
 		this.dtreeCol = treeCol;
+		treeAtts = new Vector<Vector<String>>();
 		
 		for(DTLearning tree : treeCol)
 		{
