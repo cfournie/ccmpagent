@@ -44,7 +44,12 @@ public class BayesTrust {
 	 * 1.0  - all recommenders are completely trustworthy
 	 * (initial value of EC matrix diagonal) 
 	 */
-	private static final double ETA = 0.4;
+	private static final double ETA = 0.3;
+	
+	/**
+	 * Additive smoother to all probability values.
+	 */
+	private static final double EPSILON = 0.0;
 	
 	/**
 	 * Constructor
@@ -165,7 +170,7 @@ public class BayesTrust {
 				"  p(Sent " + fmt.format(beta) + " | Rcmd " + fmt.format(alpha) + ") = " + fmt.format(pSRgivenRT(rc, beta, alpha)) + " * " +
 				"p(Rcmd " + fmt.format(alpha) + ") = " + fmt.format(r[alpha]));
 			
-			double pSR = 0.0;
+			double pSR = EPSILON;
 			for (int gamma = 0; gamma < stats.getN(); gamma++) {
 				System.out.println(
 					"    p(Sent " + fmt.format(beta) + " | Rcmd " + fmt.format(gamma) + ") = " + fmt.format(pSRgivenRT(rc, beta, gamma)) + " * " +
@@ -214,11 +219,11 @@ public class BayesTrust {
 	 * @return Probability of SR given RT
 	 */
 	public double pSRgivenRT(double [][] rc, int beta, int alpha) {
-		double denom = 0.0;
+		double denom = EPSILON;
 		for (int gamma = 0; gamma < stats.getN(); gamma++) {
 			denom += rc[alpha][gamma]; 
 		}
-		return rc[alpha][beta] / denom;
+		return (rc[alpha][beta] + EPSILON) / denom;
 	}
 	
 	/**

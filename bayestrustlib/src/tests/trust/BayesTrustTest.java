@@ -65,6 +65,7 @@ public class BayesTrustTest {
 		final Context ctx = CONTEXTS[0];
 		final Peer alice = PEERS[0];
 		final Peer bob = PEERS[1];
+		final Peer charlie = PEERS[2];
 		setUpBayesTrust();
 		
 		bt.storeRecommendation(ctx, alice, bob, 0.7);
@@ -72,9 +73,20 @@ public class BayesTrustTest {
 		
 		bt.storeRecommendation(ctx, alice, bob, 0.7);
 		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+
 		bt.storeRecommendation(ctx, alice, bob, 0.7);
 		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
-		bt.storeRecommendation(ctx, alice, bob, 0.3);
+
+		bt.storeRecommendation(ctx, charlie, bob, 0.2);
+		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+		
+		bt.storeRecommendation(ctx, charlie, bob, 0.0);
+		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+
+		bt.storeRecommendation(ctx, charlie, bob, 0.0);
+		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
+
+		bt.storeRecommendation(ctx, charlie, bob, 0.0);
 		stats.printPmf(bt.getRecommendedTrust(ctx, bob));
 
 		/*double[][] m = /misc.makeIdentityMatrix()/misc.makeMatrix(0.1);
