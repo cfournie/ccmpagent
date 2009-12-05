@@ -65,7 +65,7 @@ public class BayesTrustTest {
 		bt.storeRecommendation(ROMAN, ALICE, BOB, 0.7);
 		double [] r = bt.getRecommendedTrust(ROMAN, BOB);
 		stats.printPmf(r);
-		assertEquals(Math.floor(0.7 * 4), stats.mean(r), 1);
+		assertEquals(2, stats.mean(r), 1);
 	}
 	
 	@Test

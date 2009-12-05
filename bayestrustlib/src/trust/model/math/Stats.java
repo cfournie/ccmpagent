@@ -64,6 +64,16 @@ public class Stats {
 	}
 	
 	/**
+	 * Maximum variance (the variance of a uniform distribution).
+	 * @return maximum variance
+	 */
+	public double maxVariance()
+	{
+		final double [] uniform = new Misc(this).makeTuple(1.0 / getN());
+		return variance(uniform);
+	}
+	
+	/**
 	 * Shows a pmf, its mean and variance on stdout.
 	 * @param d pmf
 	 */

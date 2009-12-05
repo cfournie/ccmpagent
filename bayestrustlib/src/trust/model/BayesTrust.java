@@ -254,7 +254,6 @@ public class BayesTrust {
 		return misc.continuate((SIGMA * dE) + ((1-SIGMA) * rE));
 	}
 	
-	
 	/**
 	 * Returns the confidence in the overall trust as a probability
 	 * @param ck Context
@@ -264,16 +263,17 @@ public class BayesTrust {
 	public double getOverallTrustConfidence(Context ck, Peer py) {
 		double[] d = dts.retrieve(ck, py);
 		double[] r = rts.retrieve(ck, py);
-		double[] t = this.misc.makeTuple();
 		
-		for (int j = 0; j < stats.getN(); j++)
-		{
-			t[j] = (SIGMA * d[j]) + ((1-SIGMA) * r[j]);
-		}
+		this.misc.checkPmf(d);
+		this.misc.checkPmf(r);
 		
-		//return stats.confidencePmfMax() / stats.variancePmf(t);
-		// TODO
-		return 0.666;
+		double varD = stats.variance(d);
+		double varR = stats.variance(r);
+		
+		double varTotal = SIGMA * varD + (1 - SIGMA) * varR;
+		double confidence = stats.maxVariance() / varTotal;
+		
+		return confidence;
 	}
 	
 	/**
