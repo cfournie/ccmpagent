@@ -343,10 +343,7 @@ public class WekaDTTest {
 								catAtt[DTLearningNames.DT_PROVIDEWEIGHT.ordinal()]
 		};
 		
-		String[] proWgtData = { "0.7,DO",
-								"0.3,DONT",
-								"0.4,DONT",
-								"0.5,DO"
+		String[] proWgtData = { "?,DO"
 		};
 		
 		try{
