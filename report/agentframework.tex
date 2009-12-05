@@ -31,6 +31,10 @@ to the ART testbed for creation in the sim.  In this manner different
 implementations of the trust network and decision tree classes can be easily
 incorperated into the CCMPAgent.
 
+\begin{center}
+\includegraphics{images/CCMPClasses.jpg}
+\end{center}
+
 \subsection{Trust Network}
 The trust network is an abstract class used to represent the trust the agent
 has for other players.  The interface class provides methods to update the
@@ -46,6 +50,13 @@ agent about our reputation and by keeping track of our actions to the specific
 agent.  To this end several methods are provided that will tell the trust
 network about the actions the CCMPAgent has taken, such as not providing the
 requested information or modifying the appraisal value.
+
+\begin{center}
+\begin{array}{cc}
+\includegraphics{images/TrustNetworkClasses.jpg} &
+\includegraphics{images/DTClasses.jpg}
+\end{array}
+\end{center}
 
 \subsection{Decision Tree}
 Abstract class that provides direction to the agent on how to behave.  For each
