@@ -6,7 +6,7 @@
         	author="true"
         	classpath="lib/junit-addons-1.4.jar;lib/art-2.1.1.jar;lib/junit.jar"
         	destdir="doc"
-        	doctitle="B-trust Framework"
+        	doctitle="CCMP Agent"
         	nodeprecated="false"
         	nodeprecatedlist="false"
         	noindex="false"
