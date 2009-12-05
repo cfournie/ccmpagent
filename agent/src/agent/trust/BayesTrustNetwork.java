@@ -130,7 +130,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		{
 			Context ck = new Context(era.getName());
 			Peer py = new Peer(agent);
-			return mTrust.getOverallTrustConfidence(ck, py);
+			return mTrust.getCondensedOverallTrust(ck, py);
 		}
 		
 		/**
@@ -193,10 +193,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 * @see agent.trust.TrustInterface#updateAgentTrustValue(java.lang.String, testbed.sim.AppraisalAssignment, int, int, double)
 		 */
 		public void updateAgentTrustFromFinalAppraisal(String agent, Appraisal appraisal, Opinion opinion)
-		{
-
-			
-			
+		{			
 			// What was the difference encountered
 			double difference = Math.abs(appraisal.getTrueValue() - opinion.getAppraisedValue());
 			
@@ -222,7 +219,6 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 */
 		public void frameReset()
 		{
-			this.agentCertainties.clear();
 		}
 		
 		protected void storeEncounter(String agent, String context, double satisfaction)
