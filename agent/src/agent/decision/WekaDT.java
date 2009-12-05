@@ -16,6 +16,7 @@ public class WekaDT extends DecisionTree {
 	
 	public DTLearningCollection dtreeCol;
 	private Vector<Vector<String>> treeAtts;
+	private Map<String,String> strategy;
 	
 	public enum DTLearningNames{
 		DT_ADJUSTAPPRAISAL,
@@ -51,7 +52,9 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 	
-	private String BuildTest(DTLearningNames tree, String forAgent)
+	private String BuildTest(DTLearningNames tree, 
+							 String agent, Era era, boolean ourCertainty,
+							 AppraisalAssignment art)
 	{
 		StringBuffer test = new StringBuffer();
 		
@@ -59,21 +62,41 @@ public class WekaDT extends DecisionTree {
 		{
 			if(att == "stategy")
 			{
-				test.append("curStragforAgent"+",");
+				test.append(strategy+",");
 			}
 			else if(att == "msgrem")
 			{
-				test.append("msgrem"+",");
+				switch (tree)
+				{
+				case DT_REQUESTCERTAINTY:
+					test.append(mNumCertaintyRequestsLeft.toString());
+					break;
+				case DT_REQUESTOPINION:
+					test.append(mNumOpinionRequestsLeft.get(art.getPaintingID()).toString());
+					break;
+				default:
+					test.append("crash");
+					break;
+				}
+				test.append(",");
 			}
 			else if(att == "certainty")
 			{
-				test.append("certainty"+",");
+				if(ourCertainty)
+				{
+					test.append(Double.toString(mAgent.getEraCertainty(era)));
+				}
+				else
+				{
+					test.append(Double.toString(mCertainties.get(agent).get(era)));
+				}
+				test.append(",");
 			}
 			else if(att == "trust")
 			{
-				test.append("trust"+",");
+				test.append(Double.toString(mReputations.get(agent))+",");
 			}
-			else // this should be the nonCat
+			else // this should be the Cat
 			{
 				test.append("?");
 			}
@@ -87,7 +110,7 @@ public class WekaDT extends DecisionTree {
 	 * @see agent.learning.LearningInterface#adjustAppraisalValue(java.lang.String, testbed.sim.Era, int)
 	 */
 	public int adjustAppraisalValue(String toAgent, Era era, int appraisal) {
-		String dtTest = BuildTest(DTLearningNames.DT_ADJUSTAPPRAISAL, toAgent);			
+		String dtTest = BuildTest(DTLearningNames.DT_ADJUSTAPPRAISAL, toAgent, era, true, null);			
 		String result = dtreeCol.get(DTLearningNames.DT_ADJUSTAPPRAISAL.ordinal()).DTClassify(dtTest);
 		
 		if(result=="UNCHANGED")
@@ -112,7 +135,7 @@ public class WekaDT extends DecisionTree {
 	 * @see agent.learning.LearningInterface#generateOpinion(java.lang.String, testbed.sim.Era)
 	 */
 	public boolean generateOpinion(String requestingAgent, Era era) {
-		String dtTest = BuildTest(DTLearningNames.DT_GENERATEOPINION, requestingAgent);	
+		String dtTest = BuildTest(DTLearningNames.DT_GENERATEOPINION, requestingAgent, era, true, null);	
 		String result = dtreeCol.get(DTLearningNames.DT_GENERATEOPINION.ordinal()).DTClassify(dtTest);
 
 		if(result == "DO")
@@ -134,7 +157,7 @@ public class WekaDT extends DecisionTree {
 	 */
 	public double getAppraisalCost(String requestingAgent, Era era)
 	{
-		String dtTest = BuildTest(DTLearningNames.DT_GETAPPRAISAL, requestingAgent);
+		String dtTest = BuildTest(DTLearningNames.DT_GETAPPRAISAL, requestingAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_GETAPPRAISAL.ordinal()).DTClassify(dtTest);
 		
 		if(result == "MINIMAL")
@@ -164,7 +187,7 @@ public class WekaDT extends DecisionTree {
         String eraName = era.getName();
         double myExpertise = mAgent.getExpertise(eraName);
         
-        String dtTest = BuildTest(DTLearningNames.DT_GETCERTAINTY, agent);
+        String dtTest = BuildTest(DTLearningNames.DT_GETCERTAINTY, agent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_GETCERTAINTY.ordinal()).DTClassify(dtTest);
 
 		if(result == "TRUTH")
@@ -190,7 +213,7 @@ public class WekaDT extends DecisionTree {
 		// The simple agent returns are real values
 		double repValue = mReputations.get(aboutAgent).doubleValue();
 		
-		String dtTest = BuildTest(DTLearningNames.DT_GETREPUTATION, requestingAgent);
+		String dtTest = BuildTest(DTLearningNames.DT_GETREPUTATION, requestingAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_GETREPUTATION.ordinal()).DTClassify(dtTest);
 
 		if(result == "TRUTH")
@@ -212,7 +235,7 @@ public class WekaDT extends DecisionTree {
 	 */
 	public boolean provideCertaintyReply(String agent, Era era)
 	{
-		String dtTest = BuildTest(DTLearningNames.DT_PROVIDECERTAINTY, agent);
+		String dtTest = BuildTest(DTLearningNames.DT_PROVIDECERTAINTY, agent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_PROVIDECERTAINTY.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
@@ -234,7 +257,7 @@ public class WekaDT extends DecisionTree {
 	 */
 	public boolean provideOpinion(String requestionAgent, Era era)
 	{
-		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEOPINION, requestionAgent);
+		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEOPINION, requestionAgent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEOPINION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
@@ -257,7 +280,7 @@ public class WekaDT extends DecisionTree {
 	public boolean provideReputationReply(String requestingAgent,
 			String aboutAgent, Era era)
 	{
-		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEREPUTATION, requestingAgent);
+		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEREPUTATION, requestingAgent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEREPUTATION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
@@ -290,7 +313,7 @@ public class WekaDT extends DecisionTree {
 		    }
 		}
 		return false;*/
-		String dtTest = BuildTest(DTLearningNames.DT_REQUESTCERTAINTY, toAgent);
+		String dtTest = BuildTest(DTLearningNames.DT_REQUESTCERTAINTY, toAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_REQUESTCERTAINTY.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
@@ -320,7 +343,7 @@ public class WekaDT extends DecisionTree {
             }
 		}
 		return false;*/
-		String dtTest = BuildTest(DTLearningNames.DT_REQUESTOPINION, toAgent);
+		String dtTest = BuildTest(DTLearningNames.DT_REQUESTOPINION, toAgent, null, false, art);
 		String result = dtreeCol.get(DTLearningNames.DT_REQUESTOPINION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
@@ -343,7 +366,7 @@ public class WekaDT extends DecisionTree {
 	public boolean requestAgentReputationUpdate(String toAgent,
 			String aboutAgent, Era era, int currentTimestep)
 	{
-		String dtTest = BuildTest(DTLearningNames.DT_REQUESTREPUTATION, toAgent);
+		String dtTest = BuildTest(DTLearningNames.DT_REQUESTREPUTATION, toAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_REQUESTREPUTATION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
@@ -365,7 +388,7 @@ public class WekaDT extends DecisionTree {
 	 */
 	public boolean respondToCertaintyRequest(String agent, Era era)
 	{
-		String dtTest = BuildTest(DTLearningNames.DT_RESPONDCERTAINTY, agent);
+		String dtTest = BuildTest(DTLearningNames.DT_RESPONDCERTAINTY, agent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_RESPONDCERTAINTY.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
@@ -388,7 +411,7 @@ public class WekaDT extends DecisionTree {
 	public boolean respondToReputationRequest(String requestingAgent,
 			String aboutAgent, Era era)
 	{
-		String dtTest = BuildTest(DTLearningNames.DT_RESPONDREPUTATION, requestingAgent);
+		String dtTest = BuildTest(DTLearningNames.DT_RESPONDREPUTATION, requestingAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_RESPONDREPUTATION.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")
@@ -410,7 +433,7 @@ public class WekaDT extends DecisionTree {
 	 */
 	public void sentCertaintyRequest(String toAgent, Era era)
 	{
-		mNumCertaintyRequestsSent++;
+		mNumCertaintyRequestsLeft--;
 	}
 
 	/* (non-Javadoc)
@@ -418,9 +441,9 @@ public class WekaDT extends DecisionTree {
 	 */
 	public void sentOpinionRequest(String toAgent, AppraisalAssignment art)
 	{
-		Integer currentSent = mNumOpinionRequestsSent.get(art.getPaintingID());
-		currentSent++;		
-		mNumOpinionRequestsSent.put( art.getPaintingID(), currentSent);
+		Integer currentLeft = mNumOpinionRequestsLeft.get(art.getPaintingID());
+		currentLeft--;		
+		mNumOpinionRequestsLeft.put( art.getPaintingID(), currentLeft);
 	}
 
 	/* (non-Javadoc)
@@ -442,14 +465,6 @@ public class WekaDT extends DecisionTree {
             mCertainties.put(agent, agCert);
         }
         agCert.put(era, certainty);
-	}
-
-	/* (non-Javadoc)
-	 * @see agent.decision.DecisionTree#setAgentPerceivedTrust(java.lang.String, testbed.sim.Era, double)
-	 */
-	public void setAgentPerceivedTrust(String agent, Era era, double trust)
-	{
-		// Not used in Simple DecisionTree
 	}
 
 	/* (non-Javadoc)
@@ -475,10 +490,10 @@ public class WekaDT extends DecisionTree {
 	{
 		mReputations = new Hashtable<String,Double>();
 		mCertainties = new Hashtable<String,Map<Era,Double>>();
-		mNumCertaintyRequestsSent = 0;
-		mNumOpinionRequestsSent = new Hashtable<String,Integer>();
+		mNumCertaintyRequestsLeft = 0;
+		mNumOpinionRequestsLeft = new Hashtable<String,Integer>();
 		
-		mNumOpinionRequestsSent.clear();
+		mNumOpinionRequestsLeft.clear();
 	}
 	
 	/* (non-Javadoc)
@@ -486,11 +501,11 @@ public class WekaDT extends DecisionTree {
 	 */
 	public void frameReset()
 	{
-		mNumCertaintyRequestsSent= 0;
-		mNumOpinionRequestsSent.clear();
+		mNumCertaintyRequestsLeft= mAgent.getMaxCertaintyRequests();;
+		mNumOpinionRequestsLeft.clear();
 		for( AppraisalAssignment art: mAgent.getAppraisalAssignments())
 		{
-			mNumOpinionRequestsSent.put(art.getPaintingID(), 0);
+			mNumOpinionRequestsLeft.put(art.getPaintingID(), mAgent.getMaxOpinionRequests());
 		}
 	}	
 
@@ -500,6 +515,7 @@ public class WekaDT extends DecisionTree {
 	public void addAgent( String newAgent )
 	{
 		mReputations.put(newAgent, new Double(1.0));
+		strategy.put(newAgent, "NICE");
 	}
 	
 	/* (non-Javadoc)
@@ -508,6 +524,7 @@ public class WekaDT extends DecisionTree {
 	public void removeAgent( String agent )
 	{
 		mReputations.remove(agent);
+		strategy.remove(agent);
 	}	
 	
 	public boolean provideWeight( String aboutAgent, Era era )
@@ -516,7 +533,7 @@ public class WekaDT extends DecisionTree {
         	return true;
         else
         	return false;*/
-		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEWEIGHT, aboutAgent);
+		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEWEIGHT, aboutAgent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEWEIGHT.ordinal()).DTClassify(dtTest);
 		
 		if(result == "DO")

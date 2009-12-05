@@ -722,9 +722,7 @@ public abstract class CCMPAgent extends Agent {
 	private void updateDecisionTreeTrustValues( String toAgent, Era era )
 	{
     	double ourNewTrust = mTrustNetwork.getTrustValue(toAgent, era);
-    	double ourNewInferredTrust = mTrustNetwork.getInferredTrustValue(toAgent, era);
-    	mDecisionTrees.setAgentTrust(toAgent, era, ourNewTrust);
-    	mDecisionTrees.setAgentPerceivedTrust(toAgent, era, ourNewInferredTrust);		
+    	mDecisionTrees.setAgentTrust(toAgent, era, ourNewTrust);		
 	}
 
 	/**

@@ -18,8 +18,8 @@ public abstract class DecisionTree {
 	protected CCMPAgent mAgent;
 	protected Map<String,Double>            mReputations;
 	protected Map<String,Map<Era,Double>> 	mCertainties;
-	Integer									mNumCertaintyRequestsSent;
-	protected Map<String,Integer>			mNumOpinionRequestsSent;
+	Integer									mNumCertaintyRequestsLeft;
+	protected Map<String,Integer>			mNumOpinionRequestsLeft;
 	
 	public DecisionTree(CCMPAgent agent)
 	{
@@ -34,7 +34,6 @@ public abstract class DecisionTree {
 	public abstract void frameReset();	
 	
 	public abstract void  setAgentTrust( String agent, Era era, double trust );
-	public abstract void  setAgentPerceivedTrust( String agent, Era era, double trust );
 	public abstract void  setAgentEraCertainty( String agent, Era era, double certainty);
 	
 	//get the reputation value, about an agent, we want to give to another agent.

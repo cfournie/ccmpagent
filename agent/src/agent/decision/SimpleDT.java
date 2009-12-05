@@ -108,7 +108,7 @@ public class SimpleDT extends DecisionTree {
 	{
 		//If we haven't sent to many requests, and we don't already know the agents
 		//certainty, return true.
-		if( mNumCertaintyRequestsSent < mAgent.getMaxCertaintyRequests() )
+		if( mNumCertaintyRequestsLeft > 0 )
 		{
 		    Map<Era,Double> agCert = mCertainties.get(toAgent); 
 		    if (agCert == null || !agCert.containsKey(era))
@@ -124,7 +124,7 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public boolean requestAgentOpinion(String toAgent, AppraisalAssignment art)
 	{
-		if( mNumOpinionRequestsSent.get(art.getPaintingID()) < mAgent.getMaxOpinionRequests() )
+		if( mNumOpinionRequestsLeft.get(art.getPaintingID()) > 0 )
 		{
             if (mReputations.get(toAgent) > 0.5)
             {
@@ -168,7 +168,7 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void sentCertaintyRequest(String toAgent, Era era)
 	{
-		mNumCertaintyRequestsSent++;
+		mNumCertaintyRequestsLeft--;
 	}
 
 	/* (non-Javadoc)
@@ -176,9 +176,9 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void sentOpinionRequest(String toAgent, AppraisalAssignment art)
 	{
-		Integer currentSent = mNumOpinionRequestsSent.get(art.getPaintingID());
-		currentSent++;		
-		mNumOpinionRequestsSent.put( art.getPaintingID(), currentSent);
+		Integer currentLeft = mNumOpinionRequestsLeft.get(art.getPaintingID());
+		currentLeft--;		
+		mNumOpinionRequestsLeft.put( art.getPaintingID(), currentLeft);
 	}
 
 	/* (non-Javadoc)
@@ -233,10 +233,10 @@ public class SimpleDT extends DecisionTree {
 	{
 		mReputations = new Hashtable<String,Double>();
 		mCertainties = new Hashtable<String,Map<Era,Double>>();
-		mNumCertaintyRequestsSent = 0;
-		mNumOpinionRequestsSent = new Hashtable<String,Integer>();
+		mNumCertaintyRequestsLeft = 0;
+		mNumOpinionRequestsLeft = new Hashtable<String,Integer>();
 		
-		mNumOpinionRequestsSent.clear();
+		mNumOpinionRequestsLeft.clear();
 	}
 	
 	/* (non-Javadoc)
@@ -244,13 +244,13 @@ public class SimpleDT extends DecisionTree {
 	 */
 	public void frameReset()
 	{
-		mNumCertaintyRequestsSent= 0;
-		mNumOpinionRequestsSent.clear();
+		mNumCertaintyRequestsLeft= mAgent.getMaxCertaintyRequests();;
+		mNumOpinionRequestsLeft.clear();
 		for( AppraisalAssignment art: mAgent.getAppraisalAssignments())
 		{
-			mNumOpinionRequestsSent.put(art.getPaintingID(), 0);
-		}		
-	}	
+			mNumOpinionRequestsLeft.put(art.getPaintingID(), mAgent.getMaxOpinionRequests());
+		}
+	}		
 
 	/* (non-Javadoc)
 	 * @see agent.decision.DecisionTree#addAgent()

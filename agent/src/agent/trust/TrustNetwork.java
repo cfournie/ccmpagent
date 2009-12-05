@@ -40,9 +40,6 @@ public abstract class TrustNetwork {
 	//Get our local trust value, for dtlibrary
 	public abstract double getTrustValue( String agent, Era era);
 	
-	//how much do we think the other agent trusts us?
-	public abstract double getInferredTrustValue( String agent, Era era );
-	
 	public abstract void updateAgentTrustFromFinalAppraisal(String agent, Appraisal appraisal, Opinion opinion);
 
 	public abstract void agentDidNotAcceptReputationRequest( String agent, Era era );
