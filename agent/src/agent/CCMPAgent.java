@@ -809,10 +809,10 @@ public abstract class CCMPAgent extends Agent {
 				}
 				if( !providedOpinion )
 				{
-					writeToLogFile("Agent Did not provide opinion agent="+requestMsg.getSender()
+					writeToLogFile("Agent Did not provide opinion agent="+requestMsg.getReceiver()
 							    +" era="+requestMsg.getAppraisalAssignment().getEra());
-					mTrustNetwork.agentDidNotProvideOpinion(requestMsg.getSender(), requestMsg.getAppraisalAssignment().getEra());
-					mDecisionTrees.agentDidNotProvideOpinion(requestMsg.getSender(), requestMsg.getAppraisalAssignment().getEra());
+					mTrustNetwork.agentDidNotProvideOpinion(requestMsg.getReceiver(), requestMsg.getAppraisalAssignment().getEra());
+					mDecisionTrees.agentDidNotProvideOpinion(requestMsg.getReceiver(), requestMsg.getAppraisalAssignment().getEra());
 				}
 			}
 			    	
