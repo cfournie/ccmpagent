@@ -244,4 +244,9 @@ public class BayesTrustNetwork extends TrustNetwork {
 		{
 			return agent + "." + era.getName();
 		}
+
+		public String toString()
+		{
+			return mTrust.toString();
+		}
 }
