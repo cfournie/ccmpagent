@@ -302,17 +302,6 @@ public class WekaDT extends DecisionTree {
 	 */
 	public boolean requestAgentCertainty(String toAgent, Era era)
 	{
-		//If we haven't sent to many requests, and we don't already know the agents
-		//certainty, return true.
-		/*if( mNumCertaintyRequestsSent < mAgent.getMaxCertaintyRequests() )
-		{
-		    Map<Era,Double> agCert = mCertainties.get(toAgent); 
-		    if (agCert == null || !agCert.containsKey(era))
-		    {			
-		    	return true;
-		    }
-		}
-		return false;*/
 		String dtTest = BuildTest(DTLearningNames.DT_REQUESTCERTAINTY, toAgent, era, false, null);
 		String result = dtreeCol.get(DTLearningNames.DT_REQUESTCERTAINTY.ordinal()).DTClassify(dtTest);
 		
@@ -335,14 +324,6 @@ public class WekaDT extends DecisionTree {
 	 */
 	public boolean requestAgentOpinion(String toAgent, AppraisalAssignment art)
 	{
-		/*if( mNumOpinionRequestsSent.get(art.getPaintingID()) < mAgent.getMaxOpinionRequests() )
-		{
-            if (mReputations.get(toAgent) > 0.5)
-            {
-                return true;
-            }
-		}
-		return false;*/
 		String dtTest = BuildTest(DTLearningNames.DT_REQUESTOPINION, toAgent, null, false, art);
 		String result = dtreeCol.get(DTLearningNames.DT_REQUESTOPINION.ordinal()).DTClassify(dtTest);
 		
@@ -451,7 +432,7 @@ public class WekaDT extends DecisionTree {
 	 */
 	public void sentReputationRequest(String toAgent, String aboutAgent)
 	{
-		// Simple DT doesn't send reputation requests and doesn't care if we do
+		// No need to implement
 	}
 
 	/* (non-Javadoc)
@@ -473,14 +454,6 @@ public class WekaDT extends DecisionTree {
 	public void setAgentTrust(String agent, Era era, double trust)
 	{
 		mReputations.put(agent, trust);
-	}
-
-	/* (non-Javadoc)
-	 * @see agent.decision.DecisionTree#setOurEraCertainty(testbed.sim.Era, double)
-	 */
-	public void setOurEraCertainty(Era era, double certainty)
-	{
-		// Not used in SimpleDT, it just explicity asks for the agents expertice 
 	}
 	
 	/* (non-Javadoc)
@@ -529,10 +502,6 @@ public class WekaDT extends DecisionTree {
 	
 	public boolean provideWeight( String aboutAgent, Era era )
 	{
-        /*if (mReputations.get(aboutAgent) > 0.8)
-        	return true;
-        else
-        	return false;*/
 		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEWEIGHT, aboutAgent, era, true, null);
 		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEWEIGHT.ordinal()).DTClassify(dtTest);
 		

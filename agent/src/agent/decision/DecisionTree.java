@@ -84,13 +84,4 @@ public abstract class DecisionTree {
 	public abstract void agentDidNotProvideCertainty( String agent, Era era);
 	public abstract void agentDidNotProvideOpinion( String agent, Era era);
 	public abstract void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue );	
-	
-	private double getBankBalance()
-	{
-		return mAgent.getBankBalance();
-	}
-	private double getOurEraCertainty(Era era)
-	{
-		return mAgent.getEraCertainty(era);
-	}
 }
