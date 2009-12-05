@@ -1,5 +1,6 @@
 package trust.model;
 
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class BayesTrust {
 			rts.store(ck, py, this.misc.defaultTrustTuple());
 			
 			// Init SRS
-			double[][] m = this.misc.makeMatrix(1.0 - 3 * ETA);
+			double[][] m = this.misc.makeMatrix((1.0 - ETA) / (this.stats.getN() - 1));
 			for (int i = 0; i < m.length; i++) {
 				m[i][i] = ETA;
 			}
@@ -154,28 +155,29 @@ public class BayesTrust {
 		// Prior belief of what pr will send about py.
 		double [][] rc = srs.retrieve(ck, pr);
 		
+		final DecimalFormat fmt = new DecimalFormat("0.00");
 		double [] newR = misc.makeTuple();
 		for (int alpha = 0; alpha < stats.getN(); alpha++) {
-			System.out.println("Alpha = " + alpha + ":");
+			System.out.println("Alpha = " + fmt.format(alpha) + ":");
 			
 			double pSRandRT = r[alpha] * pSRgivenRT(rc, beta, alpha);
 			System.out.println(
-				"  p(Sent " + beta + " | Rcmd " + alpha + ") = " + pSRgivenRT(rc, beta, alpha) + " * " +
-				"p(Rcmd " + alpha + ") = " + r[alpha]);
+				"  p(Sent " + fmt.format(beta) + " | Rcmd " + fmt.format(alpha) + ") = " + fmt.format(pSRgivenRT(rc, beta, alpha)) + " * " +
+				"p(Rcmd " + fmt.format(alpha) + ") = " + fmt.format(r[alpha]));
 			
 			double pSR = 0.0;
 			for (int gamma = 0; gamma < stats.getN(); gamma++) {
 				System.out.println(
-					"    p(Sent " + beta + " | Rcmd " + gamma + ") = " + pSRgivenRT(rc, beta, gamma) + " * " +
-					"p(Rcmd " + gamma + ") = " + r[gamma]);
+					"    p(Sent " + fmt.format(beta) + " | Rcmd " + fmt.format(gamma) + ") = " + fmt.format(pSRgivenRT(rc, beta, gamma)) + " * " +
+					"p(Rcmd " + fmt.format(gamma) + ") = " + fmt.format(r[gamma]));
 				pSR += r[gamma] * pSRgivenRT(rc, beta, gamma);
 			}
 			
 			System.out.println(
-				"  p(Sent " + beta + "; Rcmd " + alpha + ") = " + pSRandRT + " / " +
-				"p(Sent " + beta + ") = " + pSR);
+				"  p(Sent " + fmt.format(beta) + "; Rcmd " + fmt.format(alpha) + ") = " + fmt.format(pSRandRT) + " / " +
+				"p(Sent " + fmt.format(beta) + ") = " + fmt.format(pSR));
 			newR[alpha] = pSRandRT / pSR;
-			System.out.println("  p(new Rcmd " + alpha + ") = " + newR[alpha]);
+			System.out.println("  p(new Rcmd " + fmt.format(alpha) + ") = " + fmt.format(newR[alpha]));
 		}
 		
 		rts.store(ck, py, newR);

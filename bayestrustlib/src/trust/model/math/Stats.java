@@ -117,7 +117,7 @@ public class Stats {
 		
 		var -= mean * mean;
 		
-		final DecimalFormat fmt = new DecimalFormat("#.###");
+		final DecimalFormat fmt = new DecimalFormat("0.000");
 		System.out.print("[");
 		for (int j = 0; j < getN(); j++) {
 			System.out.print(fmt.format(d[j]));
