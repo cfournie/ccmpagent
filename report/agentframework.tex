@@ -1,12 +1,12 @@
 \section{CCMP Agent Framework}
 The ART testbed provides a base Agent class with several functions that must be
 implemented by the new agent. These functions allow the agent to interact with
-the other agents and participate in the game through the exchange of differet
+the other agents and participate in the game through the exchange of different
 messages.  
 
 To facilitate the distributed development environment it was important to break
 the agent environment into different parts.  The CCMP Agent consists of the
-base CCMP Agent class, base Trust Network interface class, an base Decision
+base CCMP Agent class, base Trust Network interface class, a base Decision
 Tree interface class and their associated implementations.
 
 \subsection{Main Agent}
@@ -15,11 +15,11 @@ and provides the interface to the ART testbed.  The CCMPAgent is
 responsible for handling the generation, parsing and responses to the
 messages within the testbed Agent methods.  
 
-It does this in a similar and abstact manner for each one. First it parses the
+It does this in a similar and abstract manner for each one. First it parses the
 incoming messages and updates the trust network and decision tree on the
 results of the messages, either positive or negative.  After updating the
 knowledge base regarding the actions of the other agents and passing the new
-values from the trust network to the decision tree if queries the decision tree
+values from the trust network to the decision tree, it queries the decision tree
 to determine what action to take.  It then generates the appropriate
 messages and passes them to the sim.
 
@@ -29,7 +29,7 @@ types, such as the Bayesian trust network and Weka decision tree, are
 instantiated in subclasses of CCMPAgent.  It is these subclasses that are passed
 to the ART testbed for creation in the sim.  In this manner different
 implementations of the trust network and decision tree classes can be easily
-incorperated into the CCMPAgent.
+incorporated into the CCMPAgent.
 
 \begin{center}
 \includegraphics{images/CCMPClasses.jpg}
@@ -42,7 +42,7 @@ trust values based on events in the sim, such as receiving new reputation
 information from other agents or negative actions taken by an agent.  During
 each of the ART agent methods the CCMPAgent class will parse the incoming
 messages to determine the actions of the other agents.  Based on these actions
-and the contents of the messages the CCMPAgent will call the apporpriate
+and the contents of the messages the CCMPAgent will call the appropriate
 function in the Trust Network to update the trust values.  At the end of each
 frame the resulting final appraisal and each agents opinion are passed to the trust network 
 to update the trust value for the agent based on the results. The following
@@ -105,7 +105,7 @@ Modify the generated opinion & \\
 \end{center}
 
 As discussed above, during each of the ART agent methods the CCMPAgent class
-will update the Trust Network, based on other agent actions, and then pass hese
+will update the Trust Network, based on other agent actions, and then pass these
 updated values to the Decision Tree.  The CCMPAgent then calls the appropriate
 methods in the Decision Tree interface class to get the actions to take for the
 particular method.  The CCMPAgent will also tell the Decision Tree about
