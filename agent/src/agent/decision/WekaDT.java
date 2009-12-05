@@ -16,7 +16,7 @@ public class WekaDT extends DecisionTree {
 	
 	public DTLearningCollection dtreeCol;
 	private Vector<Vector<String>> treeAtts;
-	private Map<String,String> strategy;
+	private HashMap<String,String> strategy;
 	
 	public enum DTLearningNames{
 		DT_ADJUSTAPPRAISAL,
@@ -41,6 +41,7 @@ public class WekaDT extends DecisionTree {
 		super(agent);
 		this.dtreeCol = treeCol;
 		treeAtts = new Vector<Vector<String>>();
+		strategy = new HashMap<String,String>();
 		
 		for(DTLearning tree : treeCol)
 		{
