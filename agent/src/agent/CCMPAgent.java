@@ -275,7 +275,7 @@ public abstract class CCMPAgent extends Agent {
 	   		{
 				if( numCertaintiesRequested == getMaxCertaintyRequests() )
 				{
-					mLogger.info("Max number of certainty requests reached");
+					writeToLogFile("Max number of certainty requests reached");
 					break;
 				}	   			
 	   			//Don't send a message to ourselves,
@@ -537,7 +537,7 @@ public abstract class CCMPAgent extends Agent {
     		{
     			if( numOpinionsRequested == getMaxOpinionRequests() )
     			{
-    				mLogger.info("Max number of opinion requests reached for "+appraisal.getPaintingID());
+    				writeToLogFile("Max number of opinion requests reached for "+appraisal.getPaintingID());
     				break;
     			}
     			//we can't ask ourselves for an opinion.
@@ -837,7 +837,22 @@ public abstract class CCMPAgent extends Agent {
 	        	}
 	        }
     	}
-    	mLogger.info("Frame Trust Values: "+mTrustNetwork.toString());
+
+    	mLogger.info("Frame Trust Values:");
+    	mLogIndent="\t";
+        for (String name: agentNames)
+        {
+        	if( !name.equals(getName()) )
+        	{ 
+	        	mLogIndent="\t";
+	       		writeToLogFile("Agent="+name);
+	        	mLogIndent="\t\t";
+	        	for( Era era: eras)
+	        	{
+	        		writeToLogFile("Era="+era+" Trust="+mTrustNetwork.getTrustValue(name,era));
+	        	}
+        	}    		
+    	}
     }
     
     public int getMaxCertaintyRequests()
