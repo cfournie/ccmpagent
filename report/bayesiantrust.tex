@@ -1,13 +1,43 @@
-\section{Baysian Trust Network}
-Here you talk about the Baysian Trust Network \cite{btrust}.
+\section{Bayesian Trust Network}
+To assess our trust in the other peers in the system, we implemented the model
+from ``B-trust: Bayesian Trust Framework for Pervasive Computing''
+\cite{btrust}. The paper describes a method of maintaining context-sensitive
+information about previous direct experiences with other peers as well as
+the recommended trust received from third-party recommenders. Trust values
+are stored probabilistically and trust evolution from one
+experience/recommendation to another uses a form a Bayes' theorem.
+
+For each context and peer, we store a vector that represents a discrete
+probability mass function (pmf) of our direct trust, which is the trust
+formed from previous direct experiences with this peer. We similarly store a
+vector for the recommended trust pmf, which is the trust formed from
+recommendations received about this peer from third-parties.
+
+Again for each context and peer, we store two matrices (direct and recommended)
+which govern the evolution of trust. By scaling the feedback when the trust
+pmfs evolve, these matrices control how much the pmfs change when we receive
+additional information about a peer. In terms of Bayes' theorem, the
+values in these matrices are conditional probabilities which act as weights
+to the prior probabilities of the trust level.
+
+These pmfs are initialized to the uniform discrete distribution, which
+represents a lack of information about this peer's behaviour. After a few rounds
+of trust evolution, the mean of this pmf \eqref{eqn:bayes_mean} is a single
+value representing our direct/recommended trust in a given peer, while
+the variance of the pmf \eqref{eqn:bayes_variance} represents our confidence in
+this trust value. The uniform discrete distribution has the highest variance,
+while the degenerate distribution has the lowest, so we map this variance range
+into a confidence value on \[0,1\].
 
 \begin{figure}[h]
+\label{eqn:bayes_mean}
 \begin{equation}
 mean = \sum_{j=0}^{n-1}{(j)(d_j)}
 \end{equation}
 \end{figure}
 
 \begin{figure}[h]
+\label{eqn:bayes_variance}
 \begin{equation}
 variance = \bigg(\sum_{j=0}^{n-1}{(j^2)(d_j)} \bigg) - mean^2
 \end{equation}
