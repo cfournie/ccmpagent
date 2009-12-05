@@ -251,7 +251,11 @@ public class BayesTrust {
 		double dE = stats.mean(d);
 		double rE = stats.mean(r);
 		
-		return misc.continuate((SIGMA * dE) + ((1-SIGMA) * rE));
+		double trust = misc.continuate((SIGMA * dE) + ((1-SIGMA) * rE));
+		
+		this.misc.checkLevel(trust);
+		
+		return trust;
 	}
 	
 	/**
@@ -272,6 +276,8 @@ public class BayesTrust {
 		
 		double varTotal = SIGMA * varD + (1 - SIGMA) * varR;
 		double confidence = stats.maxVariance() / varTotal;
+		
+		this.misc.checkLevel(confidence);
 		
 		return confidence;
 	}
