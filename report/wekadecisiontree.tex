@@ -1,2 +1,44 @@
 \section{Weka Decision Tree}
-Here you talk about the Weka \cite{weka}. Decision Tree
+The decision was made early that developing an advanced tree classifier from scratch would
+be unnecessary as the Weka 3\cite{weka} open source library already provided an implementation that meet
+all the requirements.  These requirements including being able to classify data sets and 
+then being able to query the resulting tree to determine the categorical action based on the set
+of noncategorical test.  Also, there was a need to view the resulting tree for visual inspection.
+
+\subsection{Interfacing with Weka}
+In order to increase the reusability of the decision tree library, classes were created that 
+reproduce the components of the Weka Attribute-Relation File Format (ARFF) instead of merely
+storing the contents of an ARFF file.  These classes are of this decision tree library, dtlib, 
+are described in the following table.
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+DTAttribute &
+Contains two strings representing the name of the attribute and its type.
+The type can be either 'numeric' or some enumerated set of the form '\{enum1,enum2,etc\}'.\\
+\hline
+DTWekaARFF &
+Contains a string for the name of the tree, a vector of the noncategorical attributes and the 
+categorical attribute as the last element, and a String array representing the data that the 
+decision tree will be built from.\\
+\hline
+DTLearning &
+Contains a DTWekaARFF object and a J48 tree object.  The tree object is retrieved by converting
+the DTWekaARFF element to the ARFF format and passing it to Weka's BuildClassifier.  The
+DTClassify method will return the proper action to be taken based on passed test\\
+\hline
+DTLearningCollection &
+Extends Vector to only contain DTLearning objects.
+\hline
+\end{tabular}
+\end{center}
+
+The decision trees were stored in configuration XML allowing the behaviour of an agent to be change without
+recompiling the entire project.  This flexibility was achieved by structuring the classes so that 
+they could be built using the Digester XML parser.
+
+
+
+
+
