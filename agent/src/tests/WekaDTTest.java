@@ -93,22 +93,17 @@ public class WekaDTTest {
 		}
 		
 		// Generate Opinion
-		DTAttribute[] genOpi = {nonCatAtt[ENonCatAtt.MSGREM.ordinal()], 
-								nonCatAtt[ENonCatAtt.CERTAINTY.ordinal()],
+		DTAttribute[] genOpi = {nonCatAtt[ENonCatAtt.CERTAINTY.ordinal()],
 								nonCatAtt[ENonCatAtt.TRUST.ordinal()], 
 								catAtt[DTLearningNames.DT_GENERATEOPINION.ordinal()]};
 		
-		String[] genOpiData = { "10,0.7,0.7,DO",
-								"10,0.7,0.5,DO",
-								"10,0.7,0.3,DONT",
-								"10,0.5,0.7,DO",
-								"10,0.5,0.5,DO",
-								"10,0.5,0.3,DONT",
-								"10,0.3,0.7,DONT",
-								"3,0.7,0.7,DO",
-								"3,0.7,0.5,DONT",
-								"3,0.5,0.7,DONT",
-								"3,0.3,0.3,DONT"
+		String[] genOpiData = { "0.7,0.7,DO",
+								"0.7,0.5,DO",
+								"0.7,0.3,DONT",
+								"0.5,0.7,DO",
+								"0.5,0.5,DO",
+								"0.5,0.3,DONT",
+								"0.3,0.7,DONT"
 				
 		};
 		
