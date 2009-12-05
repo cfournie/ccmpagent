@@ -8,9 +8,9 @@ are stored probabilistically and trust evolution from one
 experience/recommendation to another uses a form a Bayes' theorem.
 
 For each context and peer, we store a vector that represents a discrete
-probability mass function (pmf) of our direct trust, which is the trust
-formed from previous direct experiences with this peer. We similarly store a
-vector for the recommended trust pmf, which is the trust formed from
+probability mass function (pmf) of our direct trust $d_\alpha$, which is the
+trust formed from previous direct experiences with this peer. We similarly store a
+vector for the recommended trust pmf $r_\alpha$, which is the trust formed from
 recommendations received about this peer from third-parties.
 
 Again for each context and peer, we store two matrices (direct and recommended)
@@ -22,23 +22,24 @@ to the prior probabilities of the trust level.
 
 These pmfs are initialized to the uniform discrete distribution, which
 represents a lack of information about this peer's behaviour. After a few rounds
-of trust evolution, the mean of this pmf \eqref{eqn:bayes_mean} is a single
-value representing our direct/recommended trust in a given peer, while
-the variance of the pmf \eqref{eqn:bayes_variance} represents our confidence in
-this trust value. The uniform discrete distribution has the highest variance,
-while the degenerate distribution has the lowest, so we map this variance range
-into a confidence value on \[0,1\].
+of trust evolution, the mean $\mu_{\{d,r\}}$ of this pmf \ref{eqn:bayes_mean}
+is a single value representing our direct/recommended trust in a given peer,
+while the variance $\sigma^2_{\{d,r\}}$ of the pmf \ref{eqn:bayes_variance}
+represents our confidence in this trust value. The uniform discrete distribution
+has the highest variance, while the degenerate distribution has the lowest, so
+we map this variance range into a confidence value on [0,1].
 
 \begin{figure}[h]
 \label{eqn:bayes_mean}
+\caption{bayes mean}
 \begin{equation}
-mean = \sum_{j=0}^{n-1}{(j)(d_j)}
+\mu_{\{d,r\}} = \sum_{i=0}^{n-1}{i*{\{d,r\}}_i}
 \end{equation}
 \end{figure}
 
 \begin{figure}[h]
 \label{eqn:bayes_variance}
 \begin{equation}
-variance = \bigg(\sum_{j=0}^{n-1}{(j^2)(d_j)} \bigg) - mean^2
+\sigma^2_{\{d,r\}} = \sum_{i=0}^{n-1}{i^2*{\{d,r\}}_i} - \mu^2_{\{d,r\}}
 \end{equation}
 \end{figure}
