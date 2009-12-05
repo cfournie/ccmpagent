@@ -4,6 +4,7 @@ import testbed.sim.Era;
 import agent.CCMPAgent;
 import agent.trust.TrustNetwork;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import testbed.sim.Appraisal;
@@ -17,9 +18,25 @@ import trust.model.primitives.Peer;
  */
 public class BayesTrustNetwork extends TrustNetwork {
 		/** Trust levels */
-		public static final int TRUST_LEVELS = 4;
+		public static final int TRUST_LEVELS = 5;
+		
+		/** Fully trustworthy */
+		public static final int TRUST_LEVEL_FULL = 4/TRUST_LEVELS;
+		/** Moderately trustworthy */
+		public static final int TRUST_LEVEL_MID = 3/TRUST_LEVELS;
+		/** Moderately untrustworthy */
+		public static final int TRUST_LEVEL_MODERATE = 2/TRUST_LEVELS;
+		/** Untrustworthy */
+		public static final int TRUST_LEVEL_MID_UNTRUST = 1/TRUST_LEVELS;
+		/** Fully untrustworthy */
+		public static final int TRUST_LEVEL_FULL_UNTRUST = 0;
+		
 		/** B-trust framework */
-		private BayesTrust mTrust;
+		protected BayesTrust mTrust;
+		/** Era certainty */
+		protected double eraCertainty = 0.0;
+		/** Era certainties */
+		protected HashMap<String,Double> agentCertainties;
 		
 		/**
 		 * Constructor.
@@ -29,6 +46,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		{
 			super(agent);
 			List<Context> contexts = new LinkedList<Context>();
+			this.agentCertainties = new HashMap<String,Double>();
 			
 			for(Era era : mAgent.getEras()) {
 				Context c = new Context(era.getName());
@@ -38,15 +56,9 @@ public class BayesTrustNetwork extends TrustNetwork {
 			mTrust = new BayesTrust(TRUST_LEVELS, contexts);
 		}
 		
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#addAgent(java.lang.String)
-		 */
-		public void init()
-		{
-		}	
-		
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#addAgent(java.lang.String)
+		/**
+		 * Add an agent to be watched by the Trust framework.
+		 * @param newAgent Agent to watch
 		 */
 		public void addAgent(String newAgent)
 		{
@@ -54,48 +66,64 @@ public class BayesTrustNetwork extends TrustNetwork {
 			mTrust.addPeer(p);
 		}
 
-		/* (non-Javadoc)
+		/** Handler for DidNotAcceptCertainty event.
+		 * @param agent Agent
+		 * @param era Era
+		 * @Param certaintyValue Certainty [0,1]
 		 * @see agent.trust.TrustInterface#agentDidNotAcceptCertainty(java.lang.String, testbed.sim.Era)
 		 */
-		public void agentDidNotAcceptCertainty(String agent, Era era,
-				double certaintyValue)
+		public void agentDidNotAcceptCertainty(String agent, Era era, double certaintyValue)
 		{
-			// TODO: Evaluate implementation
+			// Benign encounter
 		}
 
-		/* (non-Javadoc)
+		/** Handler for DidNotAcceptReputationRequest event.
+		 * @param agent Agent
+		 * @param era Era
 		 * @see agent.trust.TrustInterface#agentDidNotAcceptReputationRequest(java.lang.String, testbed.sim.Era)
 		 */
 		public void agentDidNotAcceptReputationRequest(String agent, Era era)
 		{
-			// TODO: Evaluate implementation
+			// Benign encounter
 		}
 
-		/* (non-Javadoc)
+		/** Handler for DidNotProvideCertainty event.
+		 * @param agent Agent
+		 * @param era Era
 		 * @see agent.trust.TrustInterface#agentDidNotProvideCertainty(java.lang.String, testbed.sim.Era)
 		 */
 		public void agentDidNotProvideCertainty(String agent, Era era)
 		{
-			// TODO: Evaluate implementation
+			// Record negative encounter
+			this.storeEncounter(agent, era.getName(), TRUST_LEVEL_MID_UNTRUST);
 		}
 
-		/* (non-Javadoc)
+		/** Handler for DidNotProvideOpinion event.
+		 * @param agent Agent
+		 * @param era Era
 		 * @see agent.trust.TrustInterface#agentDidNotProvideOpinion(java.lang.String, testbed.sim.Era)
 		 */
 		public void agentDidNotProvideOpinion(String agent, Era era)
 		{
-			// Ignored, no encounter, assumed to be a benign response
+			// Record negative encounter
+			this.storeEncounter(agent, era.getName(), TRUST_LEVEL_FULL_UNTRUST);
 		}
 
-		/* (non-Javadoc)
+		/** Handler for DidNotProvideReputation event.
+		 * @param agent Agent
+		 * @param era Era
 		 * @see agent.trust.TrustInterface#agentDidNotProvideReputation(java.lang.String, testbed.sim.Era)
 		 */
 		public void agentDidNotProvideReputation(String agent, Era era)
 		{
-			// Ignored, no encounter, assumed to be a benign response
+			// Record negative encounter
+			this.storeEncounter(agent, era.getName(), TRUST_LEVEL_MODERATE);
 		}
 
-		/* (non-Javadoc)
+		/**
+		 * Get the weight, or confidence, in a trust value of an agent
+		 * @param agent Agent to query
+		 * @param agent Context or era to query
 		 * @see agent.trust.TrustInterface#getReputationWeight(java.lang.String, testbed.sim.Era)
 		 */
 		public double getReputationWeight(String agent, Era era)
@@ -105,7 +133,10 @@ public class BayesTrustNetwork extends TrustNetwork {
 			return mTrust.getOverallTrustConfidence(ck, py);
 		}
 		
-		/* (non-Javadoc)
+		/**
+		 * Get the trust value of an agent
+		 * @param agent Agent to query
+		 * @param agent Context or era to query
 		 * @see agent.trust.TrustInterface#getTrustValue(java.lang.String, testbed.sim.Era)
 		 */
 		public double getTrustValue(String agent, Era era)
@@ -115,7 +146,12 @@ public class BayesTrustNetwork extends TrustNetwork {
 			return mTrust.getCondensedOverallTrust(ck, py);
 		}
 
-		/* (non-Javadoc)
+		/**
+		 * Store a recommendation from agent X agent about agent Y.
+		 * @param fromAgent Recommender
+		 * @param aboutAgent Recommendee
+		 * @param era Context, or era
+		 * @param double Reputation [0,1] 
 		 * @see agent.trust.TrustInterface#receiveAgentReputationUpdate(java.lang.String, java.lang.String, testbed.sim.Era, double)
 		 */
 		public void receiveAgentReputationUpdate(String fromAgent, String aboutAgent, Era era, double reputation)
@@ -124,44 +160,42 @@ public class BayesTrustNetwork extends TrustNetwork {
 			Peer py = new Peer(fromAgent);
 			Peer pr = new Peer(aboutAgent);
 			
-			// TODO: Evaluate beta calculation
+			// ctsBeta should be [0,1]
 			double ctsBeta = reputation;
 			
 			mTrust.storeRecommendation(ck, pr, py, ctsBeta);
 		}
 
-		/* (non-Javadoc)
-		 * @see agent.trust.TrustInterface#removeAgent(java.lang.String)
-		 */
-		public void removeAgent(String agent)
-		{
-			// Ignored, trust does not care about agent removal
-		}
-
-		/* (non-Javadoc)
+		/**
+		 * Set an agent's era certainty
+		 * @param agent Other agent
+		 * @param era Era
+		 * @param certainty Certainty [0,1]
 		 * @see agent.trust.TrustInterface#setAgentEraCertainty(java.lang.String, testbed.sim.Era, double)
 		 */
 		public void setAgentEraCertainty(String agent, Era era, double certainty)
 		{
-			// Ignored, trust does not care about agent era certainty.
+			agentCertainties.put(this.getAgentEraKey(agent,era), new Double(certainty));
 		}
 
-		/* (non-Javadoc)
+		/**
+		 * Get our era certainty.
+		 * @param era Era
 		 * @see agent.trust.TrustInterface#setOurEraCertainty(testbed.sim.Era)
 		 */
-		public void setOurEraCertainty(Era era)
+		protected double getOurEraCertainty(Era era)
 		{
-			// Ignored, trust does not care about our era certainty.
+			return mAgent.getEraCertainty(era);
 		}
 
-		/* (non-Javadoc)
+		/**
+		 * Handle encounter of final appraisal
 		 * @see agent.trust.TrustInterface#updateAgentTrustValue(java.lang.String, testbed.sim.AppraisalAssignment, int, int, double)
 		 */
 		public void updateAgentTrustFromFinalAppraisal(String agent, Appraisal appraisal, Opinion opinion)
 		{
 
-			Context ck = new Context(appraisal.getEra().getName());
-			Peer py = new Peer(agent);
+			
 			
 			// What was the difference encountered
 			double difference = Math.abs(appraisal.getTrueValue() - opinion.getAppraisedValue());
@@ -170,15 +204,44 @@ public class BayesTrustNetwork extends TrustNetwork {
 			difference = difference / ((double)appraisal.getTrueValue());
 	        
 			// What is the satisfaction level of this encounter
-			// TODO: Calculate satisfaction
 			double satisfaction = 0.0; // range [0,1]
 			
-			// Record the encounter
-			mTrust.storeEncounter(ck, py, (int)satisfaction);
+			// No satisfaction if difference > 100%
+			if (difference > 1.0)
+				satisfaction = 0;
+			// Satisfaction is the inverse of % difference if 0% > difference > 100%
+			else if (difference >= 0 && difference <= 1.0)
+				satisfaction = 1 - difference;
+			
+			// Record encounter
+			this.storeEncounter(agent, appraisal.getEra().getName(), satisfaction);
 		}
 		
+		/**
+		 * Indicates that the frame has changed.
+		 */
 		public void frameReset()
 		{
-			// TODO: Evaluate implementation: requires changes to BayesTrust
-		}	
+			this.agentCertainties.clear();
+		}
+		
+		protected void storeEncounter(String agent, String context, double satisfaction)
+		{
+			Context ck = new Context(context);
+			Peer py = new Peer(agent);
+
+			// Record the encounter
+			mTrust.storeEncounter(ck, py, (double)satisfaction);
+		}
+		
+		/**
+		 * Creates a key for the hashmap.
+		 * @param agent Agent
+		 * @param era Era
+		 * @return Key string
+		 */
+		private String getAgentEraKey(String agent, Era era)
+		{
+			return agent + "." + era.getName();
+		}
 }

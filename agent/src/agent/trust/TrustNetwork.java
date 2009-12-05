@@ -13,7 +13,6 @@ public abstract class TrustNetwork {
 	protected CCMPAgent mAgent;
 	
 	public abstract void addAgent( String newAgent );
-	public abstract void removeAgent( String agent );
 	
 	/**
 	 * Constructor
@@ -26,9 +25,7 @@ public abstract class TrustNetwork {
 	}
 	
 	public abstract void frameReset();
-	public abstract void init();
-		
-	public abstract void setOurEraCertainty(Era era);
+	
 	public abstract void setAgentEraCertainty( String agent, Era era, double certainty);	
 
 	//handle a reputation response from an Agent about another Agent.

@@ -107,7 +107,6 @@ public abstract class CCMPAgent extends Agent {
 	    //within these classes.
 	    mLogger.warning("Initializing CCMPAgent");
         mDecisionTrees.init();
-        mTrustNetwork.init();
         
         //Add all the agents to the TN and DT.
         //Since we've got default trust values in TN, pass the values

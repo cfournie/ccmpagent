@@ -50,12 +50,6 @@ public class BayesTrustNetworkTest {
 		this.trustNetwork.addAgent(aboutAgent);
 		this.trustNetwork.addAgent(toAgent);
 	}
-	
-	@Test
-	public void testCrashInit() {
-		this.trustNetwork.init();
-	}
-	
 
 	@Test
 	public void testCrashaddAgent() {
@@ -103,18 +97,8 @@ public class BayesTrustNetworkTest {
 	}
 	
 	@Test
-	public void testCrashRemoveAgent() {
-		this.trustNetwork.removeAgent(agent);
-	}
-	
-	@Test
 	public void testCrashSetAgentEraCertainty() {
 		this.trustNetwork.setAgentEraCertainty(agent, era, certainty);
-	}
-	
-	@Test
-	public void testCrashSetOurEraCertainty() {
-		this.trustNetwork.setOurEraCertainty(era);
 	}
 	
 	@Test
