@@ -251,7 +251,6 @@ public abstract class CCMPAgent extends Agent {
     		{
 	        	for( Era era: eras )
 	        	{
-	        		mLogger.info("update trust values for="+name+" era="+era);
 	        		updateDecisionTreeTrustValues(name, era);
 	        	}
     		}
