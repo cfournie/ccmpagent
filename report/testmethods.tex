@@ -1,10 +1,40 @@
 \section{Test Methodologies}
-The CCMP Agent Framework was first tested by implementing the Simple Agent
-example provided.
+To test the behaviour and stability of the CCMP Agent framework and the
+associated decision tree and trust network implmentations several different test
+strategies were adopted.
 
-Agent was then tested by implementing an initial decision tree and tweaking it.
+\subsection{CCMP Agent Framework Testing}
+The CCMP Agent Framework was first tested by implementing the
+Simple Agent example provided in the ART testbed.  A SimpleDT and
+SimpleTrust implementation of the associated interface classes were created.
+The SimpleDT class implemented the decision methods using the same if conditions
+as the example agent.  The SimpleTrust class mererly provided trust values of
+1.0, the same as the example agent.  A SimpleCCMPAgent was then created that
+instantiates the SimpleDT and SimpleTrust classes.  The behaviour of the
+SimpleCCMPAgent was then compared to the behaviour of the example SimpleAgent
+to ensure the CCMP Agent Framework implemented the ART methods correctly.
+
+Logging to a file was also implemented in the CCMPAgent class.  The CCMPAgent
+class will print information on the messages received, decisions taken and the
+messages generated.  It also logs any negative actions taken by other agents.
+With the use of logging, the complete behaviour of the SimpleCCMPAgent and
+associated  could be examined to ensure the expected behaviour was being
+performed.
+
+\subsection{Weka Decision Tree Testing}
+The Weka Decision Tree implmentation was tested in two ways.  The first
+method was to create classes that would test the parsing of the XML confg
+file, which contains the Weka data, and to test the creation and execution of
+the Weka decision tree parsing.
+
+The second requirement for testing of the Weka Decision Tree was to ensure
+that the behaviour of the Weka decision trees generated from the Weka data
+provided in the XML config file was as expected.  To speed up the process of
+verifying the Weka decision trees a class was created to visualize the Weka
+decision trees.  The XML config file is parsed, Weka decision tree created and
+then displayed using the Weka visualization tools.
+
+\subsection{Bayes Trust Network Testing}
+The Bayes Trust Network was tested using JUnit testing.  JUnit tests
 
 
-Testing was an important part of the development process of the CCMP Agent. 
-Several different types of decision tree and trust network implementations were
-created
