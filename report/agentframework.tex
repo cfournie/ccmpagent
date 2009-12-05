@@ -36,29 +36,79 @@ incorperated into the CCMPAgent.
 \end{center}
 
 \subsection{Trust Network}
-The trust network is an abstract class used to represent the trust the agent
+The trust network is an interface class used to represent the trust the agent
 has for other players.  The interface class provides methods to update the
 trust values based on events in the sim, such as receiving new reputation
-information from other agents or negative actions by an agent.  At the end of
-each frame the resulting final appraisal and each agents opinion are also
-passed to the trust network as they could be used to update trust values.
-
-The trust network also allows for the representation of inferred trust, or the
-trust we believe an other agent has for us.  This value could be used by the
-decision tree to affect decisions and can be modelled both by asking the other
-agent about our reputation and by keeping track of our actions to the specific
-agent.  To this end several methods are provided that will tell the trust
-network about the actions the CCMPAgent has taken, such as not providing the
-requested information or modifying the appraisal value.
+information from other agents or negative actions taken by an agent.  During
+each of the ART agent methods the CCMPAgent class will parse the incoming
+messages to determine the actions of the other agents.  Based on these actions
+and the contents of the messages the CCMPAgent will call the apporpriate
+function in the Trust Network to update the trust values.  At the end of each
+frame the resulting final appraisal and each agents opinion are passed to the trust network 
+to update the trust value for the agent based on the results. The following
+functions are provided by the Trust Network to update the trust values:
 
 \begin{center}
-\begin{array}{cc}
-\includegraphics{images/TrustNetworkClasses.jpg} &
-\includegraphics{images/DTClasses.jpg}
-\end{array}
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{2}{|c|}{Reputation Updates} \\
+\hline
+receiveAgentReputationUpdate & updateAgentTrustFromFinalAppraisal \\
+\hline
+Actually provide a reputation response & Determine the reputation value to
+return \\ 
+\hline
+\multicolumn{2}{|c|}{Negative Actions} \\
+\hline
+agentDidNotAcceptReputationRequest & agentDidNotProvideReputation \\
+\hline
+agentDidNotProvideCertainty & agentDidNotProvideOpinion \\
+\hline
+agentDidNotAcceptCertainty & \\
+\hline
+\end{tabular}
 \end{center}
 
 \subsection{Decision Tree}
-Abstract class that provides direction to the agent on how to behave.  For each
-possible action (list actions) the DT has a function to provide direction to
-the main agent class.
+The decision tree interface class provides methods for the CCMP agent to
+determine what actions to perform.  There are a finite number of actions that
+an agent in the ART testbed can decide to perform:
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{2}{|c|}{Reputation} \\
+\hline
+Ask another agent for a reputation & Accept another agents reputation request \\
+\hline
+Actually provide a reputation response & Determine the reputation value to
+return \\ 
+\hline
+\multicolumn{2}{|c|}{Certainty} \\
+\hline
+Ask another agent for a certainty value & Accept another agents request for a
+certainty \\
+\hline
+Actually provide a certainty response & Determine the certainty value to return
+\\
+\hline
+\multicolumn{2}{|c|}{Opinions} \\
+\hline
+Ask another agent for an opinion & Accept another agents request for an
+opinion \\
+\hline
+Actually generate the opinion & Determine the amount to pay for an
+opinion \\
+\hline
+Modify the generated opinion & \\
+\hline
+\end{tabular}
+\end{center}
+
+As discussed above, during each of the ART agent methods the CCMPAgent class
+will update the Trust Network, based on other agent actions, and then pass hese
+updated values to the Decision Tree.  The CCMPAgent then calls the appropriate
+methods in the Decision Tree interface class to get the actions to take for the
+particular method.  The CCMPAgent will also tell the Decision Tree about
+the negative actions of other agents, such as not providing a reputation after
+payment, as this may affect the actions recommended by the actual
+implementation class of the decision tree used by the agent.  
