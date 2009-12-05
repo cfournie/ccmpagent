@@ -42,4 +42,11 @@ public class DirectExperienceSetTest {
 		
 		set.store(new Context("renaissance"), new Peer("picasso"), trust);
 	}
+
+	@Test(expected=PeerContextUnfoundException.class)
+	public void testRetrieveFail() throws Exception {
+		Context ck = new Context("modern");
+		Peer py = new Peer("newAgent");
+		set.retrieve(ck, py);
+	}
 }
