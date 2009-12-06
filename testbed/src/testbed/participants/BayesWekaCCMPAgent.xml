@@ -1,4 +1,4 @@
-<agentConfig typename="simple">
+<agentConfig typename="CCMPAgent">
    <classFile>../BayesWekaCCMPAgent.jar</classFile>
    <parameters>true</parameters>
 	<CCMPParams>
