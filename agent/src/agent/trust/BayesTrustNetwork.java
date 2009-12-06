@@ -21,15 +21,15 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public static final int TRUST_LEVELS = 5;
 		
 		/** Fully trustworthy */
-		public static final int TRUST_LEVEL_FULL = 4/TRUST_LEVELS;
+		public static final double TRUST_LEVEL_FULL = 4/TRUST_LEVELS;
 		/** Moderately trustworthy */
-		public static final int TRUST_LEVEL_MID = 3/TRUST_LEVELS;
+		public static final double TRUST_LEVEL_MID = 3/TRUST_LEVELS;
 		/** Moderately untrustworthy */
-		public static final int TRUST_LEVEL_MODERATE = 2/TRUST_LEVELS;
+		public static final double TRUST_LEVEL_MODERATE = 2/TRUST_LEVELS;
 		/** Untrustworthy */
-		public static final int TRUST_LEVEL_MID_UNTRUST = 1/TRUST_LEVELS;
+		public static final double TRUST_LEVEL_MID_UNTRUST = 1/TRUST_LEVELS;
 		/** Fully untrustworthy */
-		public static final int TRUST_LEVEL_FULL_UNTRUST = 0;
+		public static final double TRUST_LEVEL_FULL_UNTRUST = 0;
 		
 		/** B-trust framework */
 		protected BayesTrust mTrust;
