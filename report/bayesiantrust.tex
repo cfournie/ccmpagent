@@ -22,24 +22,25 @@ to the prior probabilities of the trust level.
 
 These pmfs are initialized to the uniform discrete distribution, which
 represents a lack of information about this peer's behaviour. After a few rounds
-of trust evolution, the mean $\mu_{\{d,r\}}$ of this pmf \ref{eqn:bayes_mean}
+of trust evolution, the mean $\mu_{\{d,r\}}$ of this pmf \eqref{eq:bayes_mean}
 is a single value representing our direct/recommended trust in a given peer,
-while the variance $\sigma^2_{\{d,r\}}$ of the pmf \ref{eqn:bayes_variance}
+while the variance $\sigma^2_{\{d,r\}}$ of the pmf \eqref{eq:bayes_variance}
 represents our confidence in this trust value. The uniform discrete distribution
-has the highest variance, while the degenerate distribution has the lowest, so
-we map this variance range into a confidence value on [0,1].
+has the highest variance $\sigma^2_U = \frac{n^2-1}{12}$, while the degenerate
+distribution has the lowest $\sigma^2_\delta = 0$, so we map this variance range
+into a confidence value on [0,1] using \eqref{eq:bayes_confidence}.
 
-\begin{figure}[h]
-\label{eqn:bayes_mean}
-\caption{bayes mean}
 \begin{equation}
+\label{eq:bayes_mean}
 \mu_{\{d,r\}} = \sum_{i=0}^{n-1}{i*{\{d,r\}}_i}
 \end{equation}
-\end{figure}
 
-\begin{figure}[h]
-\label{eqn:bayes_variance}
 \begin{equation}
+\label{eq:bayes_variance}
 \sigma^2_{\{d,r\}} = \sum_{i=0}^{n-1}{i^2*{\{d,r\}}_i} - \mu^2_{\{d,r\}}
 \end{equation}
-\end{figure}
+
+\begin{equation}
+\label{eq:bayes_confidence}
+c = 1 - \frac{\sigma^2_{\{d,r\}}}{\sigma^2_U}}
+\end{equation}
