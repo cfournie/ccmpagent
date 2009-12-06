@@ -18,6 +18,10 @@ public class WekaDT extends DecisionTree {
 	private Vector<Vector<String>> treeAtts;
 	private HashMap<String,String> strategy;
 	
+	private HashMap<String,Boolean> provideRep;
+	private HashMap<String,Boolean> provideCer;
+	private HashMap<String,Boolean> provideOpi;
+	
 	public enum DTLearningNames{
 		DT_ADJUSTAPPRAISAL,
 		DT_GENERATEOPINION,
@@ -43,6 +47,10 @@ public class WekaDT extends DecisionTree {
 		treeAtts = new Vector<Vector<String>>();
 		strategy = new HashMap<String,String>();
 		
+		provideRep = new HashMap<String,Boolean>();
+		provideCer = new HashMap<String,Boolean>();
+		provideOpi = new HashMap<String,Boolean>();
+		
 		for(DTLearning tree : treeCol)
 		{
 			Vector<String> atts = new Vector<String>();
@@ -65,6 +73,27 @@ public class WekaDT extends DecisionTree {
 			if(att.equals("strategy"))
 			{
 				test.append(strategy+",");
+			}
+			else if(att.equals("lastaction"))
+			{
+				Boolean lastaction;
+				switch (tree)
+				{
+				case DT_PROVIDECERTAINTY:
+					lastaction = provideCer.get(agent);
+					break;
+				case DT_PROVIDEOPINION:
+					lastaction = provideOpi.get(agent);
+					break;
+				case DT_PROVIDEREPUTATION:
+					lastaction = provideRep.get(agent);
+					break;
+				default:
+					lastaction = Boolean.TRUE;
+					break;
+				}
+				
+				test.append(lastaction.toString()+",");				
 			}
 			else if(att.equals("msgrem"))
 			{
@@ -504,6 +533,9 @@ public class WekaDT extends DecisionTree {
 	{
 		mReputations.put(newAgent, new Double(1.0));
 		strategy.put(newAgent, "NICE");
+		provideRep.put(newAgent, Boolean.TRUE);
+		provideCer.put(newAgent, Boolean.TRUE);
+		provideOpi.put(newAgent, Boolean.TRUE);
 	}
 	
 	/* (non-Javadoc)
@@ -535,9 +567,45 @@ public class WekaDT extends DecisionTree {
 		}		
 	}
 	
-	public void agentDidNotAcceptReputationRequest( String agent, Era era ) {}
-	public void agentDidNotProvideReputation( String agent, Era era ) {}
-	public void agentDidNotProvideCertainty( String agent, Era era) {}
-	public void agentDidNotProvideOpinion( String agent, Era era) {}
-	public void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue ) {}		
+	public void agentDidNotAcceptReputationRequest( String agent, Era era ) 
+	{
+		//benign		
+	}
+	public void agentDidNotProvideReputation( String agent, Era era ) 
+	{
+		provideRep.put(agent, Boolean.FALSE);
+	}
+	public void agentDidNotProvideCertainty( String agent, Era era)
+	{
+		provideCer.put(agent, Boolean.FALSE);
+	}
+	public void agentDidNotProvideOpinion( String agent, Era era) 
+	{
+		provideOpi.put(agent, Boolean.FALSE);	
+	}
+	public void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue ) 
+	{
+		//benign
+	}
+	
+	public void agentDidAcceptReputationRequest( String agent, Era era ) 
+	{
+		//benign	
+	}
+	public void agentDidProvideReputation( String agent, Era era ) 
+	{
+		provideRep.put(agent, Boolean.TRUE);
+	}
+	public void agentDidProvideCertainty( String agent, Era era)
+	{
+		provideCer.put(agent, Boolean.TRUE);
+	}
+	public void agentDidProvideOpinion( String agent, Era era) 
+	{
+		provideOpi.put(agent, Boolean.TRUE);	
+	}
+	public void agentDidAcceptCertainty( String agent, Era era, double certaintyValue ) 
+	{
+		//benign
+	}
 }

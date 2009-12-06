@@ -83,5 +83,10 @@ public abstract class DecisionTree {
 	public abstract void agentDidNotProvideReputation( String agent, Era era );
 	public abstract void agentDidNotProvideCertainty( String agent, Era era);
 	public abstract void agentDidNotProvideOpinion( String agent, Era era);
-	public abstract void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue );	
+	public abstract void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue );
+	public abstract void agentDidAcceptReputationRequest( String agent, Era era );
+	public abstract void agentDidProvideReputation( String agent, Era era );
+	public abstract void agentDidProvideCertainty( String agent, Era era);
+	public abstract void agentDidProvideOpinion( String agent, Era era);
+	public abstract void agentDidAcceptCertainty( String agent, Era era, double certaintyValue );	
 }

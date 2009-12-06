@@ -280,5 +280,11 @@ public class SimpleDT extends DecisionTree {
 	public void agentDidNotProvideReputation( String agent, Era era ) {}
 	public void agentDidNotProvideCertainty( String agent, Era era) {}
 	public void agentDidNotProvideOpinion( String agent, Era era) {}
-	public void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue ) {}		
+	public void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue ) {}
+	
+	public void agentDidAcceptReputationRequest( String agent, Era era ) {}
+	public void agentDidProvideReputation( String agent, Era era ) {}
+	public void agentDidProvideCertainty( String agent, Era era) {}
+	public void agentDidProvideOpinion( String agent, Era era) {}
+	public void agentDidAcceptCertainty( String agent, Era era, double certaintyValue ) {}	
 }

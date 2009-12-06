@@ -43,6 +43,7 @@ public class WekaDTTest {
 
 		// If you make changes here makes sure you update WekaDT.BuildTest
 		DTAttribute[] nonCatAtt = {new DTAttribute("strategy", "{NICE,REFLEX}"),
+								   new DTAttribute("lastaction", "{TRUE,FALSE}"),
 								   new DTAttribute("msgrem", "numeric"),
 								   new DTAttribute("certainty", "numeric"),
 				                   new DTAttribute("trust", "numeric")

@@ -222,21 +222,25 @@ public abstract class CCMPAgent extends Agent {
 		    		{
 		    			providedReputation = true;
 		    		}
-		    	}		    	
-		    	//We never got a reponse for our request/payment.
-		    	if( !providedReputation )
-		    	{
-		    		//We need to find the era associated with this request
-					for( ReputationRequestMsg requestMsg: mReputationsRequested )
+		    	}
+		    	//We need to find the era associated with this request
+				for( ReputationRequestMsg requestMsg: mReputationsRequested )
+				{
+					if( requestMsg.getTransactionID().equals(acceptMsg.getTransactionID()) )
 					{
-						if( requestMsg.getTransactionID().equals(acceptMsg.getTransactionID()) )
-						{
-							writeToLogFile("Agent did not accept reputation request agent="+acceptMsg.getSender()+" era="+requestMsg.getEra());
+						//We never got a reponse for our request/payment.
+				    	if( !providedReputation )
+				    	{
+				    		writeToLogFile("Agent did not accept reputation request agent="+acceptMsg.getSender()+" era="+requestMsg.getEra());
 							mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
-							mDecisionTrees.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
-						}
+							mDecisionTrees.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());
+				    	}
+				    	else
+				    	{
+				    		mDecisionTrees.agentDidAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());
+				    	}
 					}
-		    	}	    		
+				}
 	    	}
 	    }
 	    
@@ -345,6 +349,7 @@ public abstract class CCMPAgent extends Agent {
 	        }
 	        else
 	        {
+	        	mDecisionTrees.agentDidAcceptCertainty(previousCertaintyMsg.getReceiver(), previousCertaintyMsg.getEra(), previousCertaintyMsg.getCertainty());
 	        	numAccepted++;
 	        }
         }
@@ -498,6 +503,10 @@ public abstract class CCMPAgent extends Agent {
 				mTrustNetwork.agentDidNotProvideCertainty(requestMsg.getReceiver(), requestMsg.getEra());
 				mDecisionTrees.agentDidNotProvideCertainty(requestMsg.getReceiver(), requestMsg.getEra());
 			}
+			else
+			{
+				mDecisionTrees.agentDidProvideCertainty(requestMsg.getReceiver(), requestMsg.getEra());
+			}
 		}
 		
 		//From the received messages, update the certainty values.
@@ -625,21 +634,23 @@ public abstract class CCMPAgent extends Agent {
 		int numDeclined = 0;
 		for( ReputationAcceptOrDeclineMsg acceptMsg: mReputationRequestsAcceptedOrDeclined )
 		{
-			if( !acceptMsg.getAccept() )
+			for( ReputationRequestMsg requestMsg: mReputationsRequested )
 			{
-				for( ReputationRequestMsg requestMsg: mReputationsRequested )
+				if( requestMsg.getTransactionID().equals(acceptMsg.getTransactionID()) )
 				{
-					if( requestMsg.getTransactionID().equals(acceptMsg.getTransactionID()) )
+					if( !acceptMsg.getAccept() )
 					{
-        				writeToLogFile("agent declined rep request: from="+acceptMsg.getSender()+" about="+requestMsg.getAppraiserID()+" era="+requestMsg.getEra());
+						writeToLogFile("agent declined rep request: from="+acceptMsg.getSender()+" about="+requestMsg.getAppraiserID()+" era="+requestMsg.getEra());
 						mTrustNetwork.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
-						mDecisionTrees.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());						
+						mDecisionTrees.agentDidNotAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());
 					}
+					else
+					{
+						mDecisionTrees.agentDidAcceptReputationRequest(acceptMsg.getSender(), requestMsg.getEra());
+						numAccepted++;
+					}
+    										
 				}
-			}
-			else
-			{
-				numAccepted++;
 			}
 		}
 		writeToLogFile("num received replies="+mReputationRequestsAcceptedOrDeclined.size()+
@@ -813,6 +824,10 @@ public abstract class CCMPAgent extends Agent {
 							    +" era="+requestMsg.getAppraisalAssignment().getEra());
 					mTrustNetwork.agentDidNotProvideOpinion(requestMsg.getReceiver(), requestMsg.getAppraisalAssignment().getEra());
 					mDecisionTrees.agentDidNotProvideOpinion(requestMsg.getReceiver(), requestMsg.getAppraisalAssignment().getEra());
+				}
+				else
+				{
+					mDecisionTrees.agentDidProvideOpinion(requestMsg.getReceiver(), requestMsg.getAppraisalAssignment().getEra());
 				}
 			}
 			    	
