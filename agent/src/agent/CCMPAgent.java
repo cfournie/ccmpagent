@@ -903,6 +903,9 @@ public abstract class CCMPAgent extends Agent {
             mDigester = new Digester();            
             mDigester.push(mConfigInfo);            
             mDigester.addCallMethod("agentConfig/CCMPParams/log", "setLogging", 0); 
+            mDigester.addCallMethod("agentConfig/CCMPParams/trust/notcertainty", "setNotCertainty", 0);
+            mDigester.addCallMethod("agentConfig/CCMPParams/trust/notopinion", "setNotOpinion", 0);
+            mDigester.addCallMethod("agentConfig/CCMPParams/trust/notreputation", "setNotReputation", 0);            
             mDigester.parse(paramFile);            
         } catch (IOException e1) {
           System.out.println("File not found exception: " + paramFile);

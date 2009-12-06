@@ -3,6 +3,11 @@
    <parameters>true</parameters>
 	<CCMPParams>
 		<log>true</log>
+		<trust>
+			<notcertainty>0.2</notcertainty>
+			<notopinion>0.0</notopinion>
+			<notreputation>0.4</notreputation>
+		</trust>
 		<decisiontrees>
 		<dt name="AdjustAppraisal">
 			<attribute name="certainty" type="numeric" />

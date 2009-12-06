@@ -31,6 +31,11 @@ public class BayesTrustNetwork extends TrustNetwork {
 		/** Fully untrustworthy */
 		public static final double TRUST_LEVEL_FULL_UNTRUST = 0;
 		
+		/** Encounter Trust Values **/
+		private double trustDidNotProvideCertainty;
+		private double trustDidNotProvideOpinion;
+		private double trustDidNotProvideReputation;
+		
 		/** B-trust framework */
 		protected BayesTrust mTrust;
 		/** Era certainty */
@@ -48,12 +53,44 @@ public class BayesTrustNetwork extends TrustNetwork {
 			List<Context> contexts = new LinkedList<Context>();
 			this.agentCertainties = new HashMap<String,Double>();
 			
+			/** Set Default Values for Trust Encounters **/
+			trustDidNotProvideCertainty = TRUST_LEVEL_MID_UNTRUST;
+			trustDidNotProvideOpinion = TRUST_LEVEL_FULL_UNTRUST;
+			trustDidNotProvideReputation = TRUST_LEVEL_MODERATE;			
+			
 			for(Era era : mAgent.getEras()) {
 				Context c = new Context(era.getName());
 				contexts.add(c);
 			}
 			
 			mTrust = new BayesTrust(TRUST_LEVELS, contexts);
+		}
+		
+		/**
+		 * Set the Trust Value for not providing Certainty
+		 * @param trustDidNotProvideCertainty Double value from [0,1]
+		 */
+		public void setTrustDidNotProvideCertainty(double trustDidNotProvideCertainty)
+		{
+			this.trustDidNotProvideCertainty = trustDidNotProvideCertainty;
+		}
+		
+		/**
+		 * Set the Trust Value for not providing Opinion
+		 * @param trustDidNotProvideOpinion Double value from [0,1]
+		 */
+		public void setTrustDidNotProvideOpinion(double trustDidNotProvideOpinion)
+		{
+			this.trustDidNotProvideOpinion = trustDidNotProvideOpinion;
+		}
+		
+		/**
+		 * Set the Trust Value for not providing Reputation
+		 * @param trustDidNotProvideReputation Double value from [0,1]
+		 */
+		public void setTrustDidNotProvideReputation(double trustDidNotProvideReputation)
+		{
+			this.trustDidNotProvideReputation = trustDidNotProvideReputation;
 		}
 		
 		/**
@@ -91,11 +128,11 @@ public class BayesTrustNetwork extends TrustNetwork {
 		 * @param agent Agent
 		 * @param era Era
 		 * @see agent.trust.TrustInterface#agentDidNotProvideCertainty(java.lang.String, testbed.sim.Era)
-		 */
+		 */		
 		public void agentDidNotProvideCertainty(String agent, Era era)
 		{
 			// Record negative encounter
-			this.storeEncounter(agent, era.getName(), TRUST_LEVEL_MID_UNTRUST);
+			this.storeEncounter(agent, era.getName(), trustDidNotProvideCertainty);
 		}
 
 		/** Handler for DidNotProvideOpinion event.
@@ -106,7 +143,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void agentDidNotProvideOpinion(String agent, Era era)
 		{
 			// Record negative encounter
-			this.storeEncounter(agent, era.getName(), TRUST_LEVEL_FULL_UNTRUST);
+			this.storeEncounter(agent, era.getName(), trustDidNotProvideOpinion);
 		}
 
 		/** Handler for DidNotProvideReputation event.
@@ -117,7 +154,7 @@ public class BayesTrustNetwork extends TrustNetwork {
 		public void agentDidNotProvideReputation(String agent, Era era)
 		{
 			// Record negative encounter
-			this.storeEncounter(agent, era.getName(), TRUST_LEVEL_MODERATE);
+			this.storeEncounter(agent, era.getName(), trustDidNotProvideReputation);
 		}
 
 		/**

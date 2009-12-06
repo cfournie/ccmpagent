@@ -45,8 +45,21 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
     }
     
 	protected TrustNetwork createTrustNetwork()
-    {
-    	return new BayesTrustNetwork(this);
+    {		
+		BayesTrustNetwork temp = new BayesTrustNetwork(this);
+		if(mConfigInfo.setTrustDidNotProvideCertainty)
+		{
+			temp.setTrustDidNotProvideCertainty(mConfigInfo.trustDidNotProvideCertainty);
+		}
+		if(mConfigInfo.setTrustDidNotProvideOpinion)
+		{
+			temp.setTrustDidNotProvideOpinion(mConfigInfo.trustDidNotProvideOpinion);
+		}
+		if(mConfigInfo.setTrustDidNotProvideReputation)
+		{
+			temp.setTrustDidNotProvideReputation(mConfigInfo.trustDidNotProvideReputation);
+		}
+    	return temp;
     }
     
     protected void parseConfigFile( String paramFile )
@@ -57,18 +70,19 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
         {
             mDigester = new Digester();
             mDigester.setClassLoader(this.getClass().getClassLoader());
-            mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees", DTLearningCollection.class);
+            
+            mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees", DTLearningCollection.class);            
 			
-			mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees/dt", DTWekaARFF.class);
+			mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees/dt", DTWekaARFF.class);			
 			mDigester.addSetProperties("agentConfig/CCMPParams/decisiontrees/dt", "name", "name");
 			
-			mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees/dt/attribute", DTAttribute.class);
+			mDigester.addObjectCreate("agentConfig/CCMPParams/decisiontrees/dt/attribute", DTAttribute.class);			
 			mDigester.addSetProperties("agentConfig/CCMPParams/decisiontrees/dt/attribute", "name", "name");
 			mDigester.addSetProperties("agentConfig/CCMPParams/decisiontrees/dt/attribute", "type", "type");
 			mDigester.addSetNext("agentConfig/CCMPParams/decisiontrees/dt/attribute", "addAttribute");
 			mDigester.addBeanPropertySetter("agentConfig/CCMPParams/decisiontrees/dt/data", "data");
 			
-			mDigester.addSetNext("agentConfig/CCMPParams/decisiontrees/dt", "addDT");
+			mDigester.addSetNext("agentConfig/CCMPParams/decisiontrees/dt", "addDT");			
             
             parsedTrees = (DTLearningCollection)mDigester.parse(paramFile);
         } catch (IOException e1) {
@@ -78,5 +92,7 @@ public class BayesWekaCCMPAgent extends CCMPAgent {
           System.out.println("Error parsing file: " + paramFile);
           System.out.println(e2);
         }
+        
+        mDigester = new Digester();
     }
 }
