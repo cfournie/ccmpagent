@@ -18,9 +18,10 @@ public class WekaDT extends DecisionTree {
 	private Vector<Vector<String>> treeAtts;
 	private HashMap<String,String> strategy;
 	
-	private HashMap<String,Boolean> provideRep;
+	private HashMap<String,Boolean> provideRep;	
 	private HashMap<String,Boolean> provideCer;
 	private HashMap<String,Boolean> provideOpi;
+	private HashMap<String,Integer> notProvideCount;
 	
 	public enum DTLearningNames{
 		DT_ADJUSTAPPRAISAL,
@@ -51,6 +52,8 @@ public class WekaDT extends DecisionTree {
 		provideCer = new HashMap<String,Boolean>();
 		provideOpi = new HashMap<String,Boolean>();
 		
+		notProvideCount = new HashMap<String,Integer>();
+		
 		for(DTLearning tree : treeCol)
 		{
 			Vector<String> atts = new Vector<String>();
@@ -72,7 +75,7 @@ public class WekaDT extends DecisionTree {
 		{
 			if(att.equals("strategy"))
 			{
-				test.append(strategy+",");
+				test.append(strategy.get(agent)+",");
 			}
 			else if(att.equals("lastaction"))
 			{
@@ -93,7 +96,7 @@ public class WekaDT extends DecisionTree {
 					break;
 				}
 				
-				test.append(lastaction.toString()+",");				
+				test.append(lastaction.toString().toUpperCase()+",");				
 			}
 			else if(att.equals("msgrem"))
 			{
@@ -113,13 +116,20 @@ public class WekaDT extends DecisionTree {
 			}
 			else if(att.equals("certainty"))
 			{
-				if(ourCertainty)
+				try
 				{
-					test.append(Double.toString(mAgent.getEraCertainty(era)));
+					if(ourCertainty)
+					{
+						test.append(Double.toString(mAgent.getEraCertainty(era)));
+					}
+					else
+					{
+						test.append(Double.toString(mCertainties.get(agent).get(era)));						
+					}
 				}
-				else
-				{
-					test.append(Double.toString(mCertainties.get(agent).get(era)));
+				catch(NullPointerException e) {
+					// If no certainty... put zero
+					test.append("0.0");
 				}
 				test.append(",");
 			}
@@ -319,7 +329,7 @@ public class WekaDT extends DecisionTree {
 			String aboutAgent, Era era)
 	{
 		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEREPUTATION, requestingAgent, era, true, null);
-		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEREPUTATION.ordinal()).DTClassify(dtTest);
+		String result = dtreeCol.get(DTLearningNames.DT_PROVIDEREPUTATION.ordinal()).DTClassify(dtTest);	    
 		mAgent.writeToLogFile("Test:"+dtTest+"Result:"+result);
 		
 		if(result.equals("DO"))
@@ -536,6 +546,7 @@ public class WekaDT extends DecisionTree {
 		provideRep.put(newAgent, Boolean.TRUE);
 		provideCer.put(newAgent, Boolean.TRUE);
 		provideOpi.put(newAgent, Boolean.TRUE);
+		notProvideCount.put(newAgent, Integer.valueOf(0));
 	}
 	
 	/* (non-Javadoc)
@@ -573,14 +584,35 @@ public class WekaDT extends DecisionTree {
 	}
 	public void agentDidNotProvideReputation( String agent, Era era ) 
 	{
+		Integer notProvideCnt = notProvideCount.get(agent);
+		notProvideCnt++;
+		if(notProvideCnt>1) // Every agent gets one chance to reneg
+		{
+			strategy.put(agent, "REFLEX");
+		}
+		notProvideCount.put(agent, notProvideCnt);
 		provideRep.put(agent, Boolean.FALSE);
 	}
 	public void agentDidNotProvideCertainty( String agent, Era era)
 	{
+		Integer notProvideCnt = notProvideCount.get(agent);
+		notProvideCnt++;
+		if(notProvideCnt>1) // Every agent gets one chance to reneg
+		{
+			strategy.put(agent, "REFLEX");
+		}
+		notProvideCount.put(agent, notProvideCnt);
 		provideCer.put(agent, Boolean.FALSE);
 	}
 	public void agentDidNotProvideOpinion( String agent, Era era) 
 	{
+		Integer notProvideCnt = notProvideCount.get(agent);
+		notProvideCnt++;
+		if(notProvideCnt>1) // Every agent gets one chance to reneg
+		{
+			strategy.put(agent, "REFLEX");
+		}
+		notProvideCount.put(agent, notProvideCnt);
 		provideOpi.put(agent, Boolean.FALSE);	
 	}
 	public void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue ) 

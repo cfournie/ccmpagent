@@ -9,6 +9,7 @@ public class WekaDTTest {
 	
 	public enum ENonCatAtt {
 		STRATEGY,
+		LASTACTION,
 		MSGREM,
 		CERTAINTY,
 		TRUST
@@ -18,18 +19,18 @@ public class WekaDTTest {
 	{
 		StringBuffer xml = new StringBuffer();
 		
-		xml.append("\t\t<dt name=\""+name+"\">\n");
+		xml.append("\t\t\t<dt name=\""+name+"\">\n");
 		for(DTAttribute dtAtt : arrAtt)
 		{
-			xml.append("\t\t\t<attribute name=\""+dtAtt.name+"\" type=\""+dtAtt.type+"\" />\n");
+			xml.append("\t\t\t\t<attribute name=\""+dtAtt.name+"\" type=\""+dtAtt.type+"\" />\n");
 		}
-		xml.append("\t\t\t<data>\n");
+		xml.append("\t\t\t\t<data>\n");
 		for(String str : arrData)
 		{
-			xml.append("\t\t\t\t"+str+"\n");
+			xml.append("\t\t\t\t\t"+str+"\n");
 		}
-		xml.append("\t\t\t</data>\n");
-		xml.append("\t\t</dt>\n");
+		xml.append("\t\t\t\t</data>\n");
+		xml.append("\t\t\t</dt>\n");
 		
 		return xml.toString();
 	}
@@ -39,9 +40,9 @@ public class WekaDTTest {
 	 */	
 	public static void main(String[] args) {
 		StringBuffer xml = new StringBuffer();		
-		xml.append("\t<decisiontrees>\n");
+		xml.append("\t\t<decisiontrees>\n");
 
-		// If you make changes here makes sure you update WekaDT.BuildTest
+		// If you make changes here makes sure you update WekaDT.BuildTest AND the ENonCat Enum above
 		DTAttribute[] nonCatAtt = {new DTAttribute("strategy", "{NICE,REFLEX}"),
 								   new DTAttribute("lastaction", "{TRUE,FALSE}"),
 								   new DTAttribute("msgrem", "numeric"),
@@ -104,8 +105,7 @@ public class WekaDTTest {
 								"0.5,0.7,DO",
 								"0.5,0.5,DO",
 								"0.5,0.3,DONT",
-								"0.3,0.7,DONT"
-				
+								"0.3,0.7,DONT"				
 		};
 		
 		try{
@@ -180,14 +180,19 @@ public class WekaDTTest {
 		}
 		
 		// Provide Certainty
-		DTAttribute[] proCer = {nonCatAtt[ENonCatAtt.TRUST.ordinal()],
+		DTAttribute[] proCer = {nonCatAtt[ENonCatAtt.STRATEGY.ordinal()],
+								nonCatAtt[ENonCatAtt.LASTACTION.ordinal()],
 								catAtt[DTLearningNames.DT_PROVIDECERTAINTY.ordinal()]
 		};
 		
-		String[] proCerData = { "0.7,DO",
-								"0.3,DONT",
-								"0.4,DONT",
-								"0.5,DO"
+		String[] proCerData = { "REFLEX,FALSE,DONT",
+								"REFLEX,FALSE,DONT",
+								"REFLEX,TRUE,DO",
+								"REFLEX,TRUE,DO",
+								"NICE,FALSE,DO",
+								"NICE,FALSE,DO",
+								"NICE,TRUE,DO",
+								"NICE,TRUE,DO"
 		};
 		
 		try{
@@ -200,14 +205,19 @@ public class WekaDTTest {
 		}
 		
 		// Provide Opinion
-		DTAttribute[] proOpi = {nonCatAtt[ENonCatAtt.TRUST.ordinal()],
-								catAtt[DTLearningNames.DT_PROVIDEOPINION.ordinal()]
+		DTAttribute[] proOpi = {nonCatAtt[ENonCatAtt.STRATEGY.ordinal()],
+								nonCatAtt[ENonCatAtt.LASTACTION.ordinal()],
+								catAtt[DTLearningNames.DT_PROVIDECERTAINTY.ordinal()]
 		};
 		
-		String[] proOpiData = { "0.7,DO",
-								"0.3,DONT",
-								"0.4,DONT",
-								"0.5,DO"
+		String[] proOpiData = { "REFLEX,FALSE,DONT",
+								"REFLEX,FALSE,DONT",
+								"REFLEX,TRUE,DO",
+								"REFLEX,TRUE,DO",
+								"NICE,FALSE,DO",
+								"NICE,FALSE,DO",
+								"NICE,TRUE,DO",
+								"NICE,TRUE,DO"
 		};
 		
 		try{
@@ -220,14 +230,19 @@ public class WekaDTTest {
 		}
 		
 		// Provide Reputation
-		DTAttribute[] proRep = {nonCatAtt[ENonCatAtt.TRUST.ordinal()],
-								catAtt[DTLearningNames.DT_PROVIDEREPUTATION.ordinal()]
+		DTAttribute[] proRep = {nonCatAtt[ENonCatAtt.STRATEGY.ordinal()],
+								nonCatAtt[ENonCatAtt.LASTACTION.ordinal()],
+								catAtt[DTLearningNames.DT_PROVIDECERTAINTY.ordinal()]
 		};
 		
-		String[] proRepData = { "0.7,DO",
-								"0.3,DONT",
-								"0.4,DONT",
-								"0.5,DO"
+		String[] proRepData = { "REFLEX,FALSE,DONT",
+								"REFLEX,FALSE,DONT",
+								"REFLEX,TRUE,DO",
+								"REFLEX,TRUE,DO",
+								"NICE,FALSE,DO",
+								"NICE,FALSE,DO",
+								"NICE,TRUE,DO",
+								"NICE,TRUE,DO"
 		};
 		
 		try{
@@ -240,14 +255,26 @@ public class WekaDTTest {
 		}
 		
 		// Request Certainty
-		DTAttribute[] reqCer = {nonCatAtt[ENonCatAtt.TRUST.ordinal()],
-								catAtt[DTLearningNames.DT_REQUESTCERTAINTY.ordinal()]
-		};
+		DTAttribute[] reqCer = {nonCatAtt[ENonCatAtt.MSGREM.ordinal()],
+								nonCatAtt[ENonCatAtt.CERTAINTY.ordinal()],
+								nonCatAtt[ENonCatAtt.TRUST.ordinal()], 
+								catAtt[DTLearningNames.DT_GENERATEOPINION.ordinal()]};
 		
-		String[] reqCerData = { "0.7,DO",
-								"0.3,DONT",
-								"0.4,DONT",
-								"0.5,DO"
+		String[] reqCerData = { "0,0.7,0.7,DONT",
+								"0,0.5,0.3,DONT",
+								"0,0.3,0.7,DONT",
+								"0,0.7,0.5,DONT",
+								"0,0.3,0.3,DONT",
+								"3,0.7,0.7,DO",
+								"3,0.7,0.5,DO",
+								"3,0.7,0.3,DONT",
+								"5,0.5,0.7,DO",
+								"5,0.5,0.5,DO",
+								"3,0.5,0.7,DONT",
+								"3,0.5,0.5,DONT",
+								"?,0.5,0.3,DONT",
+								"?,0.3,0.7,DONT"
+				
 		};
 		
 		try{
@@ -260,14 +287,19 @@ public class WekaDTTest {
 		}
 		
 		// Request Opinion
-		DTAttribute[] reqOpi = {nonCatAtt[ENonCatAtt.TRUST.ordinal()],
-								catAtt[DTLearningNames.DT_REQUESTOPINION.ordinal()]
-		};
-		
-		String[] reqOpiData = { "0.7,DO",
-								"0.3,DONT",
-								"0.4,DONT",
-								"0.5,DO"
+		DTAttribute[] reqOpi = {nonCatAtt[ENonCatAtt.MSGREM.ordinal()],
+								nonCatAtt[ENonCatAtt.TRUST.ordinal()], 
+								catAtt[DTLearningNames.DT_GENERATEOPINION.ordinal()]};
+
+		String[] reqOpiData = { "0,0.7,DONT",
+								"0,0.5,DONT",
+								"0,0.3,DONT",
+								"3,0.7,DO",
+								"5,0.5,DO",
+								"5,0.5,DO",
+								"3,0.5,DONT",
+								"5,0.3,DONT",
+								"3,0.3,DONT"
 		};
 		
 		try{
@@ -356,7 +388,7 @@ public class WekaDTTest {
 			xml.append(write2xml("ProvideWeight!!ERROR!!", proWgt, proWgtData));
 		}		
 		
-		xml.append("\t</decisiontrees>");
+		xml.append("\t\t</decisiontrees>");
 		
 		System.out.println(xml.toString());
 		
