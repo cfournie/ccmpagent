@@ -9,10 +9,12 @@ of non-categorical test.  Also, there was a need to view the resulting tree for 
 In order to increase the reusability of the decision tree library, classes were created that 
 reproduce the components of the Weka Attribute-Relation File Format (ARFF) instead of merely
 storing the contents of an ARFF file.  These classes are of this decision tree library, dtlib, 
-are described in the following table.
+are described in the following Table~\ref{table:attribs}.
 
-\begin{center}
-\begin{tabular}{|l|p{5in|}
+\begin{table}[h]
+\label{table:attribs}
+\centering
+\begin{tabular}{|l|p{5in}|}
 \hline
 DTAttribute &
 Contains two strings representing the name of the attribute and its type.
@@ -33,10 +35,10 @@ represents the enumerated string specified in the type of the categorical attrib
 used to parse the type string and then the appropriate string is returned.  \\
 \hline
 DTLearningCollection &
-Extends Vector to only contain DTLearning objects.
+Extends Vector to only contain DTLearning objects.\\
 \hline
 \end{tabular}
-\end{center}
+\end{table}
 
 \subsection{XML declaration}
 
@@ -62,8 +64,8 @@ will return the proper value.
 
 \subsection{Example}
 
-*** figure *** shows a flow chart of how a decision tree is built from an XML file along with a sample
-test and classified return value.
+Figure~\ref{} shows a flow chart of how a decision tree is built from an XML file
+along with a sample test and classified return value.
 
 \subsection{Testing and Development of Decision Trees}
 Testing was accomplished by first developing a method that opened a Java window and used the Weka
