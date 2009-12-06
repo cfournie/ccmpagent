@@ -82,7 +82,7 @@ public class DTLearning {
 	{		
 		try {
 			final javax.swing.JFrame jf = 
-				new javax.swing.JFrame("Weka Classifier Tree Viusualizer");
+				new javax.swing.JFrame("Weka Classifier Tree Visualizer - "+arff.name);
 			jf.setSize(500,400);
 			jf.getContentPane().setLayout(new BorderLayout());
 			TreeVisualizer tv;
