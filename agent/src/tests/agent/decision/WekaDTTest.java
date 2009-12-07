@@ -1,4 +1,4 @@
-package tests;
+package tests.agent.decision;
 
 import agent.BayesWekaCCMPAgent;
 import agent.decision.WekaDT;

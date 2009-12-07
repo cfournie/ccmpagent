@@ -1,7 +1,7 @@
 /**
  * 
  */
-package tests;
+package tests.agent;
 
 import static org.junit.Assert.*;
 
