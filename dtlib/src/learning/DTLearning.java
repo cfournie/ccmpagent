@@ -12,14 +12,21 @@ import weka.classifiers.trees.J48;
 import weka.gui.treevisualizer.*;
 
 /**
- * @author pdinniss
- *
+ * Class that contructs the Weka J48 decision tree and Classifies Tests.
+ * 
+ * @author Pierre Dinnissen
  */
 
 public class DTLearning {
+	/** Weka J48 tree **/
 	J48 tree;
+	/** Instance of the ARFF file representation **/
 	public DTWekaARFF arff;
 	
+	/**
+	 * Constructor
+	 * @param DTWekaARFF that the tree is to be built from.
+	 */
 	public DTLearning(DTWekaARFF Data)
 	{
 		Instances data;
@@ -41,6 +48,10 @@ public class DTLearning {
 		}		
 	}
 	
+	/**
+	 * Helper function that will convert the test into a proper Weka ARFF format
+	 * @param String nonCatTest is a comma separated test
+	 */
 	private String BuildTest(String nonCatTest)
 	{
 		StringBuffer acc = new StringBuffer();
@@ -56,6 +67,11 @@ public class DTLearning {
 		return acc.toString();
 	}
 	
+	/**
+	 * Classifies a test.
+	 * @return Returns the action to be taken based on the given test
+	 * @param String nonCatTest is a comma separated test
+	 */
 	public String DTClassify(String nonCatTest)
 	{
 		String retVal = null;	
@@ -78,6 +94,9 @@ public class DTLearning {
 		return retVal;
 	}
 	
+	/**
+	 * Opens a Java window and shows a visual representation of the built tree
+	 */
 	public void Visualize()
 	{		
 		try {

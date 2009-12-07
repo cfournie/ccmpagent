@@ -2,9 +2,15 @@ package test;
 
 import learning.*;
 
+/**
+ * Small test of the dtlib classes
+ * 
+ * @author Pierre Dinnissen
+ */
 public class test_dtlib {
 
 	/**
+	 * Creates tree from DT elements and classifies one test and outputs it to console
 	 * @param args
 	 */
 	public static void main(String[] args) {
