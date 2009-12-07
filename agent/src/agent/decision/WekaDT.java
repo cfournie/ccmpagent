@@ -11,18 +11,33 @@ import agent.CCMPAgent;
 
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Era;
+import trust.model.exceptions.DuplicatePeerException;
 
+/**
+ * Weka Based Decision Tree class
+ * 
+ * @author Pierre Dinnissen
+ */
 public class WekaDT extends DecisionTree {
 	
+	/** Collection of Weka decision trees **/
 	public DTLearningCollection dtreeCol;
+	/** Vector that allows quick access to a DTLearning's name of Attributes **/
 	private Vector<Vector<String>> treeAtts;
+	
+	/** Map of which strategy should be employed for each other Agent **/
 	private HashMap<String,String> strategy;
 	
-	private HashMap<String,Boolean> provideRep;	
+	/** Map of last action from an agent in terms of providing Reputation **/
+	private HashMap<String,Boolean> provideRep;
+	/** Map of last action from an agent in terms of providing Certainty **/
 	private HashMap<String,Boolean> provideCer;
+	/** Map of last action from an agent in terms of providing Opinion **/
 	private HashMap<String,Boolean> provideOpi;
+	/** Map of how many times an agent how not provided once promised **/
 	private HashMap<String,Integer> notProvideCount;
 	
+	/** Enums of all the decision trees **/
 	public enum DTLearningNames{
 		DT_ADJUSTAPPRAISAL,
 		DT_GENERATEOPINION,
@@ -41,6 +56,11 @@ public class WekaDT extends DecisionTree {
 		DT_NUMDT
 	}	
 		
+	/**
+	 * Constructor
+	 * @param Reference to the CCMP agent
+	 * @param DTLearningCollection of all the decision trees
+	 */
 	public WekaDT(CCMPAgent agent, DTLearningCollection treeCol)
 	{
 		super(agent);
@@ -57,6 +77,7 @@ public class WekaDT extends DecisionTree {
 		for(DTLearning tree : treeCol)
 		{
 			Vector<String> atts = new Vector<String>();
+			// Get the attributes of all the trees
 			for(DTAttribute att : tree.arff.attributes)
 			{
 				atts.add(att.name);
@@ -65,12 +86,23 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 	
+	/**
+	 * Helper function that will builds a test
+	 * @return Comma separated string test
+	 * @param Enum for the tree that is to be queried
+	 * @param Agent that this query regards to
+	 * @param Era in which this query regards to
+	 * @param boolean as to whether certainty is for this agent or other agent
+	 * @param art piece to be appraised
+	 */
 	private String BuildTest(DTLearningNames tree, 
 							 String agent, Era era, boolean ourCertainty,
 							 AppraisalAssignment art)
 	{
 		StringBuffer test = new StringBuffer();
 		
+		// Go through the attributes and retrieve the appropriate value and
+		// append it to the test
 		for(String att : treeAtts.get(tree.ordinal()))
 		{
 			if(att.equals("strategy"))
@@ -147,8 +179,11 @@ public class WekaDT extends DecisionTree {
 	}
 	
 	
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#adjustAppraisalValue(java.lang.String, testbed.sim.Era, int)
+	/** Adjust the determined appraisal value
+	 * @param toAgent is the agent that this appraisal is for
+	 * @param era in which the appraisal is
+	 * @param appraisal integer value
+	 * @return adjusted appraisal value
 	 */
 	public int adjustAppraisalValue(String toAgent, Era era, int appraisal) {
 		String dtTest = BuildTest(DTLearningNames.DT_ADJUSTAPPRAISAL, toAgent, era, true, null);			
@@ -173,8 +208,10 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#generateOpinion(java.lang.String, testbed.sim.Era)
+	/** Whether or not to generate an opinion
+	 * @param requestingAgent is the agent that the opinion is for
+	 * @param era in question
+	 * @return boolean decision
 	 */
 	public boolean generateOpinion(String requestingAgent, Era era) {
 		String dtTest = BuildTest(DTLearningNames.DT_GENERATEOPINION, requestingAgent, era, true, null);	
@@ -195,8 +232,10 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#getAppraisalCost(java.lang.String, testbed.sim.Era)
+	/** How much to spend on the Appraisal
+	 * @param requestingAgent
+	 * @param era in question
+	 * @return double value of the appraisal
 	 */
 	public double getAppraisalCost(String requestingAgent, Era era)
 	{
@@ -222,12 +261,13 @@ public class WekaDT extends DecisionTree {
 		}
     }
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#getCertaintyRequestValue(java.lang.String, testbed.sim.Era)
+	/** How certain the CCMP agent is in a particular era
+	 * @param agent requesting
+	 * @param era in question
+	 * @return double value of the expertise of the CCMP agent
 	 */
 	public double getCertaintyRequestValue(String agent, Era era)
 	{
-		// SimpleDT responds with the agents true expertise value
         String eraName = era.getName();
         double myExpertise = mAgent.getExpertise(eraName);
         
@@ -249,8 +289,11 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#getReputationRequestValue(java.lang.String, java.lang.String, testbed.sim.Era)
+	/** Retrieve reputation of another agent for another agent
+	 * @param requestingAgent
+	 * @param aboutAgent is the agent whose reputation is requested for
+	 * @param era in question
+	 * @return boolean decision
 	 */
 	public double getReputationRequestValue(String requestingAgent,
 			String aboutAgent, Era era)
@@ -276,8 +319,10 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#provideCertaintyRequest(java.lang.String, testbed.sim.Era)
+	/** Whether or not to provide a Certainty
+	 * @param agent requesting
+	 * @param era in question
+	 * @return boolean decision
 	 */
 	public boolean provideCertaintyReply(String agent, Era era)
 	{
@@ -299,8 +344,10 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#provideOpinion(java.lang.String, testbed.sim.Era)
+	/** Whether or not to provide a Opinion
+	 * @param agent requesting
+	 * @param era in question
+	 * @return boolean decision
 	 */
 	public boolean provideOpinion(String requestionAgent, Era era)
 	{
@@ -322,8 +369,10 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#provideReputationReply(java.lang.String, java.lang.String, testbed.sim.Era)
+	/** Whether or not to provide a Reputation
+	 * @param agent requesting
+	 * @param era in question
+	 * @return boolean decision
 	 */
 	public boolean provideReputationReply(String requestingAgent,
 			String aboutAgent, Era era)
@@ -346,8 +395,10 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#requestAgentCertainty(java.lang.String, testbed.sim.Era)
+	/** Decide whether to request to an agent about their certainty
+	 * @param toAgent agent to ask
+	 * @param era in question
+	 * @return boolean decision
 	 */
 	public boolean requestAgentCertainty(String toAgent, Era era)
 	{
@@ -369,8 +420,10 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#requestAgentOpinion(java.lang.String, testbed.sim.AppraisalAssignment)
+	/** Decide whether to request to an agent for their opinion
+	 * @param toAgent agent to ask
+	 * @param art in question
+	 * @return boolean decision
 	 */
 	public boolean requestAgentOpinion(String toAgent, AppraisalAssignment art)
 	{
@@ -392,8 +445,12 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#requestAgentReputationUpdate(java.lang.String, java.lang.String, testbed.sim.Era, int)
+	/** Decide whether to request to an agent about another agent's reputation
+	 * @param toAgent agent to ask
+	 * @param aboutAgent
+	 * @param era in question
+	 * @param current time step of the simulation
+	 * @return boolean decision
 	 */
 	public boolean requestAgentReputationUpdate(String toAgent,
 			String aboutAgent, Era era, int currentTimestep)
@@ -416,8 +473,10 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#respondToCertaintyRequest(java.lang.String, testbed.sim.Era)
+	/** Decide whether to respond to another agents certainty request
+	 * @param agent agent to ask
+	 * @param era in question
+	 * @return boolean decision
 	 */
 	public boolean respondToCertaintyRequest(String agent, Era era)
 	{
@@ -439,8 +498,11 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#respondToReputationRequest(java.lang.String, java.lang.String, testbed.sim.Era)
+	/** Decide whether to respond to another agents reputation request about another agent
+	 * @param agent agent to ask
+	 * @param aboutAgent
+	 * @param era in question
+	 * @return boolean decision
 	 */
 	public boolean respondToReputationRequest(String requestingAgent,
 			String aboutAgent, Era era)
@@ -463,16 +525,18 @@ public class WekaDT extends DecisionTree {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#sentCertaintyRequest(java.lang.String, testbed.sim.Era)
+	/** Adjust the number of certainty requests left
+	 * @param agent agent to ask
+	 * @param era in question
 	 */
 	public void sentCertaintyRequest(String toAgent, Era era)
 	{
 		mNumCertaintyRequestsLeft--;
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.learning.LearningInterface#sentOpinionRequest(java.lang.String, testbed.sim.AppraisalAssignment)
+	/** Adjust the number of opinion requests left
+	 * @param agent agent to ask
+	 * @param era in question
 	 */
 	public void sentOpinionRequest(String toAgent, AppraisalAssignment art)
 	{
@@ -489,8 +553,10 @@ public class WekaDT extends DecisionTree {
 		// No need to implement
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.decision.DecisionTree#setAgentEraCertainty(java.lang.String, testbed.sim.Era, double)
+	/** store an agents era certainty
+	 * @param agent agent to ask
+	 * @param era in question
+	 * @param certainty value
 	 */
 	public void setAgentEraCertainty(String agent, Era era, double certainty)
 	{
@@ -502,16 +568,17 @@ public class WekaDT extends DecisionTree {
         agCert.put(era, certainty);
 	}
 
-	/* (non-Javadoc)
-	 * @see agent.decision.DecisionTree#setAgentTrust(java.lang.String, testbed.sim.Era, double)
+	/** store the reputation of another agent
+	 * @param agent agent to ask
+	 * @param era in question
+	 * @param trust value
 	 */
 	public void setAgentTrust(String agent, Era era, double trust)
 	{
 		mReputations.put(agent, trust);
 	}
 	
-	/* (non-Javadoc)
-	 * @see agent.decision.DecisionTree#initTrustNetwork()
+	/** Initialize simulation storage variables
 	 */
 	public void init()
 	{
@@ -523,8 +590,7 @@ public class WekaDT extends DecisionTree {
 		mNumOpinionRequestsLeft.clear();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agent.decision.DecisionTree#frameReset()
+	/** Reset simulation storage variables after every frame
 	 */
 	public void frameReset()
 	{
@@ -536,9 +602,9 @@ public class WekaDT extends DecisionTree {
 		}
 	}	
 
-	/* (non-Javadoc)
-	 * @see agent.decision.DecisionTree#addAgent()
-	 */	
+	/** Add space in every storage variable for a competitor agent
+	 * @param newAgent
+	 */
 	public void addAgent( String newAgent )
 	{
 		mReputations.put(newAgent, new Double(1.0));
@@ -558,6 +624,10 @@ public class WekaDT extends DecisionTree {
 		strategy.remove(agent);
 	}	
 	
+	/** Whether to provide Weight to the sim
+	 * @param aboutAgent
+	 * @param era in question
+	 */
 	public boolean provideWeight( String aboutAgent, Era era )
 	{
 		String dtTest = BuildTest(DTLearningNames.DT_PROVIDEWEIGHT, aboutAgent, era, true, null);
@@ -577,11 +647,16 @@ public class WekaDT extends DecisionTree {
 			return true;
 		}		
 	}
-	
+		
 	public void agentDidNotAcceptReputationRequest( String agent, Era era ) 
 	{
-		//benign		
+		//benign encounter		
 	}
+	
+	/** Store that an agent did not provide reputation
+	 * @param agent
+	 * @param era in question
+	 */
 	public void agentDidNotProvideReputation( String agent, Era era ) 
 	{
 		Integer notProvideCnt = notProvideCount.get(agent);
@@ -593,6 +668,11 @@ public class WekaDT extends DecisionTree {
 		notProvideCount.put(agent, notProvideCnt);
 		provideRep.put(agent, Boolean.FALSE);
 	}
+	
+	/** Store that an agent did not provide certainty
+	 * @param agent
+	 * @param era in question
+	 */
 	public void agentDidNotProvideCertainty( String agent, Era era)
 	{
 		Integer notProvideCnt = notProvideCount.get(agent);
@@ -604,6 +684,11 @@ public class WekaDT extends DecisionTree {
 		notProvideCount.put(agent, notProvideCnt);
 		provideCer.put(agent, Boolean.FALSE);
 	}
+	
+	/** Store that an agent did not provide opinion
+	 * @param agent
+	 * @param era in question
+	 */
 	public void agentDidNotProvideOpinion( String agent, Era era) 
 	{
 		Integer notProvideCnt = notProvideCount.get(agent);
@@ -617,27 +702,43 @@ public class WekaDT extends DecisionTree {
 	}
 	public void agentDidNotAcceptCertainty( String agent, Era era, double certaintyValue ) 
 	{
-		//benign
+		//benign encounter
 	}
 	
 	public void agentDidAcceptReputationRequest( String agent, Era era ) 
 	{
-		//benign	
+		//benign encounter	
 	}
+	
+	/** Store that an agent did provide reputation
+	 * @param agent
+	 * @param era in question
+	 */
 	public void agentDidProvideReputation( String agent, Era era ) 
 	{
 		provideRep.put(agent, Boolean.TRUE);
 	}
+	
+	/** Store that an agent did provide certainty
+	 * @param agent
+	 * @param era in question
+	 */
 	public void agentDidProvideCertainty( String agent, Era era)
 	{
 		provideCer.put(agent, Boolean.TRUE);
 	}
+	
+	/** Store that an agent did provide opinion
+	 * @param agent
+	 * @param era in question
+	 */
 	public void agentDidProvideOpinion( String agent, Era era) 
 	{
 		provideOpi.put(agent, Boolean.TRUE);	
 	}
+	
 	public void agentDidAcceptCertainty( String agent, Era era, double certaintyValue ) 
 	{
-		//benign
+		//benign encounter
 	}
 }

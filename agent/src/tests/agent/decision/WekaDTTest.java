@@ -5,8 +5,14 @@ import agent.decision.WekaDT;
 import agent.decision.WekaDT.DTLearningNames;
 import learning.*;
 
+/**
+ * WekaDT tests and WekaDT designer
+ * 
+ * @author Pierre Dinnissen
+ */
 public class WekaDTTest {
 	
+	/** Enum of all available non-categorical attributes **/
 	public enum ENonCatAtt {
 		STRATEGY,
 		LASTACTION,
@@ -15,6 +21,12 @@ public class WekaDTTest {
 		TRUST
 	}
 	
+	/**
+	 * Helper function that will write the XML for a decision tree
+	 * @param name of the decision tree
+	 * @param DTAttribute array
+	 * @param arrData of all the training data
+	 */
 	public static String write2xml(String name, DTAttribute[] arrAtt, String[] arrData)
 	{
 		StringBuffer xml = new StringBuffer();
@@ -390,8 +402,10 @@ public class WekaDTTest {
 		
 		xml.append("\t\t</decisiontrees>");
 		
+		// Output the XML to console so that it can be copied, if desired, to a config file
 		System.out.println(xml.toString());
 		
+		// Test the XML parsing built xml
 		BayesWekaCCMPAgent test = new BayesWekaCCMPAgent("../testbed/src/testbed/participants/bayeswekaccmpagent.xml");
 		/*WekaDT ttree = test.createDecisionTree();
 		

@@ -10,8 +10,9 @@ import testbed.sim.AppraisalAssignment;
  */
 
 /**
- * @author cfournie
- *
+ * Base class for Decision Tree to be used by our Agent.
+ * 
+ * @author Mike Lepard
  */
 public abstract class DecisionTree {
 	

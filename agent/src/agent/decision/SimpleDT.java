@@ -13,8 +13,9 @@ import agent.decision.DecisionTree;
 
 
 /**
- * @author cfournie
- *
+ * Simple extension of the DecisionTree class
+ * 
+ * @author Mike Lepard
  */
 public class SimpleDT extends DecisionTree {
 	
