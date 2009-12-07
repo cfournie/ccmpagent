@@ -2,6 +2,29 @@
 %\subsection{Example}
 \begin{frame}
 \frametitle{Agent Design}
+\begin{itemize}
+  \item Three components to the CCMP Agent Framework:
+  \begin{itemize}
+    \item CCMP Agent - handles all interactions with ART
+    \item Trust Network Interface - abstract interface to trust representation
+    \item Decision Tree Interface - abstract interface for decisions on actions
+  \end{itemize}
+\end{itemize}
+\begin{itemize}
+  \item For each ART method the CCMP Agent:
+  \begin{itemize}
+    \item Parses incoming messages and updates the trust network.
+    \item Query the decision tree on actions to take.
+    \item Generates the outgoing messages.
+  \end{itemize}
+\end{itemize}
 %\framesubtitle{Example}
+\end{frame}
 
+\begin{frame}
+\frametitle{Agent Classes}
+\begin{figure}
+\centering
+\includegraphics[height=0.75\textheight]{images/agentClasses.jpg}
+\end{figure}
 \end{frame}
