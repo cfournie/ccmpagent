@@ -7,22 +7,6 @@ the recommended trust received from third-party recommenders. Trust values
 are stored probabilistically and trust evolution from one
 experience/recommendation to another uses a form a Bayes' theorem.
 
-\subsection{Structure}
-
-\begin{figure}[h!]
-  \centering  
-  \includegraphics[width=1\textwidth]{images/bayestrust}
-  \caption{Bayes Trust Framework High Level Class Diagram}
-  \label{fig:xml2dttest}
-\end{figure}
-
-\begin{figure}[h!]
-  \centering  
-  \includegraphics[width=1\textwidth]{images/bayestrustdetail}
-  \caption{Bayes Trust Framework Detailed Class Diagram}
-  \label{fig:xml2dttest}
-\end{figure}
-
 
 \subsection{Theory}
 For each context and peer, we store a vector that represents a discrete
@@ -62,3 +46,24 @@ into a confidence value on [0,1] using \eqref{eq:bayes_confidence}.
 \label{eq:bayes_confidence}
 c = 1 - \frac{\sigma^2_{\{d,r\}}}{\sigma^2_U}
 \end{equation}
+
+
+\subsection{Implementation}
+
+\begin{figure}[h!]
+  \centering  
+  \includegraphics[width=1\textwidth]{images/bayestrust}
+  \caption{Bayes Trust Framework High Level Class Diagram}
+  \label{fig:xml2dttest}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering  
+  \includegraphics[width=1\textwidth]{images/bayestrustdetail}
+  \caption{Bayes Trust Framework Detailed Class Diagram}
+  \label{fig:xml2dttest}
+\end{figure}
+
+
+\subsection{Testing}
+Unit tests for the framework
