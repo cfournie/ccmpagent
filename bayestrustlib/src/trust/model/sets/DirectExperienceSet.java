@@ -29,25 +29,6 @@ public class DirectExperienceSet extends TrustSet {
 	}
 	
 	/**
-	 * Updates data structure to represent an encounter
-	 * 
-	 * See <b>Trust evolution through direct experience evaluation</b>
-	 * @param ck Context
-	 * @param py Peer
-	 * @param lb Trust level determined after encounter
-	 * @param la Trust level acted upon
-	 */
-	public void storeEncounter(Context ck, Peer py, int lb, int la) {
-		this.misc.checkLevel(la);
-		this.misc.checkLevel(lb);
-		
-		double[][] ec = this.retrieve(ck, py);
-		ec[lb][la]++;
-		
-		this.store(ck, py, ec);
-	}
-	
-	/**
 	 * Set trust n-tuple
 	 * @param py Peer
 	 * @param ck Context

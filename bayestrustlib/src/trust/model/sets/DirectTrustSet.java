@@ -15,7 +15,7 @@ import trust.model.primitives.*;
  */
 public class DirectTrustSet extends TrustSet {
 	/** DTS */
-	protected HashMap<String,double []> set;
+	protected Map<String,double []> set;
 	
 	/**
 	 * Constructor

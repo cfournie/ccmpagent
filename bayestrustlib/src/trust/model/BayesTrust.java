@@ -214,7 +214,7 @@ public class BayesTrust {
 	 * @param alpha
 	 * @return Probability of SR given RT
 	 */
-	public double pSRgivenRT(double [][] rc, int beta, int alpha) {
+	private double pSRgivenRT(double [][] rc, int beta, int alpha) {
 		double denom = EPSILON;
 		for (int gamma = 0; gamma < stats.getN(); gamma++) {
 			denom += rc[alpha][gamma]; 
