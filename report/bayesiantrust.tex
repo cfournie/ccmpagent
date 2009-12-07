@@ -7,6 +7,29 @@ the recommended trust received from third-party recommenders. Trust values
 are stored probabilistically and trust evolution from one
 experience/recommendation to another uses a form a Bayes' theorem.
 
+\subsection{Rationale}
+This paper was chosen for implementation because: it's data structures scale
+linearly with respect to the number of peers tracked; and it embodies what
+id describes as three main properties of trust, subjectiveness,
+context-dependence, and dynamism. These three properties explained are:
+\begin{itemize}
+  \item Subjectiveness: identical actions taken by different agent may lead to
+  different levels of trust;
+  \item Context-dependence: trust in one context does not necessarily transfer
+  to another; and
+  \item Dynamism: ``trust increases after successful observations, while it
+  decays over time''~\cite{btrust}.
+\end{itemize}
+
+The same behavior may lead to
+different trust lev- els in different trusting entities, hence subjectiveness
+qualifies trust. As trust (e.g., in giving good advices) in one context (e.g.,
+academia) does not necessarily transfer to an- other context (e.g., industry), we
+add context-dependence to the list of trust properties. Finally, the fact that
+trust increases after successful observations, while it decays over time
+exemplifies its dynamism. As a result, trust evolution must embed the notion of
+time.
+
 
 \subsection{Theory}
 For each context and peer, we store a vector that represents a discrete
@@ -51,7 +74,7 @@ c = 1 - \frac{\sigma^2_{\{d,r\}}}{\sigma^2_U}
 \subsection{Implementation}
 
 \begin{figure}[h!]
-  \centering  
+  \centering
   \includegraphics[width=1\textwidth]{images/bayestrust}
   \caption{Bayes Trust Framework High Level Class Diagram}
   \label{fig:xml2dttest}
