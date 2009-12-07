@@ -30,13 +30,11 @@ public class BayesTrustTest {
 	
 	private BayesTrust bt;
 	private Stats stats;
-	private Misc misc;
 	
 	@Before
 	public void setUpBayesTrust() {
 		bt = new BayesTrust(TRUST_LEVELS, Arrays.asList(CONTEXTS));
 		stats = new Stats(TRUST_LEVELS);
-		misc = new Misc(stats);
 		
 		for (Peer p: PEERS) {
 			bt.addPeer(p);
