@@ -1,9 +1,11 @@
 \section{Weka Decision Tree}
-The decision was made early that developing an advanced tree classifier from scratch would
-be unnecessary as the Weka 3.6.1\cite{weka} open source library already provided an implementation that meet
-all the requirements.  These requirements including being able to classify data sets and 
-then being able to query the resulting tree to determine the categorical action based on the set
-of non-categorical test.  Also, there was a need to view the resulting tree for visual inspection.
+Instead of having fixed compiled if-else tree statements, it was decided the use of decision trees would provide
+the desired flexibility of being able to specify how decisions are to be made at runtime.  It was clear that
+developing this from scratch would be unnecessary as the Weka 3.6.1\cite{weka} open source library 
+already contained implementations that meet all the requirements.  These requirements including 
+being able to classify data sets and then being able to query the resulting tree to determine the 
+categorical action based on the set of non-categorical test.  Also, there was a need to view the resulting tree 
+for visual inspection.
 
 \subsection{Interfacing with Weka}
 In order to increase the reusability of the decision tree library, classes were created that 
@@ -43,12 +45,12 @@ Extends Vector to only contain DTLearning objects.\\
 
 \subsection{XML declaration}
 
-The decision trees were stored in the configuration XML allowing the behaviour of an agent to be change without
-recompiling the entire project.  This flexibility was achieved by structuring the classes so that 
-they could be built using the Digester XML parser.  This meant that any decision tree could be modified in 
-terms of their non-categorical but the categorical attribute must agree with what is currently within the 
-compiled code.  If a new non-categorical attribute was required for a decision tree, then the compiled code would
-have to be adapted to know how to retrieve the values of that attribute.
+The decision trees were stored in the configuration XML allowing the behaviour of an agent, by tweaking values
+in the training data, to be change without recompiling the entire project.  This flexibility was achieved by 
+structuring the classes so that they could be built using the Digester XML parser.  This meant that any decision
+tree could be modified in terms of their non-categorical but the categorical attribute must agree with what is 
+currently within the compiled code.  If a new non-categorical attribute was required for a decision tree, then 
+the compiled code would have to be adapted to know how to retrieve the values of that attribute.
 
 \subsection{Integration with Agent}
 
