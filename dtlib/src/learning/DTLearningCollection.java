@@ -22,7 +22,7 @@ public class DTLearningCollection extends Vector<DTLearning>{
 	
 	/**
 	 * XML Digester callback to add an element
-	 * @param DTWekaARFF rhs is a parsed ARFF representation
+	 * @param rhs DTWekaARFF rhs is a parsed ARFF representation
 	 */
 	public void addDT(DTWekaARFF rhs)
 	{

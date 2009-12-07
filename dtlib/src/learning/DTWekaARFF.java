@@ -25,8 +25,8 @@ public class DTWekaARFF {
 	
 	/**
 	 * Constructor
-	 * @param Array of attributes, will be converted into the Vector
-	 * @param String array of comma separated training date
+	 * @param attributes Array of attributes, will be converted into the Vector
+	 * @param data String array of comma separated training date
 	 */
 	public DTWekaARFF(DTAttribute[] attributes, String[] data)
 	{
@@ -36,7 +36,7 @@ public class DTWekaARFF {
 	
 	/**
 	 * XML Digester callback to add an Attribute
-	 * @param DTAttribute rhs to be added
+	 * @param rhs DTAttribute rhs to be added
 	 */
 	public void addAttribute(DTAttribute rhs)
 	{
@@ -45,7 +45,7 @@ public class DTWekaARFF {
 	
 	/**
 	 * XML Digester callback to store the training data
-	 * @param String rhs reprensenting all of the training data
+	 * @param rhs String rhs reprensenting all of the training data
 	 */
 	public void setData(String rhs)
 	{
@@ -54,7 +54,7 @@ public class DTWekaARFF {
 	
 	/**
 	 * XML Digester callback to set the name
-	 * @param String rhs for the name
+	 * @param rhs String rhs for the name
 	 */
 	public void setName(String rhs)
 	{

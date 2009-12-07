@@ -18,8 +18,8 @@ public class DTAttribute {
 	
 	/**
 	 * Constructor
-	 * @param String name of the Attribute
-	 * @param String type of the Attribute
+	 * @param name String name of the Attribute
+	 * @param type String type of the Attribute
 	 */
 	public DTAttribute(String name, String type)
 	{
@@ -29,7 +29,7 @@ public class DTAttribute {
 	
 	/**
 	 * XML Digester callback to set the name
-	 * @param String rhs for the name
+	 * @param rhs String rhs for the name
 	 */
 	public void setName(String rhs){
 		name = rhs;
@@ -37,7 +37,7 @@ public class DTAttribute {
 	
 	/**
 	 * XML Digester callback to set the type
-	 * @param String rhs for the type
+	 * @param rhs String rhs for the type
 	 */
 	public void setType(String rhs){
 		type = rhs;

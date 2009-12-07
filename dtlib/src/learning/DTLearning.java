@@ -25,7 +25,7 @@ public class DTLearning {
 	
 	/**
 	 * Constructor
-	 * @param DTWekaARFF that the tree is to be built from.
+	 * @param Data DTWekaARFF that the tree is to be built from.
 	 */
 	public DTLearning(DTWekaARFF Data)
 	{
@@ -50,7 +50,7 @@ public class DTLearning {
 	
 	/**
 	 * Helper function that will convert the test into a proper Weka ARFF format
-	 * @param String nonCatTest is a comma separated test
+	 * @param nonCatTest String nonCatTest is a comma separated test
 	 */
 	private String BuildTest(String nonCatTest)
 	{
@@ -70,7 +70,7 @@ public class DTLearning {
 	/**
 	 * Classifies a test.
 	 * @return Returns the action to be taken based on the given test
-	 * @param String nonCatTest is a comma separated test
+	 * @param nonCatTest String nonCatTest is a comma separated test
 	 */
 	public String DTClassify(String nonCatTest)
 	{
