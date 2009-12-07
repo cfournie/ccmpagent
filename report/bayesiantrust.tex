@@ -1,7 +1,4 @@
-\section{Bayesian Trust Network}
-\textbf{Note:} Despite the title of this section, our project does not use a
-Bayesian \emph{network}, but rather a form of \emph{Bayes' theorem}.
-
+\section{Bayesian Trust Framework}
 To assess our trust in the other peers in the system, we implemented
 the model from ``B-trust: Bayesian Trust Framework for Pervasive Computing''
 \cite{btrust}. The paper describes a method of maintaining context-sensitive
@@ -10,6 +7,17 @@ the recommended trust received from third-party recommenders. Trust values
 are stored probabilistically and trust evolution from one
 experience/recommendation to another uses a form a Bayes' theorem.
 
+\subsection{Structure}
+
+\begin{figure}[h!]
+  \centering  
+  \includegraphics[width=1\textwidth]{images/bayestrust}
+  \caption{Bayes Trust Framework High Level Class Diagram}
+  \label{fig:xml2dttest}
+\end{figure}
+
+
+\subsection{Theory}
 For each context and peer, we store a vector that represents a discrete
 probability mass function (pmf) of our direct trust $d_\alpha$, which is the
 trust formed from previous direct experiences with this peer. We similarly store a
