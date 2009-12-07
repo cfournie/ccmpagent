@@ -1,7 +1,5 @@
 package tests.agent.decision;
 
-import agent.BayesWekaCCMPAgent;
-import agent.decision.WekaDT;
 import agent.decision.WekaDT.DTLearningNames;
 import learning.*;
 
@@ -406,7 +404,7 @@ public class WekaDTTest {
 		System.out.println(xml.toString());
 		
 		// Test the XML parsing built xml
-		BayesWekaCCMPAgent test = new BayesWekaCCMPAgent("../testbed/src/testbed/participants/bayeswekaccmpagent.xml");
+		//BayesWekaCCMPAgent test = new BayesWekaCCMPAgent("../testbed/src/testbed/participants/bayeswekaccmpagent.xml");
 		/*WekaDT ttree = test.createDecisionTree();
 		
 		for(DTLearning dt : ttree.dtreeCol)

@@ -11,7 +11,6 @@ import agent.CCMPAgent;
 
 import testbed.sim.AppraisalAssignment;
 import testbed.sim.Era;
-import trust.model.exceptions.DuplicatePeerException;
 
 /**
  * Weka Based Decision Tree class
