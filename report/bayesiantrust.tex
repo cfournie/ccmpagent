@@ -10,7 +10,7 @@ experience/recommendation to another uses a form a Bayes' theorem.
 \subsection{Rationale}
 This paper was chosen for implementation because: it's data structures scale
 linearly with respect to the number of peers tracked; and it embodies what
-id describes as three main properties of trust, subjectiveness,
+the paper describes as three main properties of trust, subjectiveness,
 context-dependence, and dynamism. These three properties explained are:
 \begin{itemize}
   \item Subjectiveness: identical actions taken by different agent may lead to
@@ -20,15 +20,6 @@ context-dependence, and dynamism. These three properties explained are:
   \item Dynamism: ``trust increases after successful observations, while it
   decays over time''~\cite{btrust}.
 \end{itemize}
-
-The same behavior may lead to
-different trust lev- els in different trusting entities, hence subjectiveness
-qualifies trust. As trust (e.g., in giving good advices) in one context (e.g.,
-academia) does not necessarily transfer to an- other context (e.g., industry), we
-add context-dependence to the list of trust properties. Finally, the fact that
-trust increases after successful observations, while it decays over time
-exemplifies its dynamism. As a result, trust evolution must embed the notion of
-time.
 
 
 \subsection{Theory}
@@ -72,21 +63,20 @@ c = 1 - \frac{\sigma^2_{\{d,r\}}}{\sigma^2_U}
 
 
 \subsection{Implementation}
+A high level view of the resulting Java classes in the Bayes Trust Framework
+can be seen in Figure~\ref{fig:bthighlevel}.  As detailed in the paper, the
+trust sets, and the trust evolution formulae are embodied in and can be seen in
+the detailed class diagram shown in Figure~\ref{fig:btlowlevel}.
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=1\textwidth]{images/bayestrust}
-  \caption{Bayes Trust Framework High Level Class Diagram}
-  \label{fig:xml2dttest}
+  \caption{\label{fig:bthighlevel}Bayes Trust Framework High Level Class
+  Diagram}
 \end{figure}
 
 \begin{figure}[h!]
   \centering  
   \includegraphics[width=1\textwidth]{images/bayestrustdetail}
-  \caption{Bayes Trust Framework Detailed Class Diagram}
-  \label{fig:xml2dttest}
+  \caption{\label{fig:btlowlevel}Bayes Trust Framework Detailed Class Diagram}
 \end{figure}
-
-
-\subsection{Testing}
-Unit tests for the framework
