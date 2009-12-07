@@ -12,7 +12,6 @@ storing the contents of an ARFF file.  These classes are of this decision tree l
 are described in the following Table~\ref{table:attribs}.
 
 \begin{table}[h]
-\label{table:attribs}
 \centering
 \begin{tabular}{|l|p{5in}|}
 \hline
@@ -39,6 +38,7 @@ Extends Vector to only contain DTLearning objects.\\
 \hline
 \end{tabular}
 \caption{Decicion Tree library classes}
+\label{table:attribs}
 \end{table}
 
 \subsection{XML declaration}
@@ -65,23 +65,23 @@ will return the proper value.
 
 \subsection{Example}
 
-\begin{figure}[h]
-  \centering
-  \label{fig:xml2dt}
-  \includegraphics[width=1\textwidth]{../projectPres/images/xml2dtxtra.jpg}
+\begin{figure}[h!]
+  \centering  
+  \includegraphics[width=5in]{../projectPres/images/xml2dtxtra.jpg}
   \caption{XML gets converted to the Weka ARFF format and can then be visualized.}
+  \label{fig:xml2dt}
 \end{figure}
 
-\begin{figure}[h]
-  \centering
-  \label{fig:xml2dttest}
-  \includegraphics[width=1\textwidth]{../projectPres/images/xml2dttest.jpg}
+\begin{figure}[h!]
+  \centering  
+  \includegraphics[width=3in]{../projectPres/images/xml2dttest.jpg}
   \caption{Comma separated test gets converted to the Weka ARFF format and then gets classified for 
-  the tree shown in \ref{fig:xml2dt}.}
+  the tree shown in Figure~\ref{fig:xml2dt}.}
+  \label{fig:xml2dttest}
 \end{figure}
 
-\ref{fig:xml2dt} shows a sample decision tree how the shown decision tree can be described in XML.  
-In \ref{fig:xml2dttest} there is a sample comma separated test and its classified return value.
+Figure~\ref{fig:xml2dt} shows a sample decision tree how the shown decision tree can be described in XML.  
+In Figure~\ref{fig:xml2dttest} there is a sample comma separated test and its classified return value.
 
 \subsection{Testing and Development of Decision Trees}
 Testing was accomplished by first developing a method that opened a Java window and used the Weka

@@ -30,14 +30,14 @@ instantiated in subclasses of CCMPAgent.  It is these subclasses that are passed
 to the ART testbed for creation in the sim.  In this manner different
 implementations of the trust network and decision tree classes can be easily
 incorporated into the CCMPAgent.  The two derived classes developed for this 
-project are shown in \ref{fig:CCMPClasses}.
+project are shown in Figure~\ref{fig:CCMPClasses}.
 
 \begin{figure}
 \centering
-\label{fig:CCMPClasses}
 \includegraphics{images/CCMPClasses.jpg}
 \caption{Extended Classes of the abstract CCMPAgent class.}
-\end{center}
+\label{fig:CCMPClasses}
+\end{figure}
 
 \subsection{Trust Network}
 The trust network is an interface class used to represent the trust the agent
@@ -53,7 +53,6 @@ to update the trust value for the agent based on the results. Table~\ref{table:T
 shows the functions provided by the Trust Network to update the trust values.
 
 \begin{table}[h]
-\label{table:TNUpdate}
 \centering
 \begin{tabular}{|l|l|}
 \hline
@@ -74,8 +73,7 @@ agentDidNotAcceptCertainty & \\
 \hline
 \end{tabular}
 \caption{Agent Trust Network update functions.}
-\end{table}
-
+\label{table:TNUpdate}
 \end{table}
 
 The penalty values for the negative actions shown above have default values in the code,
@@ -87,7 +85,6 @@ The decision tree interface class provides methods for the CCMP agent to
 determine what actions to perform.  There are a finite number of actions that
 an agent in the ART testbed can decide to perform:
 \begin{table}[h]
-\label{table:DTUpdate}
 \centering
 \begin{tabular}{|l|l|}
 \hline
@@ -118,12 +115,13 @@ Modify the generated opinion & \\
 \hline
 \end{tabular}
 \caption{Agent Decision Tree update functions.}
+\label{table:DTUpdate}
 \end{table}
 
 As discussed above, during each of the ART agent methods the CCMPAgent class
 will update the Trust Network, based on other agent actions, and then pass these
 updated values to the Decision Tree.  The CCMPAgent then calls the appropriate
-methods, shown in Table~\ref{table:DTUpdate} in the Decision Tree interface class 
+methods, shown in Table~\ref{table:DTUpdate}, in the Decision Tree interface class 
 to get the actions to take for the particular method.  The CCMPAgent will also 
 tell the Decision Tree about the negative actions of other agents, such as not 
 providing a reputation after payment, as this may affect the actions recommended 
