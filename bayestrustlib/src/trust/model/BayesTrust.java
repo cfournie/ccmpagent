@@ -156,29 +156,16 @@ public class BayesTrust {
 		// Prior belief of what pr will send about py.
 		double [][] rc = srs.retrieve(ck, pr);
 		
-		final DecimalFormat fmt = new DecimalFormat("0.00");
 		double [] newR = misc.makeTuple();
 		for (int alpha = 0; alpha < stats.getN(); alpha++) {
-			System.out.println("Alpha = " + fmt.format(alpha) + ":");
-			
 			double pSRandRT = r[alpha] * pSRgivenRT(rc, beta, alpha);
-			System.out.println(
-				"  p(Sent " + fmt.format(beta) + " | Rcmd " + fmt.format(alpha) + ") = " + fmt.format(pSRgivenRT(rc, beta, alpha)) + " * " +
-				"p(Rcmd " + fmt.format(alpha) + ") = " + fmt.format(r[alpha]));
 			
 			double pSR = EPSILON;
 			for (int gamma = 0; gamma < stats.getN(); gamma++) {
-				System.out.println(
-					"    p(Sent " + fmt.format(beta) + " | Rcmd " + fmt.format(gamma) + ") = " + fmt.format(pSRgivenRT(rc, beta, gamma)) + " * " +
-					"p(Rcmd " + fmt.format(gamma) + ") = " + fmt.format(r[gamma]));
 				pSR += r[gamma] * pSRgivenRT(rc, beta, gamma);
 			}
 			
-			System.out.println(
-				"  p(Sent " + fmt.format(beta) + "; Rcmd " + fmt.format(alpha) + ") = " + fmt.format(pSRandRT) + " / " +
-				"p(Sent " + fmt.format(beta) + ") = " + fmt.format(pSR));
 			newR[alpha] = pSRandRT / pSR;
-			System.out.println("  p(new Rcmd " + fmt.format(alpha) + ") = " + fmt.format(newR[alpha]));
 		}
 		
 		rts.store(ck, py, newR);
