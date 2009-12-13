@@ -1,0 +1,25 @@
+CCMP Agent
+----------
+
+The base framework class, CCMPAgent, is the subclass of the ART testbed Agent
+and provides the interface to the ART testbed.  The CCMPAgent is
+responsible for handling the generation, parsing and responses to the
+messages within the testbed Agent methods.  
+
+It does this in a similar and abstract manner for each one. First it parses the
+incoming messages and updates the trust network and decision tree on the
+results of the messages, either positive or negative.  After updating the
+knowledge base regarding the actions of the other agents and passing the new
+values from the trust network to the decision tree, it queries the decision tree
+to determine what action to take.  It then generates the appropriate
+messages and passes them to the sim.
+
+The base CCMPAgent class implements all this functionality in an abstract way
+using the base TrustNetwork and DecisionTree classes.  The specific objects
+types, such as the Bayesian trust network and Weka decision tree, are
+instantiated in subclasses of CCMPAgent.  It is these subclasses that are passed
+to the ART testbed for creation in the sim.  In this manner different
+implementations of the trust network and decision tree classes can be easily
+incorporated into the CCMPAgent.
+
+The agent framework relies upon the dtlib and bayestrustlib projects.

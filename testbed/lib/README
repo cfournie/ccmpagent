@@ -1,0 +1,30 @@
+The agent library requires the following libraries to be in the classpath. The JUnit
+and JUnit addons libraries are only required for unit testing.
+
+Libraries:
+art-2.1.1.jar
+art-game-designer-2.1.1.jar
+art-wizard-2.1.1.jar
+commons-beanutils.jar
+commons-digester.jar
+commons-logging.jar
+jcommon.jar
+jdom.jar
+jfreechart.jar
+junit.jar
+junit-addons-1.4.jar
+mysql-connector-java-3.1.8-bin.jar
+
+These can be found at:
+http://sourceforge.net/projects/art-testbed/
+http://sourceforge.net/projects/art-testbed/
+http://sourceforge.net/projects/art-testbed/
+http://commons.apache.org/beanutils/
+http://commons.apache.org/digester/
+http://commons.apache.org/logging/
+http://www.jfree.org/jcommon/
+http://www.jdom.org/downloads/index.html
+http://www.jfree.org/jfreechart/
+http://www.junit.org/
+http://sourceforge.net/projects/junit-addons/
+http://www.mysql.com/products/connector/

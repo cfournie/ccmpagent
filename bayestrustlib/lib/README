@@ -1,0 +1,10 @@
+The bayest trust library requires the following libraries to be in the classpath, but only
+for unit testing.
+
+Libraries:
+junit.jar
+junit-addons-1.4.jar
+
+These can be found at:
+http://www.junit.org/
+http://sourceforge.net/projects/junit-addons/

@@ -1,0 +1,12 @@
+Weka Decision Tree 
+------------------
+Instead of having fixed compiled if-else tree statements, it was decided the use of decision trees would provide
+the desired flexibility of being able to specify how decisions are to be made at runtime.  It was clear that
+developing this from scratch would be unnecessary as the Weka 3.6.1 [1] open source library 
+already contained implementations that meet all the requirements.  These requirements including 
+being able to classify data sets and then being able to query the resulting tree to determine the 
+categorical action based on the set of non-categorical test.  Also, there was a need to view the resulting tree 
+for visual inspection.
+
+[1] M. Hall, E. Frank, G. Holmes, B. Pfahringer, P. Reutemann, and I. H. Witten, "The weka data mining
+software: An update," SIGKDD Explorations, vol. 11, no. 1, 2009.
