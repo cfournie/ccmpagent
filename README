@@ -100,10 +100,12 @@ suite.
 
 Visual Testing
 --------------
-To visually test the decision trees: In Eclipse, run tests.agent.decision WekaDTTest.java.
-Java windows will popup for each treee.  Training data can be modified as desired,
-and then the tests rerun to ensure that the decision trees will have the desired characteristics.
-If the XML parsed trees need to be visually inspected, the uncomment the code at the bottom of the file
-and resolve any compilation errors, ensure that the xml is up to date and then rerun the tests.  Once
-satisfied recomment the code and ensure to revert changes done to successfully compile.  In the future, 
-a more proper way to test the decision trees should be developed.
+To visually test the decision trees: In Eclipse, run tests.agent.decision
+WekaDTTest.java. Java windows will popup for each treee.  Training data can be
+modified as desired, and then the tests rerun to ensure that the decision trees
+will have the desired characteristics. If the XML parsed trees need to be
+visually inspected, the uncomment the code at the bottom of the file and resolve
+any compilation errors, ensure that the xml is up to date and then rerun the
+tests.  Once satisfied recomment the code and ensure to revert changes done to
+successfully compile.  In the future, a more proper way to test the decision
+trees should be developed.
