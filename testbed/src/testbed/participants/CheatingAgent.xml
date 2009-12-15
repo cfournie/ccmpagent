@@ -1,4 +1,0 @@
-<agentConfig typename="CheatingAgent">
-  <classFile>src/testbed/participants/CheatingAgent.class</classFile>
-  <parameters>false</parameters>
-</agentConfig>

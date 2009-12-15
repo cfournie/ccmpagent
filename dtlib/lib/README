@@ -1,7 +1,0 @@
-The dt library requires the following libraries to be in the classpath.
-
-Libraries:
-weka.jar
-
-This can be found at:
-http://www.cs.waikato.ac.nz/ml/weka/

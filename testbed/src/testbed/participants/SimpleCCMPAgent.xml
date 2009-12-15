@@ -1,7 +1,0 @@
-<agentConfig typename="simple">
-   <classFile>../SimpleCCMPAgent.jar</classFile>
-   <parameters>true</parameters>
-	<CCMPParams>
-		<log>true</log>
-	</CCMPParams>   
-</agentConfig>
