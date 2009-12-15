@@ -1,0 +1,17 @@
+<project name="agent" basedir="." default="main">
+ 
+    <property name="bayestrustlib.build.dir" value="bin"/>
+	<property name="jar.dir" value=".."/>
+    
+    <target name="jar">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/btrustlib.jar">
+            <fileset dir="${bayestrustlib.build.dir}/" >
+              <exclude name="**/*.html"/>
+            </fileset>
+        </jar>
+    </target>
+ 
+    <target name="main" depends="jar"/>
+ 
+</project>
