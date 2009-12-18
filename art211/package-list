@@ -1,0 +1,13 @@
+testbed
+testbed.agent
+testbed.artSetupWizard.application
+testbed.artSetupWizard.wizard
+testbed.db
+testbed.experimentation
+testbed.gameDesigner
+testbed.gui
+testbed.gui.gmi
+testbed.gui.light_gmi
+testbed.messages
+testbed.participants
+testbed.sim
